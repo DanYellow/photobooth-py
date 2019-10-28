@@ -1,0 +1,3 @@
+gphoto2 --capture-image-and-download
+
+http://www.gphoto.org/doc/manual/ref-gphoto2-cli.html
