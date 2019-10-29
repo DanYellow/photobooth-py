@@ -24,19 +24,28 @@ def start_stream():
     stream_cmd = 'gphoto2 gphoto2 --capture-movie --force-overwrite --filename _tmp/movie.mjpg'
     os.system(stream_cmd)
 
+def setup_camera():
+    camera_setup_cmd = "gphoto2 --set-config capturetarget=1"
+    os.system(camera_setup_cmd)
 
-def capture_image():
+def capture_images():
     NB_MAX_PHOTOS = 1
-    DIST_FOLDER = "./_tmp"
-    os.chdir(DIST_FOLDER)
+    INTERVAL = 3
 
-    for x in range(0, NB_MAX_PHOTOS):
-        ts = time.time()
-        new_image_name = f"""IMG_{ts}"""
-        print('capturing')
+    cwd = "./_tmp"
+    os.chdir(cwd)
 
-        capture_image_cmd = "gphoto2 --capture-image-and-download --force-overwrite --frames=3 --interval=5"
-        os.system(capture_image_cmd)
+    print('capturing')
+
+    capture_image_cmd = f"""gphoto2 \
+        --capture-image-and-download \
+        --force-overwrite \
+        --frames={NB_MAX_PHOTOS} \
+        --keep-raw \
+        --interval={INTERVAL}"""
+    os.system(capture_image_cmd)
+
+    return NB_MAX_PHOTOS
 
         # list_of_files = glob.glob(f"./*")
         # latest_file = max(list_of_files, key=os.path.getctime)
@@ -57,24 +66,57 @@ def capture_image():
 
         # time.sleep(2)
 
+def get_nlast_images(nb_images):
+    # try:
+    #     cwd = "./_tmp"
+    #     os.chdir(cwd)
 
-def display_images():
-    image = Image.open("foo.jpg")
+    images_taken = glob.glob(f"./*")
+    images_taken.sort(key=os.path.getmtime)
+     
+    return images_taken[-nb_images:]
 
-    root = Tk()
+def display_images(images):
+    # window = Tk()
+    tmp_img = Image.open(images[0])
 
-    img = ImageTk.PhotoImage(image)
-    panel = Label(root, image=img)
+
+    # photo = PhotoImage(file=images[0])
+    # panel = Label(window, image = photo)
+
+    # panel.pack(side = "bottom", fill = "both", expand = "yes")
+
+    # canvas = Canvas(window, width=350, height=200)
+    # canvas.create_image(0, 0, anchor=NW, image=photo)
+    # canvas.pack()
+
+    window = Tk()
+
+    basewidth = 600
+    wpercent = (basewidth / float(tmp_img.size[0]))
+    hsize = int((float(tmp_img.size[1]) * float(wpercent)))
+    tmp_img_resized = tmp_img.resize((basewidth, hsize), Image.ANTIALIAS)
+
+    img = ImageTk.PhotoImage(tmp_img_resized)
+
+    panel = Label(window, image=img)
     panel.pack(side="bottom", fill="both", expand="yes")
-    root.mainloop()
 
+    window.geometry("900x600")
 
+    bouton=Button(window, text="Fermer", command=window.quit)
+    bouton.pack()
 
+    window.mainloop()
 
 if __name__ == "__main__":
     #    threading.Thread(target=start_server).start()
     # display_images()
-    capture_image()
+    setup_camera()
+    nb_photos_taken = capture_images()
+    n_last_images = get_nlast_images(nb_photos_taken)
+    display_images(n_last_images)
+
 
 #    threading.Thread(target=start_stream).start()
 #    start_stream()
