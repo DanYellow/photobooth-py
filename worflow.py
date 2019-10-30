@@ -29,7 +29,7 @@ def setup_camera():
     os.system(camera_setup_cmd)
 
 def capture_images():
-    NB_MAX_PHOTOS = 1
+    NB_MAX_PHOTOS = 2
     INTERVAL = 3
 
     cwd = "./_tmp"
@@ -77,18 +77,7 @@ def get_nlast_images(nb_images):
     return images_taken[-nb_images:]
 
 def display_images(images):
-    # window = Tk()
     tmp_img = Image.open(images[0])
-
-
-    # photo = PhotoImage(file=images[0])
-    # panel = Label(window, image = photo)
-
-    # panel.pack(side = "bottom", fill = "both", expand = "yes")
-
-    # canvas = Canvas(window, width=350, height=200)
-    # canvas.create_image(0, 0, anchor=NW, image=photo)
-    # canvas.pack()
 
     window = Tk()
 
@@ -109,13 +98,39 @@ def display_images(images):
 
     window.mainloop()
 
+def display_collage(list_images):
+    window = Tk()
+    collage_img = Image.new('RGB', (3000, 2500))
+    images_dimensions = [[0, 0], [0, 1200]]                                                                                                                                                                                                   
+
+    for idx, image in enumerate(list_images):
+        tmp_img = Image.open(image)
+        tmp_img.thumbnail(tmp_img.size)
+        collage_img.paste(tmp_img, images_dimensions[idx])
+
+    # collage_img.save("Modis_2008015_1435.png", "PNG")
+    # collage_img.show()
+
+    img = ImageTk.PhotoImage(collage_img)
+
+    panel = Label(window, image=img)
+    panel.pack(side="bottom", fill="both", expand="yes")
+
+    window.geometry("900x600")
+
+    window.mainloop()
+
+    return collage_img
+
+
 if __name__ == "__main__":
     #    threading.Thread(target=start_server).start()
     # display_images()
     setup_camera()
     nb_photos_taken = capture_images()
     n_last_images = get_nlast_images(nb_photos_taken)
-    display_images(n_last_images)
+    display_collage(n_last_images)
+    # display_images(n_last_images)
 
 
 #    threading.Thread(target=start_stream).start()
