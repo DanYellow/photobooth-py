@@ -98,18 +98,25 @@ def display_images(images):
 
     window.mainloop()
 
+def resize_images_in_ram(list_images):
+    TARGET_SIZE = 128, 128
+    resized_images = [] 
+
+    for image in list_images:
+        tmp_img = Image.open(image)
+        tmp_img.thumbnail(TARGET_SIZE, Image.ANTIALIAS)
+        
+        resized_images.append(tmp_img)
+
+    return resized_images
+
 def display_collage(list_images):
     window = Tk()
     collage_img = Image.new('RGB', (3000, 2500))
-    images_dimensions = [[0, 0], [0, 1200]]                                                                                                                                                                                                   
+    images_positions = [[0, 0], [0, 200]]                                                                                                                                                                                                   
 
-    for idx, image in enumerate(list_images):
-        tmp_img = Image.open(image)
-        tmp_img.thumbnail(tmp_img.size)
-        collage_img.paste(tmp_img, images_dimensions[idx])
-
-    # collage_img.save("Modis_2008015_1435.png", "PNG")
-    # collage_img.show()
+    for idx, image_obj in enumerate(list_images):
+        collage_img.paste(image_obj, images_positions[idx])
 
     img = ImageTk.PhotoImage(collage_img)
 
@@ -129,7 +136,8 @@ if __name__ == "__main__":
     setup_camera()
     nb_photos_taken = capture_images()
     n_last_images = get_nlast_images(nb_photos_taken)
-    display_collage(n_last_images)
+    resized_images = resize_images_in_ram(n_last_images)
+    display_collage(resized_images)
     # display_images(n_last_images)
 
 
