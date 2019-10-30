@@ -147,9 +147,6 @@ def capture_images():
         --interval={INTERVAL}"""
     os.system(capture_image_cmd)
 
-    create_web_gallery()
-
-
     return NB_MAX_PHOTOS
 
         # list_of_files = glob.glob(f"./*")
@@ -222,6 +219,10 @@ def create_thumbnails(list_images_obj, list_images):
         image.thumbnail(TARGET_SIZE, Image.ANTIALIAS)
         image.save(list_images[idx])
 
+    create_web_gallery()
+
+    return 0
+
 
 def display_collage(list_images):
     collage_img_ratio = 10 / 15
@@ -250,6 +251,15 @@ def display_collage(list_images):
     return collage_img
 
 
+def photobooth_workflow():
+    nb_photos_taken = capture_images()
+    n_last_images = get_nlast_images(nb_photos_taken)
+    resized_images = resize_images_in_ram(n_last_images)
+
+    threading.Thread(target=create_thumbnails,
+                kwargs={'list_images_obj':resized_images, 'list_images': n_last_images}, name='create_thumbnails').start()
+
+
 if __name__ == "__main__":
     setup_web_gallery()
     setup_camera()
@@ -257,15 +267,12 @@ if __name__ == "__main__":
     create_web_gallery()
     threading.Thread(target=start_server).start()
     
+    bouton = Button(window, text="Take picture")
+    bouton.config(command=photobooth_workflow)
+    bouton.pack()
 
+    window.mainloop()
     
-    
-    nb_photos_taken = capture_images()
-    n_last_images = get_nlast_images(nb_photos_taken)
-    resized_images = resize_images_in_ram(n_last_images)
-
-    threading.Thread(target=create_thumbnails,
-                  kwargs={'list_images_obj':resized_images, 'list_images': n_last_images}, name='create_thumbnails').start()
 
     # display_collage(resized_images) 
     # display_images(n_last_images)
