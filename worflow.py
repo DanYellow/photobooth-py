@@ -129,7 +129,9 @@ def start_stream():
     return 0
 
 def setup_camera():
-    camera_setup_cmd = "gphoto2 --set-config capturetarget=1"
+    camera_setup_cmd = """gphoto2 \
+        --set-config capturetarget=1 \
+    """
     os.system(camera_setup_cmd)
 
     return 0
@@ -137,8 +139,8 @@ def setup_camera():
 def capture_images():
     os.chdir(ROOT_DIR)
     
-    NB_MAX_PHOTOS = 3
-    INTERVAL = 1
+    NB_MAX_PHOTOS = 2
+    INTERVAL = "3s"
     FULL_PATH = f"{ROOT_DIR}/_tmp/full"
 
     if not os.path.exists(FULL_PATH):
@@ -151,10 +153,12 @@ def capture_images():
     capture_image_cmd = f"""gphoto2 \
         --capture-image-and-download \
         --force-overwrite \
-        --frames={NB_MAX_PHOTOS} \
         --keep-raw \
-        --interval={INTERVAL}"""
+        -F={NB_MAX_PHOTOS} \
+        -I={INTERVAL}"""
     os.system(capture_image_cmd)
+
+
 
     return NB_MAX_PHOTOS
 
@@ -193,13 +197,12 @@ def display_collage(list_images):
         collage_img_height * len(list_images)
     ))
 
-    images_positions = [[0, 0], [0, 300], [0, 600]]
+#    images_positions = [[0, 0], [0, 300], [0, 600]]
     
     for idx, image_obj in enumerate(list_images):
         try:
             _, height = image_obj.size
-            x, _ = images_positions[idx]
-            collage_img.paste(image_obj, (x, height * idx))
+            collage_img.paste(image_obj, (0, height * idx))
         except Exception as e:
             print(e)
     
@@ -208,8 +211,7 @@ def display_collage(list_images):
     collage_label.configure(image=img)
     collage_label.image = img
 
-    window.mainloop()
-    window.update()
+
 
     return collage_img
 
@@ -220,8 +222,10 @@ def photobooth_workflow():
     images_in_ram = resize_images_in_ram(n_last_images)
     create_thumbnails(images_in_ram)
     img_collage = display_collage(images_in_ram)
-    print(img_collage)
-    os.chdir(f"{ROOT_DIR}/_tmp")
+    print("---------------------------------------- img_collage", img_collage)
+    
+    window.mainloop()
+    window.update()
     
 
 if __name__ == "__main__":
