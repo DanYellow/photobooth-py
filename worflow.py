@@ -16,6 +16,9 @@ window = Tk()
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+collage_label = Label(window, image=None)
+collage_label.place(x=70,y=30)
+collage_label.pack()
 
 
 def get_nlast_images(nb_images):
@@ -28,7 +31,7 @@ def get_nlast_images(nb_images):
 
     images_taken_sorted = Tcl().call('lsort', '-dict', images_taken)
     
-    imgs_taken_rev = images_taken_sorted#[:: -1]
+    imgs_taken_rev = images_taken_sorted[:: -1]
 
     return imgs_taken_rev if nb_images == -1 else imgs_taken_rev[-nb_images:]
 
@@ -180,31 +183,35 @@ def create_thumbnails(list_images_obj):
 
     create_web_gallery()
 
-
-
 def display_collage(list_images):
     os.chdir(f"{ROOT_DIR}/_tmp")
 
     collage_img_ratio = 10 / 15
-    collage_img_height = 300
+    _, height_list_images_item = list_images[0].size
+    collage_img_height = height_list_images_item
+
     collage_img = Image.new('RGB', (
-        int(collage_img_height * collage_img_ratio),
-        collage_img_height
+        int(collage_img_height * (1/collage_img_ratio)),
+        collage_img_height * len(list_images)
     ))
 
     images_positions = [[0, 0], [0, 300], [0, 600]]
     
     for idx, image_obj in enumerate(list_images):
         try:
-            collage_img.paste(image_obj, images_positions[idx])
+            _, height = image_obj.size
+            x, y = images_positions[idx]
+            collage_img.paste(image_obj, (x, height * idx))
         except Exception as e:
             print(e)
     
     img = ImageTk.PhotoImage(collage_img)
 
+    collage_img.save("img.jpg", "JPEG", quality=65)
+
     panel = Label(window, image=img)
-    panel.place(x=70,y=90)
-    panel.pack()
+    collage_label.configure(image=img)
+    collage_label.image = img
 
     window.mainloop()
     window.update()
