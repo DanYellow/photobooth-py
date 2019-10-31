@@ -17,19 +17,15 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def get_nlast_images(nb_images):
-    os.chdir(ROOT_DIR)
-
-    cwd = "./_tmp/full"
-    os.chdir(cwd)
+    os.chdir(f"{ROOT_DIR}/_tmp/full")
 
     images_taken = glob.glob('*.JPG')
     images_taken.extend(glob.glob('*.jpeg'))
     images_taken.extend(glob.glob('*.jpg'))
 
-    images_taken.sort(key=os.path.getmtime)
+    images_taken_sorted = Tcl().call('lsort', '-dict', images_taken)
 
-    os.chdir(ROOT_DIR)
-    return images_taken if nb_images == -1 else images_taken[-nb_images:]
+    return images_taken_sorted if nb_images == -1 else images_taken_sorted[-nb_images:]
 
 def setup_web_gallery():
     os.chdir(ROOT_DIR)
@@ -49,7 +45,7 @@ def create_web_gallery():
     for image in all_images:
         images_tpl.append(f"""
             <li>
-                    <a href="full/{image}">
+                <a href="full/{image}">
                     <figure>
                         <img src="./{image}" />
                     </figure>
@@ -128,7 +124,7 @@ def setup_camera():
 def capture_images():
     os.chdir(ROOT_DIR)
     
-    NB_MAX_PHOTOS = 1
+    NB_MAX_PHOTOS = 2
     INTERVAL = 1
     FULL_PATH = "./_tmp/full"
 
@@ -148,26 +144,6 @@ def capture_images():
     os.system(capture_image_cmd)
 
     return NB_MAX_PHOTOS
-
-        # list_of_files = glob.glob(f"./*")
-        # latest_file = max(list_of_files, key=os.path.getctime)
-
-        # oldext = os.path.splitext(latest_file)[1]
-        # os.rename(latest_file, new_image_name + oldext)
-
-        # ufraw_cmd = "ufraw-batch *.cr2 --silent --out-type=jpeg --compression=95 --wb=camera"
-        # os.system(ufraw_cmd)
-
-        # if not os.path.exists(directory):
-        #     os.makedirs(directory)
-
-        # im = Image.open(image_name)
-        # print "Generating jpeg for %s" % name
-        # im.thumbnail(im.size)
-        # im.save(outfile, "JPEG", quality=100)
-
-        # time.sleep(2)
-
 
 def display_images(images):
     tmp_img = Image.open(images[0])
@@ -192,13 +168,10 @@ def display_images(images):
     window.mainloop()
 
 def resize_images_in_ram(list_images):
-    os.chdir(ROOT_DIR)
-
     TARGET_SIZE = 300, 300
     resized_images = []
 
-    cwd = "_tmp/full"
-    os.chdir(cwd)
+    os.chdir(f"{ROOT_DIR}/_tmp/full")
 
     for image in list_images:
         tmp_img = Image.open(image)
@@ -208,16 +181,14 @@ def resize_images_in_ram(list_images):
 
     return resized_images
 
-def create_thumbnails(list_images_obj, list_images):
-    os.chdir(ROOT_DIR)
-
+def create_thumbnails(list_images_obj):
     TARGET_SIZE = 300, 300
-    cwd = "./_tmp"
-    os.chdir(cwd)
+    os.chdir(f"{ROOT_DIR}/_tmp")
 
-    for idx, image in enumerate(list_images_obj):
+    for image in list_images_obj:
         image.thumbnail(TARGET_SIZE, Image.ANTIALIAS)
-        image.save(list_images[idx])
+        print(image.filename)
+        image.save(image.filename, "JPEG", quality=65)
 
     create_web_gallery()
 
@@ -246,8 +217,6 @@ def display_collage(list_images):
 
     window.geometry("1200x600")
 
-    window.mainloop()
-
     return collage_img
 
 
@@ -255,9 +224,10 @@ def photobooth_workflow():
     nb_photos_taken = capture_images()
     n_last_images = get_nlast_images(nb_photos_taken)
     resized_images = resize_images_in_ram(n_last_images)
+    create_thumbnails(resized_images)
 
-    threading.Thread(target=create_thumbnails,
-                kwargs={'list_images_obj':resized_images, 'list_images': n_last_images}, name='create_thumbnails').start()
+    # threading.Thread(target=create_thumbnails,
+    #             kwargs={'list_images_obj':resized_images}, name='create_thumbnails').start()
 
 
 if __name__ == "__main__":
@@ -270,6 +240,11 @@ if __name__ == "__main__":
     bouton = Button(window, text="Take picture")
     bouton.config(command=photobooth_workflow)
     bouton.pack()
+
+    screen_width = window.winfo_screenwidth()
+    screen_height = window.winfo_screenheight()
+
+    window.geometry(f"{screen_width}x{screen_height}")
 
     window.mainloop()
     
