@@ -30,10 +30,8 @@ def get_nlast_images(nb_images):
     images_taken.extend(glob.glob('*.jpg'))
 
     images_taken_sorted = Tcl().call('lsort', '-dict', images_taken)
-    
-    imgs_taken_rev = images_taken_sorted[:: -1]
 
-    return imgs_taken_rev if nb_images == -1 else imgs_taken_rev[-nb_images:]
+    return images_taken_sorted if nb_images == -1 else images_taken_sorted[-nb_images:]
 
 def setup_files_and_folders():
     os.chdir(ROOT_DIR)
@@ -45,7 +43,7 @@ def setup_files_and_folders():
 
 
 def create_web_gallery():
-    all_images = get_nlast_images(-1)
+    all_images = get_nlast_images(-1)[:: -1]
     os.chdir(f"{ROOT_DIR}/_tmp")
 
     f = open('index.html','w')
@@ -200,16 +198,13 @@ def display_collage(list_images):
     for idx, image_obj in enumerate(list_images):
         try:
             _, height = image_obj.size
-            x, y = images_positions[idx]
+            x, _ = images_positions[idx]
             collage_img.paste(image_obj, (x, height * idx))
         except Exception as e:
             print(e)
     
     img = ImageTk.PhotoImage(collage_img)
 
-    collage_img.save("img.jpg", "JPEG", quality=65)
-
-    panel = Label(window, image=img)
     collage_label.configure(image=img)
     collage_label.image = img
 
@@ -224,8 +219,10 @@ def photobooth_workflow():
     n_last_images = get_nlast_images(nb_photos_taken)
     images_in_ram = resize_images_in_ram(n_last_images)
     create_thumbnails(images_in_ram)
-
-    display_collage(images_in_ram)
+    img_collage = display_collage(images_in_ram)
+    print(img_collage)
+    os.chdir(f"{ROOT_DIR}/_tmp")
+    
 
 if __name__ == "__main__":
     setup_files_and_folders()
@@ -234,12 +231,12 @@ if __name__ == "__main__":
     create_web_gallery()
     threading.Thread(target=start_server).start()
     
-    bouton = Button(window, text="Take picture")
-    bouton.config(command=photobooth_workflow)
-    bouton.pack()
+    take_pictures_btn = Button(window, text="Take picture")
+    take_pictures_btn.config(command=photobooth_workflow)
+    take_pictures_btn.pack()
 
-    screen_width = window.winfo_screenwidth()
-    screen_height = window.winfo_screenheight()
+    screen_width = int(window.winfo_screenwidth() / 2)
+    screen_height = int(window.winfo_screenheight() / 2)
 
     window.geometry(f"{screen_width}x{screen_height}")
 
