@@ -2,7 +2,7 @@ import glob
 import os
 import threading
 from tkinter import *
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageFile
 import subprocess
 
 import http.server
@@ -13,31 +13,37 @@ import time
 window = Tk()
 # window.attributes("-fullscreen", 1)
 
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def get_nlast_images(nb_images):
-    os.chdir(f"{ROOT_DIR}/_tmp/full")
+    imgs_list_full_dir = f"{ROOT_DIR}/_tmp/full/"
+    os.chdir(imgs_list_full_dir)
 
     images_taken = glob.glob('*.JPG')
     images_taken.extend(glob.glob('*.jpeg'))
     images_taken.extend(glob.glob('*.jpg'))
 
     images_taken_sorted = Tcl().call('lsort', '-dict', images_taken)
+    
+    imgs_taken_rev = images_taken_sorted#[:: -1]
 
-    return images_taken_sorted if nb_images == -1 else images_taken_sorted[-nb_images:]
+    return imgs_taken_rev if nb_images == -1 else imgs_taken_rev[-nb_images:]
 
-def setup_web_gallery():
+def setup_files_and_folders():
     os.chdir(ROOT_DIR)
+    full_dir = f"{ROOT_DIR}/_tmp/full/"
 
-    os.popen('mkdir -p _tmp/ & cp reset.css ./_tmp/reset.css')
+    os.popen(f"mkdir -p _tmp/ && cp reset.css ./_tmp/reset.css && mkdir -p {full_dir}" )
+
+    return 0
 
 
 def create_web_gallery():
+    all_images = get_nlast_images(-1)
     os.chdir(f"{ROOT_DIR}/_tmp")
-
-    all_images = glob.glob('*.JPG')
-    all_images.sort(key=os.path.getmtime)
 
     f = open('index.html','w')
 
@@ -112,21 +118,27 @@ def start_server():
         print("serving at port", PORT)
         httpd.serve_forever()
 
+    return 0
+
 
 def start_stream():
     stream_cmd = 'gphoto2 gphoto2 --capture-movie --force-overwrite --filename _tmp/movie.mjpg'
     os.system(stream_cmd)
 
+    return 0
+
 def setup_camera():
     camera_setup_cmd = "gphoto2 --set-config capturetarget=1"
     os.system(camera_setup_cmd)
 
+    return 0
+
 def capture_images():
     os.chdir(ROOT_DIR)
     
-    NB_MAX_PHOTOS = 2
+    NB_MAX_PHOTOS = 3
     INTERVAL = 1
-    FULL_PATH = "./_tmp/full"
+    FULL_PATH = f"{ROOT_DIR}/_tmp/full"
 
     if not os.path.exists(FULL_PATH):
         os.makedirs(FULL_PATH)
@@ -145,37 +157,14 @@ def capture_images():
 
     return NB_MAX_PHOTOS
 
-def display_images(images):
-    tmp_img = Image.open(images[0])
-
-    window = Tk()
-
-    basewidth = 300
-    wpercent = (basewidth / float(tmp_img.size[0]))
-    hsize = int((float(tmp_img.size[1]) * float(wpercent)))
-    tmp_img_resized = tmp_img.resize((basewidth, hsize), Image.ANTIALIAS)
-
-    img = ImageTk.PhotoImage(tmp_img_resized)
-
-    panel = Label(window, image=img)
-    panel.pack(side="bottom", fill="both", expand="yes")
-
-    window.geometry("900x600")
-
-    bouton=Button(window, text="Fermer", command=window.quit)
-    bouton.pack()
-
-    window.mainloop()
 
 def resize_images_in_ram(list_images):
-    TARGET_SIZE = 300, 300
     resized_images = []
 
     os.chdir(f"{ROOT_DIR}/_tmp/full")
 
     for image in list_images:
         tmp_img = Image.open(image)
-        
         resized_images.append(tmp_img)
     
 
@@ -187,35 +176,38 @@ def create_thumbnails(list_images_obj):
 
     for image in list_images_obj:
         image.thumbnail(TARGET_SIZE, Image.ANTIALIAS)
-        print(image.filename)
         image.save(image.filename, "JPEG", quality=65)
 
     create_web_gallery()
 
-    return 0
 
 
 def display_collage(list_images):
+    os.chdir(f"{ROOT_DIR}/_tmp")
+
     collage_img_ratio = 10 / 15
-    collage_img_height = 1500
+    collage_img_height = 300
     collage_img = Image.new('RGB', (
         int(collage_img_height * collage_img_ratio),
         collage_img_height
     ))
-    images_positions = [[0, 0], [0, 0]]                                                                                                                                                                                                   
 
+    images_positions = [[0, 0], [0, 300], [0, 600]]
+    
     for idx, image_obj in enumerate(list_images):
-        collage_img.paste(image_obj, images_positions[idx])
-
+        try:
+            collage_img.paste(image_obj, images_positions[idx])
+        except Exception as e:
+            print(e)
+    
     img = ImageTk.PhotoImage(collage_img)
 
     panel = Label(window, image=img)
-    panel.pack(side="bottom", fill="both", expand="yes")
+    panel.place(x=70,y=90)
+    panel.pack()
 
-    btn = Button(window, text = 'Fermer', command = window.destroy)
-    btn.pack()
-
-    window.geometry("1200x600")
+    window.mainloop()
+    window.update()
 
     return collage_img
 
@@ -223,15 +215,13 @@ def display_collage(list_images):
 def photobooth_workflow():
     nb_photos_taken = capture_images()
     n_last_images = get_nlast_images(nb_photos_taken)
-    resized_images = resize_images_in_ram(n_last_images)
-    create_thumbnails(resized_images)
+    images_in_ram = resize_images_in_ram(n_last_images)
+    create_thumbnails(images_in_ram)
 
-    # threading.Thread(target=create_thumbnails,
-    #             kwargs={'list_images_obj':resized_images}, name='create_thumbnails').start()
-
+    display_collage(images_in_ram)
 
 if __name__ == "__main__":
-    setup_web_gallery()
+    setup_files_and_folders()
     setup_camera()
 
     create_web_gallery()
@@ -247,11 +237,5 @@ if __name__ == "__main__":
     window.geometry(f"{screen_width}x{screen_height}")
 
     window.mainloop()
-    
-
-    # display_collage(resized_images) 
-    # display_images(n_last_images)
 
     sys.exit(0)
-#    threading.Thread(target=start_stream).start()
-#    start_stream()
