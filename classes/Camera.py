@@ -1,12 +1,19 @@
 import os
+import time
+from functools import partial
+import threading
+
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 NB_MAX_PHOTOS = 2
 
-print('ROOT_DIR', ROOT_DIR)
+countdown_ended_thread = threading.Event()
+
 
 class Camera:
-    def capture(self, nb_photos_to_take = NB_MAX_PHOTOS):
+    def foo(self):
+        print('foo')
+    def capture(self, countdown, nb_photos_to_take = NB_MAX_PHOTOS):
         os.chdir(self.root_dir)
         
         INTERVAL = "3s"
@@ -17,15 +24,35 @@ class Camera:
 
         os.chdir(FULL_PATH)
 
-        print('capturing')
+        print('capturing', nb_photos_to_take)
 
-        capture_image_cmd = f"""gphoto2 \
-            --capture-image-and-download \
-            --force-overwrite \
-            --keep-raw \
-            -F={nb_photos_to_take} \
-            -I={INTERVAL}"""
-        os.system(capture_image_cmd)
+        # if countdown is not None:
+        #     print('==========================')
+        #     threading.Thread(target=partial(countdown.countdown, 3, thread=countdown_ended_thread))
+        #     countdown_ended_thread.wait()
+        # print('picture')
+
+        for _ in range(nb_photos_to_take):
+            if countdown is not None:
+                print('==========================')
+                countdown.label.pack()
+                countdown.countdown(3, callback=self.foo)
+            print('picture')
+            # capture_image_cmd = f"""gphoto2 \
+            #     --capture-image-and-download \
+            #     --force-overwrite \
+            #     --keep-raw
+            #     """
+            # os.system(capture_image_cmd)
+            time.sleep(3)
+
+        # capture_image_cmd = f"""gphoto2 \
+        #     --capture-image-and-download \
+        #     --force-overwrite \
+        #     --keep-raw \
+        #     -F={nb_photos_to_take} \
+        #     -I={INTERVAL}"""
+        # os.system(capture_image_cmd)
 
         return nb_photos_to_take
 
@@ -33,6 +60,7 @@ class Camera:
         self.root_dir = root_dir
 
         camera_setup_cmd = """gphoto2 \
-            --set-config capturetarget=1
+            --set-config capturetarget=1 \
+            --set-config shutterspeed=1/100
         """
         os.system(camera_setup_cmd)
