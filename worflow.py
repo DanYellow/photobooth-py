@@ -1,8 +1,6 @@
 import glob
 import os
 import threading
-from tkinter import *
-from PIL import Image, ImageTk, ImageFile
 import subprocess
 
 import http.server
@@ -10,28 +8,19 @@ import socketserver
 
 import time
 
-window = Tk()
-# window.attributes("-fullscreen", 1)
+from tkinter import *
+from PIL import Image, ImageTk, ImageFile
+from classes.Ui import PhotoboothUi
+
+root = Tk()
+# root.attributes("-fullscreen", 1)
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-collage_label = Label(window, image=None)
-collage_label.place(x=70,y=30)
-collage_label.pack()
 
-translation = {
-    'fr': {
-        'take_pict': "Prendre des photos !",
-        'print': 'Imprimer',
-        'cancel': "Annuler"
-        'last_collage': "Dernier collage"
-    }
-}
 
-print_btn = Button(window, text=translation['fr']['print'])
-take_pictures_btn = Button(window, text=translation['fr']['take_pict'])
-cancel_print_btn = Button(window, text=translation['fr']['cancel'])
+photobooth_ui = None
 
 
 def get_nlast_images(nb_images):
@@ -218,52 +207,57 @@ def display_collage(list_images):
     
     img = ImageTk.PhotoImage(collage_img)
 
-    collage_label.configure(image=img)
-    collage_label.image = img
+    photobooth_ui.collage_label.configure(image=img)
+    photobooth_ui.collage_label.image = img
 
     return collage_img
 
 
 def photobooth_workflow():
+    print('gregergergergegergerger')
     nb_photos_taken = capture_images()
     n_last_images = get_nlast_images(nb_photos_taken)
     images_in_ram = set_nlast_photos_in_ram(n_last_images)
     create_thumbnails(images_in_ram)
     img_collage = display_collage(images_in_ram)
 
-    take_pictures_btn.pack_forget()
-    print_btn.pack()
-    cancel_print_btn.pack()
+    photobooth_ui.pictures_btn.pack_forget()
+    photobooth_ui.print_btn.pack()
+    photobooth_ui.cancel_btn.pack()
     
-    window.mainloop()
-    window.update()
+    # root.mainloop()
+    # root.update()
 
+def print_photo():
+    print('greger')
 
 def reset_ui():
-    take_pictures_btn.pack()
-    cancel_print_btn.pack_forget()
-    print_btn.pack_forget()
+    photobooth_ui.pictures_btn.pack()
+
+    photobooth_ui.print_btn.pack_forget()
+    photobooth_ui.cancel_btn.pack_forget()
     
 if __name__ == "__main__":
+    actions = {
+        "take_pictures": photobooth_workflow,
+        "cancel": reset_ui,
+        "print": print_photo
+    }
+
+    photobooth_ui = PhotoboothUi(master=root, actions=actions)
 
     setup_files_and_folders()
     setup_camera()
 
     create_web_gallery()
     threading.Thread(target=start_server).start()
-    
-    take_pictures_btn.config(command=photobooth_workflow)
-    take_pictures_btn.pack()
-
-    print_btn.config(command=print_photo)
-    cancel_print_btn.config(command=reset_ui)
 
 
-    screen_width = int(window.winfo_screenwidth() / 2)
-    screen_height = int(window.winfo_screenheight() / 2)
+    screen_width = int(root.winfo_screenwidth() / 2)
+    screen_height = int(root.winfo_screenheight() / 2)
 
-    window.geometry(f"{screen_width}x{screen_height}")
+    root.geometry(f"{screen_width}x{screen_height}")
 
-    window.mainloop()
+    root.mainloop()
 
     sys.exit(0)
