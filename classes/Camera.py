@@ -11,8 +11,10 @@ countdown_ended_thread = threading.Event()
 
 
 class Camera:
-    def foo(self):
+    def foo(self, number):
         print('foo')
+        countdown_ended_thread.set()
+
     def capture(self, countdown, nb_photos_to_take = NB_MAX_PHOTOS):
         os.chdir(self.root_dir)
         
@@ -26,25 +28,26 @@ class Camera:
 
         print('capturing', nb_photos_to_take)
 
-        # if countdown is not None:
-        #     print('==========================')
-        #     threading.Thread(target=partial(countdown.countdown, 3, thread=countdown_ended_thread))
-        #     countdown_ended_thread.wait()
-        # print('picture')
+        if countdown is not None:
+            print('==========================')
+            threading.Thread(target=partial(foo, number=3))
+            # threading.Thread(target=partial(countdown.countdown, 3, thread=countdown_ended_thread))
+            countdown_ended_thread.wait()
+        print('picture')
 
-        for _ in range(nb_photos_to_take):
-            if countdown is not None:
-                print('==========================')
-                countdown.label.pack()
-                countdown.countdown(3, callback=self.foo)
-            print('picture')
-            # capture_image_cmd = f"""gphoto2 \
-            #     --capture-image-and-download \
-            #     --force-overwrite \
-            #     --keep-raw
-            #     """
-            # os.system(capture_image_cmd)
-            time.sleep(3)
+        # for _ in range(nb_photos_to_take):
+        #     if countdown is not None:
+        #         print('==========================')
+        #         countdown.label.pack()
+        #         countdown.countdown(3, callback=self.foo)
+        #     print('picture')
+        #     # capture_image_cmd = f"""gphoto2 \
+        #     #     --capture-image-and-download \
+        #     #     --force-overwrite \
+        #     #     --keep-raw
+        #     #     """
+        #     # os.system(capture_image_cmd)
+        #     time.sleep(3)
 
         # capture_image_cmd = f"""gphoto2 \
         #     --capture-image-and-download \
