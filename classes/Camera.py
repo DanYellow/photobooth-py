@@ -11,10 +11,6 @@ countdown_ended_thread = threading.Event()
 
 
 class Camera:
-    def foo(self, number):
-        print('foo')
-        countdown_ended_thread.set()
-
     def capture(self, countdown, nb_photos_to_take = NB_MAX_PHOTOS):
         os.chdir(self.root_dir)
         
@@ -26,13 +22,16 @@ class Camera:
 
         os.chdir(FULL_PATH)
 
-        print('capturing', nb_photos_to_take)
+        print('--- capturing ---')
 
-        if countdown is not None:
-            print('==========================')
-            threading.Thread(target=partial(foo, number=3))
-            # threading.Thread(target=partial(countdown.countdown, 3, thread=countdown_ended_thread))
-            countdown_ended_thread.wait()
+        for _ in range(nb_photos_to_take):
+            if countdown is not None:
+                print('rgggege')
+                countdown.countdown(3, callback=partial(self.direct_capture, nb_photos_to_take))
+            else:
+                self.direct_capture(nb_photos_to_take = nb_photos_to_take)
+
+    def direct_capture(self, nb_photos_to_take):
         print('picture')
 
         # for _ in range(nb_photos_to_take):
