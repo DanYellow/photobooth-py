@@ -20,6 +20,18 @@ collage_label = Label(window, image=None)
 collage_label.place(x=70,y=30)
 collage_label.pack()
 
+translation = {
+    'fr': {
+        'take_pict': "Prendre des photos !",
+        'print': 'Imprimer',
+        'cancel': "Annuler"
+    }
+}
+
+print_btn = Button(window, text=translation['fr']['print'])
+take_pictures_btn = Button(window, text=translation['fr']['take_pict'])
+cancel_print_btn = Button(window, text=translation['fr']['cancel'])
+
 
 def get_nlast_images(nb_images):
     imgs_list_full_dir = f"{ROOT_DIR}/_tmp/full/"
@@ -208,8 +220,6 @@ def display_collage(list_images):
     collage_label.configure(image=img)
     collage_label.image = img
 
-
-
     return collage_img
 
 
@@ -219,21 +229,38 @@ def photobooth_workflow():
     images_in_ram = set_nlast_photos_in_ram(n_last_images)
     create_thumbnails(images_in_ram)
     img_collage = display_collage(images_in_ram)
+
+    take_pictures_btn.pack_forget()
+    print_btn.pack()
+    cancel_print_btn.pack()
     
     window.mainloop()
     window.update()
-    
 
+def print_photo():
+    print('Printing...')
+    take_pictures_btn.pack()
+    cancel_print_btn.pack()
+
+def reset_ui():
+    take_pictures_btn.pack()
+    cancel_print_btn.pack_forget()
+    print_btn.pack_forget()
+    
 if __name__ == "__main__":
+
     setup_files_and_folders()
     setup_camera()
 
     create_web_gallery()
     threading.Thread(target=start_server).start()
     
-    take_pictures_btn = Button(window, text="Take picture")
     take_pictures_btn.config(command=photobooth_workflow)
     take_pictures_btn.pack()
+
+    print_btn.config(command=print_photo)
+    cancel_print_btn.config(command=reset_ui)
+
 
     screen_width = int(window.winfo_screenwidth() / 2)
     screen_height = int(window.winfo_screenheight() / 2)

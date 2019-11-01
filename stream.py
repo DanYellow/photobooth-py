@@ -1,17 +1,29 @@
-#import cv2
-#import numpy as np
-from urllib.request import urlopen
-import http.server
+from tkinter import *
 
-import http.server
-import socketserver
+class Application(Frame):
+    def say_hi(self):
+        print("hi there, everyone!")
 
-PORT = 8000
+    def createWidgets(self):
+        self.QUIT = Button(self)
+        self.QUIT["text"] = "QUIT"
+        self.QUIT["fg"]   = "red"
+        self.QUIT["command"] =  self.quit
 
-Handler = http.server.SimpleHTTPRequestHandler
+        self.QUIT.pack({"side": "left"})
 
-with socketserver.TCPServer(("", PORT), Handler) as httpd:
-    print("serving at port", PORT)
-    httpd.serve_forever()
-    
-stream = urlopen('http://localhost:8000/movie.mjpg')
+        self.hi_there = Button(self)
+        self.hi_there["text"] = "Hello",
+        self.hi_there["command"] = self.say_hi
+
+        self.hi_there.pack({"side": "left"})
+
+    def __init__(self, master=None):
+        Frame.__init__(self, master)
+        self.pack()
+        self.createWidgets()
+
+root = Tk()
+app = Application(master=root)
+app.mainloop()
+root.destroy()
