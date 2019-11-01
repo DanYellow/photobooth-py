@@ -25,6 +25,7 @@ translation = {
         'take_pict': "Prendre des photos !",
         'print': 'Imprimer',
         'cancel': "Annuler"
+        'last_collage': "Dernier collage"
     }
 }
 
@@ -237,10 +238,6 @@ def photobooth_workflow():
     window.mainloop()
     window.update()
 
-def print_photo():
-    print('Printing...')
-    take_pictures_btn.pack()
-    cancel_print_btn.pack()
 
 def reset_ui():
     take_pictures_btn.pack()
