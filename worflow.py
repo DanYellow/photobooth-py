@@ -2,9 +2,6 @@ import glob
 import os
 import subprocess
 
-import http.server
-import socketserver
-
 import time
 
 from tkinter import *
@@ -49,7 +46,6 @@ def start_stream():
     os.system(stream_cmd)
 
     return 0
-
 
 def set_nlast_photos_in_ram(list_photos):
     list_last_photos = []
@@ -134,8 +130,6 @@ if __name__ == "__main__":
 
     web_gallery = WebGallery(root_dir=ROOT_DIR)
     web_gallery.generate_gallery(get_nlast_images(-1)[:: -1])
-
-    
 
     screen_width = int(root.winfo_screenwidth() / 2)
     screen_height = int(root.winfo_screenheight() / 2)
