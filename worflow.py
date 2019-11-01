@@ -138,7 +138,7 @@ def setup_camera():
 
 def capture_images():
     os.chdir(ROOT_DIR)
-    
+     
     NB_MAX_PHOTOS = 2
     INTERVAL = "3s"
     FULL_PATH = f"{ROOT_DIR}/_tmp/full"
@@ -158,22 +158,19 @@ def capture_images():
         -I={INTERVAL}"""
     os.system(capture_image_cmd)
 
-
-
     return NB_MAX_PHOTOS
 
 
-def resize_images_in_ram(list_images):
-    resized_images = []
+def set_nlast_photos_in_ram(list_photos):
+    list_last_photos = []
 
     os.chdir(f"{ROOT_DIR}/_tmp/full")
 
-    for image in list_images:
+    for image in list_photos:
         tmp_img = Image.open(image)
-        resized_images.append(tmp_img)
+        list_last_photos.append(tmp_img)
     
-
-    return resized_images
+    return list_last_photos
 
 def create_thumbnails(list_images_obj):
     TARGET_SIZE = 300, 300
@@ -219,10 +216,9 @@ def display_collage(list_images):
 def photobooth_workflow():
     nb_photos_taken = capture_images()
     n_last_images = get_nlast_images(nb_photos_taken)
-    images_in_ram = resize_images_in_ram(n_last_images)
+    images_in_ram = set_nlast_photos_in_ram(n_last_images)
     create_thumbnails(images_in_ram)
     img_collage = display_collage(images_in_ram)
-    print("---------------------------------------- img_collage", img_collage)
     
     window.mainloop()
     window.update()
