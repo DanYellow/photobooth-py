@@ -1,5 +1,6 @@
 import os
 from functools import partial
+import subprocess
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -55,14 +56,18 @@ class Camera:
 
         self.capture()
 
-    def __init__(self, root_dir = ROOT_DIR):
+    def __init__(self, root_dir = ROOT_DIR, on_error=None):
         self.root_dir = root_dir
-        self.nb_takes = 9999999999
+        self.nb_takes = 0
         self.shutter_counter = 0
         self.interval = 3
 
-        camera_setup_cmd = """gphoto2 \
-            --set-config capturetarget=1 \
-            --set-config shutterspeed=1/100
-        """
-        os.system(camera_setup_cmd)
+        try:
+            camera_setup_cmd = """gphoto2 \
+                --set-config capturetarget=1 \
+                --set-config shutterspeed=1/100
+            """
+            subprocess.call([camera_setup_cmd])
+        except: 
+            if on_error is not None:
+                on_error(msg="no message")

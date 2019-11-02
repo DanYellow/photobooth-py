@@ -1,10 +1,9 @@
 import glob
 import os
-import subprocess
 
-import time
+import sys
 
-from tkinter import *
+from tkinter import messagebox, Tk
 from PIL import Image, ImageTk, ImageFile
 from classes.Ui import PhotoboothUi
 from classes.WebGallery import WebGallery
@@ -14,6 +13,7 @@ from functools import partial
 
 
 root = Tk()
+root.option_add('*Dialog.msg.width', 50)
 # root.attributes("-fullscreen", 1)
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -33,7 +33,7 @@ def get_nlast_images(nb_images):
     images_taken.extend(glob.glob('*.jpeg'))
     images_taken.extend(glob.glob('*.jpg'))
 
-    images_taken_sorted = Tcl().call('lsort', '-dict', images_taken)
+    images_taken_sorted = Tk.Tcl().call('lsort', '-dict', images_taken)
 
     return images_taken_sorted if nb_images == -1 else images_taken_sorted[-nb_images:]
 
@@ -101,12 +101,16 @@ def display_collage(list_images):
     return collage_img
 
 def photobooth_workflow():
-    print('photobooth_workflow')
     def pb_anonymous(nb_photos_taken):
         n_last_images = get_nlast_images(nb_photos_taken)
         images_in_ram = set_nlast_photos_in_ram(n_last_images)
         create_thumbnails(images_in_ram)
-        display_collage(images_in_ram)
+        collage = display_collage(images_in_ram)
+        # collage.save("image.jpg", "JPEG", quality=65)
+
+        photobooth_ui.pictures_btn.pack_forget()
+        photobooth_ui.print_btn.pack(side="left")
+        photobooth_ui.cancel_btn.pack(side="right")
 
     countdown.label.pack()
     camera.capture(
@@ -115,12 +119,15 @@ def photobooth_workflow():
         end_shooting_callback = pb_anonymous
     )
 
-    # photobooth_ui.pictures_btn.pack_forget()
-    # photobooth_ui.print_btn.pack(side="left")
-    # photobooth_ui.cancel_btn.pack(side="right")
+
 
 def print_photo():
     print('------------------ printing --------------')
+
+def show_error(msg):
+    root.withdraw()
+    messagebox.showerror("Error", msg)
+    sys.exit()
 
 def reset_ui():
     photobooth_ui.pictures_btn.pack()
@@ -136,18 +143,18 @@ if __name__ == "__main__":
         "cancel": reset_ui,
         "print": print_photo
     }
-    camera = Camera(root_dir=ROOT_DIR)
+
+    camera = Camera(root_dir=ROOT_DIR, on_error=show_error)
     photobooth_ui = PhotoboothUi(master=root, actions=actions)
     countdown = Countdown(master=root)
     
-
     # web_gallery = WebGallery(root_dir=ROOT_DIR)
     # web_gallery.generate_gallery(get_nlast_images(-1)[:: -1])
 
     screen_width = int(root.winfo_screenwidth() / 2)
     screen_height = int(root.winfo_screenheight() / 2)
 
-    root.geometry(f"{screen_width}x{screen_height}")
+    root.geometry(f"{screen_width}x{screen_height}+60+60")
 
     root.mainloop()
 
