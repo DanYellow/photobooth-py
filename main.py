@@ -101,14 +101,19 @@ def display_collage(list_images):
     return collage_img
 
 def photobooth_workflow():
+    print('photobooth_workflow')
+    def pb_anonymous(nb_photos_taken):
+        n_last_images = get_nlast_images(nb_photos_taken)
+        images_in_ram = set_nlast_photos_in_ram(n_last_images)
+        create_thumbnails(images_in_ram)
+        display_collage(images_in_ram)
+
     countdown.label.pack()
-    # countdown.countdown(10)
-    # countdown.countdown(remaining = 4)
-    nb_photos_taken = camera.capture(countdown=countdown)
-    # n_last_images = get_nlast_images(nb_photos_taken)
-    # images_in_ram = set_nlast_photos_in_ram(n_last_images)
-    # create_thumbnails(images_in_ram)
-    # display_collage(images_in_ram)
+    camera.capture(
+        countdown = countdown,
+        nb_takes = 3,
+        end_shooting_callback = pb_anonymous
+    )
 
     # photobooth_ui.pictures_btn.pack_forget()
     # photobooth_ui.print_btn.pack(side="left")

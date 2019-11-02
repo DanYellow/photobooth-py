@@ -1,65 +1,65 @@
 import os
-import time
 from functools import partial
-import threading
-
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-NB_MAX_PHOTOS = 2
-
-countdown_ended_thread = threading.Event()
-
 
 class Camera:
-    def capture(self, countdown, nb_photos_to_take = NB_MAX_PHOTOS):
+    def capture(self, 
+        countdown = None,
+        nb_takes = None,
+        end_shooting_callback = None,
+        interval = None):
         os.chdir(self.root_dir)
-        
-        INTERVAL = "3s"
+
         FULL_PATH = f"{self.root_dir}/_tmp/full"
+
+        if nb_takes is not None:
+            self.nb_takes = nb_takes
+
+        if countdown is not None:
+            self.countdown = countdown
+
+        if interval is not None:
+            self.interval = interval
+
+        if end_shooting_callback is not None:
+            self.end_shooting_callback = end_shooting_callback
+        
+        if(self.shutter_counter == self.nb_takes):
+            self.shutter_counter = 0
+            return self.end_shooting_callback(self.nb_takes)
 
         if not os.path.exists(FULL_PATH):
             os.makedirs(FULL_PATH)
 
         os.chdir(FULL_PATH)
 
-        print('--- capturing ---')
+        print('--- capturing ---', self.nb_takes)
 
-        for _ in range(nb_photos_to_take):
-            if countdown is not None:
-                print('rgggege')
-                countdown.countdown(3, callback=partial(self.direct_capture, nb_photos_to_take))
-            else:
-                self.direct_capture(nb_photos_to_take = nb_photos_to_take)
+        if self.countdown is not None:
+            self.countdown.countdown(self.interval, callback=partial(self.direct_capture))
+        else:
+            self.direct_capture()
 
-    def direct_capture(self, nb_photos_to_take):
-        print('picture')
+        return 0
 
-        # for _ in range(nb_photos_to_take):
-        #     if countdown is not None:
-        #         print('==========================')
-        #         countdown.label.pack()
-        #         countdown.countdown(3, callback=self.foo)
-        #     print('picture')
-        #     # capture_image_cmd = f"""gphoto2 \
-        #     #     --capture-image-and-download \
-        #     #     --force-overwrite \
-        #     #     --keep-raw
-        #     #     """
-        #     # os.system(capture_image_cmd)
-        #     time.sleep(3)
+    def direct_capture(self):
+        self.shutter_counter = self.shutter_counter + 1
 
-        # capture_image_cmd = f"""gphoto2 \
-        #     --capture-image-and-download \
-        #     --force-overwrite \
-        #     --keep-raw \
-        #     -F={nb_photos_to_take} \
-        #     -I={INTERVAL}"""
-        # os.system(capture_image_cmd)
+        capture_image_cmd = f"""gphoto2 \
+            --capture-image-and-download \
+            --force-overwrite \
+            --keep-raw
+            """
+        os.system(capture_image_cmd)
 
-        return nb_photos_to_take
+        self.capture()
 
     def __init__(self, root_dir = ROOT_DIR):
         self.root_dir = root_dir
+        self.nb_takes = 9999999999
+        self.shutter_counter = 0
+        self.interval = 3
 
         camera_setup_cmd = """gphoto2 \
             --set-config capturetarget=1 \
