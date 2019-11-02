@@ -35,14 +35,12 @@ class Camera:
 
         os.chdir(FULL_PATH)
 
-        print('--- capturing ---', self.nb_takes)
+        print('--- capturing ---')
 
         if self.countdown is not None:
             self.countdown.countdown(self.interval, callback=partial(self.direct_capture))
         else:
             self.direct_capture()
-
-        return 0
 
     def direct_capture(self):
         self.shutter_counter = self.shutter_counter + 1
@@ -53,6 +51,7 @@ class Camera:
             --keep-raw
             """
         os.system(capture_image_cmd)
+        self.countdown.label.configure(text="Chargement")
 
         self.capture()
 
@@ -60,14 +59,13 @@ class Camera:
         self.root_dir = root_dir
         self.nb_takes = 0
         self.shutter_counter = 0
-        self.interval = 3
+        self.interval = 0
 
         try:
-            camera_setup_cmd = """gphoto2 \
-                --set-config capturetarget=1 \
-                --set-config shutterspeed=1/100
-            """
-            subprocess.call([camera_setup_cmd])
-        except: 
+            camera_setup_cmd = ['gphoto2', '--set-config', 'capturetarget=1', '--set-config', 'shutterspeed=1/100']
+            camera_setup_process = subprocess.Popen(camera_setup_cmd, stdout=subprocess.PIPE)
+            if camera_setup_process.wait() != 0:
+                raise RuntimeError()
+        except:
             if on_error is not None:
                 on_error(msg="no message")
