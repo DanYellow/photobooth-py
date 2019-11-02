@@ -51,7 +51,7 @@ class Camera:
             --keep-raw
             """
         os.system(capture_image_cmd)
-        self.countdown.label.configure(text="Chargement")
+        self.countdown.itemconfigure(self.countdown.label, text="Chargement")
 
         self.capture()
 

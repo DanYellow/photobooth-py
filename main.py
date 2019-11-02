@@ -106,21 +106,21 @@ def photobooth_workflow():
         images_in_ram = set_nlast_photos_in_ram(n_last_images)
         create_thumbnails(images_in_ram)
         collage = display_collage(images_in_ram)
+        photobooth_ui.collage_label.pack()
         # collage.save("image.jpg", "JPEG", quality=65)
 
         photobooth_ui.pictures_btn.pack_forget()
-        countdown.label.pack_forget()
+        countdown.pack_forget()
         photobooth_ui.print_btn.pack(side="left")
         photobooth_ui.cancel_btn.pack(side="right")
 
-    countdown.label.pack()
+    countdown.pack()
     camera.capture(
         countdown = countdown,
-        nb_takes = 2,
+        nb_takes = 1,
         end_shooting_callback = pb_anonymous,
         interval = 3
     )
-
 
 def print_photo():
     print('------------------ printing --------------')
@@ -133,6 +133,7 @@ def show_error(msg):
 def reset_ui():
     photobooth_ui.pictures_btn.pack()
 
+    photobooth_ui.collage_label.pack_forget()
     photobooth_ui.print_btn.pack_forget()
     photobooth_ui.cancel_btn.pack_forget()
     
@@ -146,8 +147,9 @@ if __name__ == "__main__":
     }
 
     countdown = Countdown(master=root)
-    camera = Camera(root_dir=ROOT_DIR, on_error=show_error)
-    photobooth_ui = PhotoboothUi(master=root, actions=actions)
+    # countdown.countdown(3)
+    # camera = Camera(root_dir=ROOT_DIR, on_error=show_error)
+    # photobooth_ui = PhotoboothUi(master=root, actions=actions)
     
     # web_gallery = WebGallery(root_dir=ROOT_DIR)
     # web_gallery.generate_gallery(get_nlast_images(-1)[:: -1])
