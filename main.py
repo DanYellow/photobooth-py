@@ -151,20 +151,22 @@ def reset_ui():
 if __name__ == "__main__":
     setup_files_and_folders()
 
-    actions = { 
-        "take_pictures": photobooth_workflow,
-        "cancel": reset_ui,
-        "print": print_photo
-    }
+    self.start_stream()
 
-    camera = Camera(root_dir=ROOT_DIR, on_error=show_error)
-    photobooth_ui = PhotoboothUi(master=root, actions=actions)
+    # actions = { 
+    #     "take_pictures": photobooth_workflow,
+    #     "cancel": reset_ui,
+    #     "print": print_photo
+    # }
+
+    # camera = Camera(root_dir=ROOT_DIR, on_error=show_error)
+    # photobooth_ui = PhotoboothUi(master=root, actions=actions)
 
 
-    root.bind("<KeyPress>", photobooth_workflow)
+    # root.bind("<KeyPress>", photobooth_workflow)
 
     
-    countdown = Countdown(master=root)
+    # countdown = Countdown(master=root)
     # web_gallery = WebGallery(root_dir=ROOT_DIR)
     # web_gallery.generate_gallery(get_nlast_images(-1)[:: -1])
 
