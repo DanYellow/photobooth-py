@@ -1,6 +1,7 @@
 import os
 from functools import partial
 import subprocess
+import time
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -12,7 +13,7 @@ class Camera:
         interval = None):
         os.chdir(self.root_dir)
 
-        FULL_PATH = f"{self.root_dir}/_tmp/full"
+        FULL_PHOTOS_DIR = f"{self.root_dir}/_tmp/full"
 
         if nb_takes is not None:
             self.nb_takes = nb_takes
@@ -30,10 +31,10 @@ class Camera:
             self.shutter_counter = 0
             return self.end_shooting_callback(self.nb_takes)
 
-        if not os.path.exists(FULL_PATH):
-            os.makedirs(FULL_PATH)
+        if not os.path.exists(FULL_PHOTOS_DIR):
+            os.makedirs(FULL_PHOTOS_DIR)
 
-        os.chdir(FULL_PATH)
+        os.chdir(FULL_PHOTOS_DIR)
 
         print('--- capturing ---')
 
@@ -44,6 +45,7 @@ class Camera:
 
     def direct_capture(self):
         self.shutter_counter = self.shutter_counter + 1
+        self.countdown.pack_forget()
 
         capture_image_cmd = f"""gphoto2 \
             --capture-image-and-download \
@@ -51,7 +53,8 @@ class Camera:
             --keep-raw
             """
         os.system(capture_image_cmd)
-        self.countdown.itemconfigure(self.countdown.label, text="Chargement")
+        self.countdown.pack()
+        # self.countdown.itemconfigure(self.countdown.label, text="Chargement")
 
         self.capture()
 

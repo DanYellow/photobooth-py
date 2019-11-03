@@ -114,10 +114,12 @@ def photobooth_workflow():
         photobooth_ui.print_btn.pack(side="left")
         photobooth_ui.cancel_btn.pack(side="right")
 
+    photobooth_ui.pictures_btn.pack_forget()
+
     countdown.pack()
     camera.capture(
         countdown = countdown,
-        nb_takes = 1,
+        nb_takes = 2,
         end_shooting_callback = pb_anonymous,
         interval = 3
     )
@@ -133,6 +135,7 @@ def show_error(msg):
 def reset_ui():
     photobooth_ui.pictures_btn.pack()
 
+    countdown.pack_forget()
     photobooth_ui.collage_label.pack_forget()
     photobooth_ui.print_btn.pack_forget()
     photobooth_ui.cancel_btn.pack_forget()
@@ -146,7 +149,7 @@ if __name__ == "__main__":
         "print": print_photo
     }
 
-    # camera = Camera(root_dir=ROOT_DIR, on_error=show_error)
+    camera = Camera(root_dir=ROOT_DIR, on_error=show_error)
     photobooth_ui = PhotoboothUi(master=root, actions=actions)
     
     countdown = Countdown(master=root)
