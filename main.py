@@ -99,7 +99,11 @@ def display_collage(list_images):
 
     return collage_img
 
-def photobooth_workflow():
+def photobooth_workflow(event = None):
+    if event is not None and event.keycode != 36:
+        return 0
+    root.unbind("<KeyPress>")
+
     def pb_anonymous(nb_photos_taken):
         
         n_last_images = get_nlast_images(nb_photos_taken)
@@ -137,6 +141,8 @@ def show_error(msg):
 def reset_ui():
     photobooth_ui.pictures_btn.pack()
 
+    root.bind("<KeyPress>", photobooth_workflow)
+
     countdown.pack_forget()
     photobooth_ui.collage_label.pack_forget()
     photobooth_ui.print_btn.pack_forget()
@@ -155,7 +161,7 @@ if __name__ == "__main__":
     photobooth_ui = PhotoboothUi(master=root, actions=actions)
 
 
-    # self.bind("<KeyPress>", key_press)
+    root.bind("<KeyPress>", photobooth_workflow)
 
     
     countdown = Countdown(master=root)

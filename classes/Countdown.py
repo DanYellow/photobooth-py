@@ -9,11 +9,12 @@ ROOT_DIR = os.path.dirname(os.path.abspath(sys.argv[0]))
 class Countdown(Canvas):
     def __init__(self, master=None):
         self.delta_y = 2
-        self.width_children = 80
+        self.width_children = 100
+        self.canvas_width = 600
 
-        Canvas.__init__(self, master=master, width=300, height=self.width_children, bg="blue")
+        Canvas.__init__(self, master=master, width=self.canvas_width, height=self.width_children)
         self.master = master
-        self.labels_container = Canvas(self, width=300, height=1000, bg="red")
+        self.labels_container = Canvas(self, width=self.canvas_width, height=1000)
         self.labels_container_window = self.create_window(0, 0, window=self.labels_container, anchor="nw")
 
         self.remaining = None
@@ -28,7 +29,7 @@ class Countdown(Canvas):
                 self.labels_container,
                 text = lbl_countdown,
                 fg = 'black',
-                font = ("courier", 50, "bold"),                                                
+                font = ("courier", int(self.width_children * 0.625), "bold"),                                                
                 borderwidth = 0,
                 anchor="nw"
             )
@@ -39,7 +40,7 @@ class Countdown(Canvas):
             y_position = (self.width_children * (nb_takes - x)) + ((self.delta_y * 2) * (nb_takes - x)) 
 
             self.labels_container.create_window(
-                (300 / 2),
+                (self.canvas_width / 2),
                 y_position + (self.width_children / 2) + self.delta_y, 
                 window=widget,
                 height=self.width_children,
