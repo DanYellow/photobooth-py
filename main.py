@@ -116,12 +116,14 @@ def photobooth_workflow():
 
     photobooth_ui.pictures_btn.pack_forget()
 
+    interval = 5
+    countdown.generate_ui(interval)
     countdown.pack()
     camera.capture(
         countdown = countdown,
         nb_takes = 2,
         end_shooting_callback = pb_anonymous,
-        interval = 3
+        interval = interval
     )
 
 def print_photo():
@@ -151,6 +153,9 @@ if __name__ == "__main__":
 
     camera = Camera(root_dir=ROOT_DIR, on_error=show_error)
     photobooth_ui = PhotoboothUi(master=root, actions=actions)
+
+    # self.bind("<KeyPress>", key_press)
+
     
     countdown = Countdown(master=root)
     # web_gallery = WebGallery(root_dir=ROOT_DIR)
