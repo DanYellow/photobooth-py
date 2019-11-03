@@ -24,16 +24,9 @@ class Countdown(Canvas):
         self.animation_speed = 100
 
     def generate_ui(self, nb_takes):
-        img = ImageTk.PhotoImage(Image.open(f"""{ROOT_DIR}/chat.tmp.jpg"""), size=30)
-        # img = ImageTk.PhotoImage(Image.open(f"""{ROOT_DIR}/photo-icon.png"""), size=30)
-
-        # label = Label(image=img)
-
-        label = Label(self.labels_container, image=img)
-        self.labels_container.create_window(125,10, window=label)
-
         for x in range(nb_takes, -1, -1):
             lbl_countdown = x if x != 0 else 'Posez !'
+            img2 = ImageTk.PhotoImage(Image.open(f"""{ROOT_DIR}/chat.tmp.jpg"""), size=30)
 
             widget = Label(
                 self,
@@ -42,13 +35,12 @@ class Countdown(Canvas):
                 font = ("courier", 50, "bold"),                                                
                 borderwidth = 0,
                 anchor="nw",
-                # image=img,
             )
 
+            self.labels_container.create_image(0, 0, image=img2)
+
             if x == 0:
-                # widget.config(image=img)
-                print(img)
-                widget.config(text="0", fg="red")
+                widget.config(fg="red")
 
             y_position = (self.width_children * (nb_takes - x)) + ((self.delta_y * 2) * (nb_takes - x))
             self.labels_container.create_window(
@@ -58,8 +50,6 @@ class Countdown(Canvas):
                 height=self.width_children,
                 anchor="center"
             )
-
-        # self.countdown(remaining=5)
 
     def countdown(self, remaining = None, callback = None):
         if remaining is not None:
