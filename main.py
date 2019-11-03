@@ -146,11 +146,10 @@ if __name__ == "__main__":
         "print": print_photo
     }
 
-    countdown = Countdown(master=root)
-    # countdown.countdown(3)
     # camera = Camera(root_dir=ROOT_DIR, on_error=show_error)
-    # photobooth_ui = PhotoboothUi(master=root, actions=actions)
+    photobooth_ui = PhotoboothUi(master=root, actions=actions)
     
+    countdown = Countdown(master=root)
     # web_gallery = WebGallery(root_dir=ROOT_DIR)
     # web_gallery.generate_gallery(get_nlast_images(-1)[:: -1])
 

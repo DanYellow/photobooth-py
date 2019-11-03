@@ -4,24 +4,59 @@ import threading
 
 class Countdown(Canvas):
     def __init__(self, master=None):
-        Canvas.__init__(self, master=master, bg='yellow', width=300, height=350)
-        self.grid(ipady=1000)
+        self.delta_y = 2
+        self.width = 50
 
-        label_text = ['3', '2', '1', "Photo !"]
-        self.label = self.create_text(
-            0, 0,
-            text='\n'.join(label_text), 
-            anchor='nw',
-            font=("courier", 35, "bold"),
-            state="disabled",
-            justify="center")
+        Canvas.__init__(self, master=master, width=300, height=width, bg='blue')
+        
+        self.labels_container = Canvas(self, width=300, height=1000, bg='red')
+        self.labels_container_window = self.create_window(0, 0, window=self.labels_container, anchor="nw")
+
+        
+        for x in range(3):
+            widget = Label(
+                self,
+                text = x,
+                fg = 'white',
+                bg = 'black',
+                font = ("courier", 35, "bold"),
+                borderwidth = 0
+            )  
+
+            self.labels_container.create_window(
+                0,
+                (width * x) + ((delta_y * 2) * x),
+                window=widget,
+                width=width,
+                height=width,
+                anchor="nw"
+            )       
+
+            # y1 = width + (width * x) + ((delta_y * 2) * x)
+            # y0 = y1 - width
+
+            # self.labels_container.create_rectangle(
+            #     0,
+            #     y0 + 0,
+            #     width + 0,
+            #     y1 + 0,
+            #     fill = "blue"
+            # )
+        
+        # label_text = ['3', '2', '1', "Photo !"]
+        # self.label = self.create_text(
+        #     0, 0,
+        #     text='\n'.join(label_text), 
+        #     anchor='nw',
+        #     font=("courier", 35, "bold"),
+        #     state="disabled",
+        #     justify="center")
     
         # self.label_bg = self.create_rectangle(self.bbox(self.label),fill="red")
         # self.tag_lower(self.label_bg, self.label)
 
         self.remaining = None
         self.callback = None
-        self.countdown(3)
 
         self.pack()
 
@@ -37,14 +72,12 @@ class Countdown(Canvas):
         if callback is not None:
             self.callback = callback
 
-        self.move(self.label, 0, -53)
+        self.move(self.labels_container_window, 0, -(width * 2 + delta_y * 2 + 2))
+
 
         if self.remaining <= 0:
-            # self.itemconfigure(self.label, text="time's up!")
-            # self.coords(self.label_bg, self.bbox(self.label))
             self.coords(self.label, (0, 0))
 
-            threading.Timer(3, partial(self.countdown, remaining = 3)).start()
             if self.callback is not None:
                 threading.Timer(0.01, self.callback).start()
         else:
