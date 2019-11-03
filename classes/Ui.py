@@ -1,7 +1,7 @@
-from tkinter import *
+from tkinter import Label, Button, Frame
 
 class PhotoboothUi(Frame):
-    def createWidgets(self):
+    def create_widgets(self):
         self.collage_label = Label(self, image=None)
         self.collage_label.place(x=70,y=30)
         self.collage_label.pack()
@@ -27,11 +27,12 @@ class PhotoboothUi(Frame):
                 'print': 'Imprimer',
                 'cancel': "Annuler",
                 'last_collage': "Dernier collage",
-                'ready': 'Prêt ?'
+                'ready': 'Prêt ?',
+                'take_another_one': "Prendre une autre photo"
             }
         }
 
         self.pack()
-        self.createWidgets()
+        self.create_widgets()
 
         
