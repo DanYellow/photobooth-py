@@ -29,7 +29,7 @@ class Countdown(Canvas):
             img2 = ImageTk.PhotoImage(Image.open(f"""{ROOT_DIR}/chat.tmp.jpg"""), size=30)
 
             widget = Label(
-                self,
+                self.labels_container_window,
                 text = lbl_countdown,
                 fg = 'black',
                 font = ("courier", 50, "bold"),                                                
