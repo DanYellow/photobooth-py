@@ -154,6 +154,7 @@ if __name__ == "__main__":
     camera = Camera(root_dir=ROOT_DIR, on_error=show_error)
     photobooth_ui = PhotoboothUi(master=root, actions=actions)
 
+
     # self.bind("<KeyPress>", key_press)
 
     

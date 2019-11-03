@@ -1,12 +1,9 @@
 from tkinter import Label, Frame, Canvas
-from PIL import Image, ImageTk, ImageFile
 from functools import partial
 import threading
 import os
 import sys
-import shutil
 
-shutil.which("gs")
 ROOT_DIR = os.path.dirname(os.path.abspath(sys.argv[0]))
 
 class Countdown(Canvas):
@@ -14,10 +11,10 @@ class Countdown(Canvas):
         self.delta_y = 2
         self.width_children = 80
 
-        Canvas.__init__(self, master=master, width=300, height=self.width_children)
+        Canvas.__init__(self, master=master, width=300, height=self.width_children, bg="blue")
         self.master = master
-        self.labels_container = Canvas(self, width=300, height=1000)
-        self.labels_container_window = self.create_window(0, self.width_children / 2, window=self.labels_container, anchor="nw")
+        self.labels_container = Canvas(self, width=300, height=1000, bg="red")
+        self.labels_container_window = self.create_window(0, 0, window=self.labels_container, anchor="nw")
 
         self.remaining = None
         self.callback = None
@@ -26,26 +23,24 @@ class Countdown(Canvas):
     def generate_ui(self, nb_takes):
         for x in range(nb_takes, -1, -1):
             lbl_countdown = x if x != 0 else 'Posez !'
-            img2 = ImageTk.PhotoImage(Image.open(f"""{ROOT_DIR}/chat.tmp.jpg"""), size=30)
 
             widget = Label(
-                self.labels_container_window,
+                self.labels_container,
                 text = lbl_countdown,
                 fg = 'black',
                 font = ("courier", 50, "bold"),                                                
                 borderwidth = 0,
-                anchor="nw",
+                anchor="nw"
             )
-
-            self.labels_container.create_image(0, 0, image=img2)
 
             if x == 0:
                 widget.config(fg="red")
 
-            y_position = (self.width_children * (nb_takes - x)) + ((self.delta_y * 2) * (nb_takes - x))
+            y_position = (self.width_children * (nb_takes - x)) + ((self.delta_y * 2) * (nb_takes - x)) 
+
             self.labels_container.create_window(
                 (300 / 2),
-                y_position + 1, 
+                y_position + (self.width_children / 2) + self.delta_y, 
                 window=widget,
                 height=self.width_children,
                 anchor="center"
@@ -63,10 +58,9 @@ class Countdown(Canvas):
         self.move(self.labels_container_window, 0, y_move / self.animation_speed)
          
         if self.remaining <= 0:
-            self.coords(self.labels_container_window, 0, self.width_children / 2)
+            self.coords(self.labels_container_window, 0, 0)
             if self.callback is not None:
                 # threading.Timer(0.01, self.callback).start()
-                # self.pack_forget()
                 self.callback()
         else:
             self.remaining = self.remaining - (1 / self.animation_speed)
