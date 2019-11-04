@@ -6,7 +6,6 @@ class PhotoboothUi(PanedWindow):
 
         self.pictures_btn = Button(self, text=self.translation['fr']['take_pict'])
         self.pictures_btn.config(command=self.actions['take_pictures'])
-        self.main_panel.add(self.pictures_btn)
 
         self.btns_panel = PanedWindow(
             self,
@@ -25,7 +24,6 @@ class PhotoboothUi(PanedWindow):
         )
         self.print_btn.config(command=self.actions['print'])
         self.print_btn.pack(side="left")
-        # .add(self.print_btn)
 
         self.cancel_btn = Button(
             self.btns_panel,
