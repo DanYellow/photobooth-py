@@ -49,7 +49,7 @@ class Countdown(Canvas):
 
     def countdown(self, remaining = None, callback = None):
         if remaining is not None:
-            self.pack()
+            # self.pack()
             self.remaining = remaining
 
         if callback is not None:
