@@ -3,7 +3,7 @@ import os
 
 import sys
 
-from tkinter import messagebox, Tk, Tcl
+from tkinter import messagebox, Tk, Tcl, Canvas, PanedWindow
 from PIL import Image, ImageTk, ImageFile
 from classes.Ui import PhotoboothUi
 from classes.WebGallery import WebGallery
@@ -12,6 +12,7 @@ from classes.Countdown import Countdown
 from functools import partial
 
 root = Tk()
+root['bg'] = 'white'
 root.option_add('*Dialog.msg.width', 20)
 # root.attributes("-fullscreen", 1)
 
@@ -23,6 +24,37 @@ photobooth_ui = None
 web_gallery = None
 camera = None
 countdown = None
+
+p = PanedWindow(root, orient="horizontal")
+p.pack(side="top", expand="y", fill="both", pady=2, padx=2)
+
+
+
+is_shooting_running = False
+
+class CustomButton(Canvas):
+    def __init__(self, parent, width, height, color, command=None):
+        Canvas.__init__(self, parent, borderwidth=1, 
+            relief="raised", highlightthickness=0)
+        self.command = command
+
+        padding = 4
+        self.create_oval((padding,padding,
+            width+padding, height+padding), outline=color, fill=color)
+        (x0,y0,x1,y1)  = self.bbox("all")
+        width = (x1-x0) + padding
+        height = (y1-y0) + padding
+        self.configure(width=width, height=height)
+        self.bind("<ButtonPress-1>", self._on_press)
+        self.bind("<ButtonRelease-1>", self._on_release)
+
+    def _on_press(self, event):
+        self.configure(color="purple")
+
+    def _on_release(self, event):
+        # self.configure(relief="raised")
+        if self.command is not None:
+            self.command()
 
 def get_nlast_images(nb_images):
     imgs_list_full_dir = f"{ROOT_DIR}/_tmp/full/"
@@ -41,12 +73,6 @@ def setup_files_and_folders():
     full_dir = f"{ROOT_DIR}/_tmp/full/"
 
     os.popen(f"mkdir -p _tmp/ && cp reset.css ./_tmp/reset.css && mkdir -p {full_dir}" )
-
-    return 0
-
-def start_stream():
-    stream_cmd = 'gphoto2 gphoto2 --capture-movie --force-overwrite --filename _tmp/movie.mjpg'
-    os.system(stream_cmd)
 
     return 0
 
@@ -100,17 +126,21 @@ def display_collage(list_images):
     return collage_img
 
 def photobooth_workflow(event = None):
+    global is_shooting_running
     if event is not None and event.keycode != 36:
         return 0
-    root.unbind("<KeyPress>")
+    if is_shooting_running is True:
+        return 0
+    is_shooting_running = True
 
     def pb_anonymous(nb_photos_taken):
         
         n_last_images = get_nlast_images(nb_photos_taken)
         images_in_ram = set_nlast_photos_in_ram(n_last_images)
         create_thumbnails(images_in_ram)
-        collage = display_collage(images_in_ram)
+
         photobooth_ui.collage_label.pack()
+        collage = display_collage(images_in_ram)
         # collage.save("image.jpg", "JPEG", quality=65)
 
         photobooth_ui.pictures_btn.pack_forget()
@@ -120,7 +150,7 @@ def photobooth_workflow(event = None):
 
     photobooth_ui.pictures_btn.pack_forget()
 
-    interval = 5
+    interval = 3
     countdown.generate_ui(interval)
     countdown.pack()
     camera.capture(
@@ -138,10 +168,15 @@ def show_error(msg):
     messagebox.showerror("Error", msg)
     sys.exit()
 
-def reset_ui():
-    photobooth_ui.pictures_btn.pack()
+def quit_(event):
+    if event is not None and event.keycode == 9:
+        sys.exit()
+    return 0
 
-    root.bind("<KeyPress>", photobooth_workflow)
+def reset_ui():
+    global is_shooting_running
+    is_shooting_running = False
+    photobooth_ui.pictures_btn.pack()
 
     countdown.pack_forget()
     photobooth_ui.collage_label.pack_forget()
@@ -151,22 +186,25 @@ def reset_ui():
 if __name__ == "__main__":
     setup_files_and_folders()
 
-    self.start_stream()
+    actions = { 
+        "take_pictures": photobooth_workflow,
+        "cancel": reset_ui,
+        "print": print_photo
+    }
 
-    # actions = { 
-    #     "take_pictures": photobooth_workflow,
-    #     "cancel": reset_ui,
-    #     "print": print_photo
-    # }
+    camera = Camera(root_dir=ROOT_DIR, on_error=show_error)
+    photobooth_ui = PhotoboothUi(master=root, actions=actions)
+    countdown = Countdown(master=root)
 
-    # camera = Camera(root_dir=ROOT_DIR, on_error=show_error)
-    # photobooth_ui = PhotoboothUi(master=root, actions=actions)
+    root.bind("<KeyPress>", photobooth_workflow)
+    root.bind("<KeyPress>", quit_)
 
+    btn = CustomButton(root, 40, 50, 'red')
 
-    # root.bind("<KeyPress>", photobooth_workflow)
+    p.add(btn)
 
+    p.pack()
     
-    # countdown = Countdown(master=root)
     # web_gallery = WebGallery(root_dir=ROOT_DIR)
     # web_gallery.generate_gallery(get_nlast_images(-1)[:: -1])
 

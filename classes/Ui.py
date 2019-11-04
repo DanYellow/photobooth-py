@@ -3,7 +3,7 @@ from tkinter import Label, Button, Frame
 class PhotoboothUi(Frame):
     def create_widgets(self):
         self.collage_label = Label(self, image=None)
-        self.collage_label.place(x=70,y=30)
+        # self.collage_label.place(x=70,y=30)
         self.collage_label.pack()
 
         self.print_btn = Button(self, text=self.translation['fr']['print'], fg="red")
@@ -16,7 +16,7 @@ class PhotoboothUi(Frame):
         self.cancel_btn = Button(self, text=self.translation['fr']['cancel'])
         self.cancel_btn.config(command=self.actions['cancel'])
 
-        self.countdown_label = Label(self)
+        self.loading_label = Label(self, text=self.translation['fr']['loading'])
 
     def __init__(self, actions, master=None):
         Frame.__init__(self, master)
@@ -28,7 +28,8 @@ class PhotoboothUi(Frame):
                 'cancel': "Annuler",
                 'last_collage': "Dernier collage",
                 'ready': 'Prêt ?',
-                'take_another_one': "Prendre une autre photo"
+                'take_another_one': "Prendre une autre photo",
+                'loading': "Chargement"
             }
         }
 

@@ -2,6 +2,8 @@ import os
 from functools import partial
 import subprocess
 import time
+from concurrent.futures import ThreadPoolExecutor as Pool
+
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -38,6 +40,8 @@ class Camera:
 
         print('--- capturing ---')
 
+        self.countdown.pack()
+
         if self.countdown is not None:
             self.countdown.countdown(self.interval, callback=partial(self.direct_capture))
         else:
@@ -45,19 +49,21 @@ class Camera:
 
     def direct_capture(self):
         self.shutter_counter = self.shutter_counter + 1
-        self.countdown.pack_forget()
 
         capture_image_cmd = f"""gphoto2 \
             --capture-image-and-download \
             --force-overwrite \
             --keep-raw
             """
-        os.system(capture_image_cmd)
-        self.countdown.pack()
-        # self.countdown.itemconfigure(self.countdown.label, text="Chargement")
+        self.countdown.pack_forget()
+        print('Chargement')
+        pool = Pool(max_workers=1)
+        f = pool.submit(subprocess.call, capture_image_cmd, shell=True)
+        f.add_done_callback(self.post_capture)
 
+    def post_capture(self, arg):
         self.capture()
-
+    
     def __init__(self, root_dir = ROOT_DIR, on_error=None):
         self.root_dir = root_dir
         self.nb_takes = 0
@@ -71,4 +77,4 @@ class Camera:
                 raise RuntimeError()
         except:
             if on_error is not None:
-                on_error(msg="no message")
+                on_error(msg="Pas de caméra détectée")
