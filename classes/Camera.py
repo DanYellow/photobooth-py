@@ -40,8 +40,6 @@ class Camera:
 
         print('--- capturing ---')
 
-        # self.countdown.pack()
-
         if self.countdown is not None:
             self.countdown.countdown(self.interval, callback=partial(self.direct_capture))
         else:

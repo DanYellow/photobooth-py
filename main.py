@@ -3,7 +3,7 @@ import os
 
 import sys
 
-from tkinter import messagebox, Tk, Tcl, Canvas, PanedWindow, Label
+from tkinter import messagebox, Tk, Tcl, Canvas, PanedWindow, Label, Button
 from PIL import Image, ImageTk, ImageFile
 from classes.Ui import PhotoboothUi
 from classes.WebGallery import WebGallery
@@ -25,11 +25,7 @@ web_gallery = None
 camera = None
 countdown = None
 
-p = PanedWindow(root, orient="vertical") #fill="both", 
-p.pack(side="top", expand="y", fill="both", pady=2, padx=2)
-
 is_shooting_running = False
-
 
 class CustomButton(Canvas):
     def __init__(self, parent, width, height, color, command=None):
@@ -100,8 +96,7 @@ def display_collage(list_images):
     os.chdir(f"{ROOT_DIR}/_tmp")
 
     collage_img_ratio = 10 / 15
-    _, height_list_images_item = list_images[0].size
-    collage_img_height = height_list_images_item
+    _, collage_img_height = list_images[0].size
 
     collage_img = Image.new('RGB', (
         int(collage_img_height * (1/collage_img_ratio)),
@@ -133,25 +128,33 @@ def photobooth_workflow(event = None):
     is_shooting_running = True
 
     def pb_anonymous(nb_photos_taken):
+        photobooth_ui.pack(
+            expand="y",
+            fill="both",
+            pady=50,
+            padx=10
+        )
+
         n_last_images = get_nlast_images(nb_photos_taken)
         images_in_ram = set_nlast_photos_in_ram(n_last_images)
         create_thumbnails(images_in_ram)
 
-        photobooth_ui.main_panel.add(photobooth_ui.collage_label)
+        photobooth_ui.collage_label.pack()
 
-        # photobooth_ui.add(photobooth_ui.collage_label)
         collage = display_collage(images_in_ram)
         # collage.save("image.jpg", "JPEG", quality=65)
 
         # countdown.pack_forget()
-        photobooth_ui.main_panel.add(photobooth_ui.btns_panel)
+        photobooth_ui.btns_panel.pack(side="bottom", expand=True,
+            fill='x')
 
-    photobooth_ui.main_panel.remove(photobooth_ui.pictures_btn)
+    photobooth_ui.pictures_btn.pack_forget()
 
     interval = 1
     countdown.generate_ui(interval)
-    # countdown.pack()
-    photobooth_ui.main_panel.add(countdown)
+    countdown.pack(side="top")
+    photobooth_ui.pack_forget()
+    
     camera.capture(
         countdown = countdown,
         nb_takes = 1,
@@ -176,9 +179,10 @@ def reset_ui():
     global is_shooting_running
     is_shooting_running = False
 
-    photobooth_ui.add(photobooth_ui.pictures_btn)
-    photobooth_ui.remove(photobooth_ui.btns_panel)
-    photobooth_ui.remove(photobooth_ui.collage_label)
+    photobooth_ui.pictures_btn.pack()
+    photobooth_ui.btns_panel.pack_forget()
+    photobooth_ui.collage_label.pack_forget()
+
     countdown.pack_forget()
 
 if __name__ == "__main__":
@@ -190,35 +194,28 @@ if __name__ == "__main__":
         "print": print_photo
     }
 
-    camera = Camera(root_dir=ROOT_DIR, on_error=show_error)
-    photobooth_ui = PhotoboothUi(master=p, actions=actions)
-    photobooth_ui.add(photobooth_ui.pictures_btn)
+    camera = Camera(
+        root_dir=ROOT_DIR,
+        on_error=show_error
+    )
+    photobooth_ui = PhotoboothUi(master=root, actions=actions)
+    photobooth_ui.pictures_btn.pack(side="bottom")
 
     countdown = Countdown(master=root)
 
     root.bind("<KeyPress>", photobooth_workflow)
     root.bind("<KeyPress>", quit_)
-
-    btn = CustomButton(root, 40, 50, 'red')
     
-    # photobooth_ui.pictures_btn.pack()
-    # print(btn)
-    # print(photobooth_ui.pictures_btn)
+    photobooth_ui.pack(side="top", expand="y", fill="both", pady=50, padx=10)
 
-    # p.add(photobooth_ui)
-    photobooth_ui.add(photobooth_ui.btns_panel)
-    # photobooth_ui.add(photobooth_ui.pictures_btn, before=photobooth_ui.btns_panel)
-
-    photobooth_ui.pack(side="top", expand="y", fill="both", pady=2, padx=2)
-
-    
     # web_gallery = WebGallery(root_dir=ROOT_DIR)
     # web_gallery.generate_gallery(get_nlast_images(-1)[:: -1])
 
     screen_width = int(root.winfo_screenwidth() / 2)
     screen_height = int(root.winfo_screenheight() / 2)
 
-    root.geometry(f"{screen_width}x{screen_height}")
+    root.geometry(f"600x1024")
+    # root.geometry(f"{screen_width}x{screen_height}")
 
     root.mainloop()
 

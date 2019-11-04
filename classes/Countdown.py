@@ -12,7 +12,7 @@ class Countdown(Canvas):
         self.width_children = 100
         self.canvas_width = 600
 
-        Canvas.__init__(self, master=master, width=self.canvas_width, height=self.width_children)
+        Canvas.__init__(self, master=master, width=self.canvas_width, height=self.width_children, bg="red")
         self.master = master
         self.labels_container = Canvas(self, width=self.canvas_width, height=1000)
         self.labels_container_window = self.create_window(0, 0, window=self.labels_container, anchor="nw")
