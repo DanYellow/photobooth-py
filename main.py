@@ -5,8 +5,6 @@ import sys
 from tkinter import messagebox, Tk, Tcl, Canvas, PanedWindow, Label, Button
 from PIL import Image, ImageTk, ImageFile
 from classes.Ui import PhotoboothUi
-from classes.WebGallery import WebGallery
-from classes.Server import Server
 from classes.Camera import Camera
 from classes.Countdown import Countdown
 from functools import partial
@@ -89,8 +87,6 @@ def create_thumbnails(list_images_obj):
     for image in list_images_obj:
         image.thumbnail(TARGET_SIZE, Image.ANTIALIAS)
         image.save(image.filename, "JPEG", quality=65)
-
-    # web_gallery.generate_gallery(get_nlast_images(-1)[:: -1])
 
 def display_collage(list_images):
     os.chdir(f"{ROOT_DIR}/_tmp")
@@ -219,9 +215,7 @@ if __name__ == "__main__":
             padx=10
         )
 
-    server = Server()
-    # web_gallery = WebGallery(root_dir=ROOT_DIR)
-    # web_gallery.generate_gallery(get_nlast_images(-1)[:: -1])
+    os.system('env FLASK_ENV=production; env FLASK_APP=router.py flask run &')
 
     screen_width = int(root.winfo_screenwidth() / 2)
     screen_height = int(root.winfo_screenheight() / 2)

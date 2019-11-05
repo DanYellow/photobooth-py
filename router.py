@@ -37,4 +37,4 @@ def index():
     images_taken.extend(glob.glob('*.jpg'))
 
     images_taken_sorted = Tcl().call('lsort', '-dict', images_taken)
-    return render_template('index.html',  images_list=images_taken)
+    return render_template('index.html',  images_list=images_taken_sorted)
