@@ -37,8 +37,8 @@ class PhotoboothUi(Frame):
         self.loading_label = Label(self, text=self.translation['fr']['loading'])
 
     def __init__(self, actions, master=None):
+        Frame.__init__(self, master, bg='white')
         self['bg'] = 'white'
-        Frame.__init__(self, master, bg=self['bg'])
 
         self.actions = actions
         self.translation = {

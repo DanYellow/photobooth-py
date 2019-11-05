@@ -4,7 +4,6 @@ import subprocess
 import time
 from concurrent.futures import ThreadPoolExecutor as Pool
 
-
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class Camera:

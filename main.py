@@ -1,12 +1,12 @@
 import glob
 import os
-
 import sys
 
 from tkinter import messagebox, Tk, Tcl, Canvas, PanedWindow, Label, Button
 from PIL import Image, ImageTk, ImageFile
 from classes.Ui import PhotoboothUi
 from classes.WebGallery import WebGallery
+from classes.Server import Server
 from classes.Camera import Camera
 from classes.Countdown import Countdown
 from functools import partial
@@ -219,6 +219,7 @@ if __name__ == "__main__":
             padx=10
         )
 
+    server = Server()
     # web_gallery = WebGallery(root_dir=ROOT_DIR)
     # web_gallery.generate_gallery(get_nlast_images(-1)[:: -1])
 
