@@ -36,7 +36,7 @@ class Countdown(Canvas):
             )
 
             if x == 0:
-                widget.config(fg="red")
+                widget.config(fg="green")
 
             y_position = (self.width_children * (nb_takes - x)) + ((self.delta_y * 2) * (nb_takes - x)) 
 

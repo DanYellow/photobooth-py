@@ -11,7 +11,9 @@ class Camera:
         countdown = None,
         nb_takes = None,
         end_shooting_callback = None,
-        interval = None):
+        interval = None,
+        photobooth_ui = None
+    ):
         os.chdir(self.root_dir)
 
         FULL_PHOTOS_DIR = f"{self.root_dir}/_tmp/full"
@@ -22,6 +24,9 @@ class Camera:
         if countdown is not None:
             self.countdown = countdown
 
+        if photobooth_ui is not None:
+            self.photobooth_ui = photobooth_ui
+
         if interval is not None:
             self.interval = interval
 
@@ -30,6 +35,7 @@ class Camera:
         
         if(self.shutter_counter == self.nb_takes):
             self.shutter_counter = 0
+            self.countdown.place_forget()
             return self.end_shooting_callback(self.nb_takes)
 
         if not os.path.exists(FULL_PHOTOS_DIR):
@@ -55,13 +61,21 @@ class Camera:
             --keep-raw
             """
 
-        print('Chargement')
+        # print('Chargement')
+        self.photobooth_ui.loading_screen.pack(
+            expand=1,
+            fill="both",
+            side="top"
+        )
+        self.photobooth_ui.lift(self.countdown)
         pool = Pool(max_workers=1)
         f = pool.submit(subprocess.call, capture_image_cmd, shell=True)
-        self.countdown.place_forget()
+        # self.countdown.place_forget()
         f.add_done_callback(self.post_capture)
 
     def post_capture(self, arg):
+        self.photobooth_ui.lower(self.countdown)
+        self.photobooth_ui.loading_screen.pack_forget()
         self.capture()
     
     def __init__(self, root_dir = ROOT_DIR, on_error=None):

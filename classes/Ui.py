@@ -33,7 +33,16 @@ class PhotoboothUi(Frame):
         self.cancel_btn.config(command=self.actions['cancel'])
         self.cancel_btn.pack(side="left", fill="x", expand=True, padx=(10, 0))
 
-        self.loading_label = Label(self, text=self.translation['fr']['loading'])
+        self.loading_screen = Frame(self, bg="black")
+        self.loading_label = Label(
+            self.loading_screen, 
+            text=self.translation['fr']['loading'],
+            fg="white",
+            bg="black",
+            font = ('Sans','30','bold')
+        )
+        self.loading_label.place(relx=0.5, rely=0.5, anchor="center")
+        self.loading_screen.lift()
 
     def __init__(self, actions, master=None):
         Frame.__init__(self, master, bg='white')

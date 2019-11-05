@@ -105,6 +105,7 @@ def display_collage(list_images):
     for idx, image_obj in enumerate(list_images):
         try:
             _, height = image_obj.size
+            # image_obj.resize((image_obj.size.width * 2, image_obj.size.height * 2), Image.ANTIALIAS)
             collage_img.paste(image_obj, (0, height * idx))
         except Exception as e:
             print(e)
@@ -114,7 +115,7 @@ def display_collage(list_images):
     photobooth_ui.collage_label.configure(image=img)
     photobooth_ui.collage_label.image = img
 
-    collage_img.save("image.jpg", "JPEG", quality=65)
+    collage_img.save(list_images[0].filename, "JPEG", quality=65)
 
     return collage_img
 
@@ -140,8 +141,7 @@ def photobooth_workflow(event = None):
 
         photobooth_ui.collage_label.pack()
 
-        collage = display_collage(images_in_ram)
-        # collage.save("image.jpg", "JPEG", quality=65)
+        display_collage(images_in_ram)
 
         photobooth_ui.btns_panel.pack(
             side="bottom",
@@ -152,17 +152,17 @@ def photobooth_workflow(event = None):
 
     photobooth_ui.pictures_btn.pack_forget()
 
-    interval = 3
+    interval = 3 
     countdown.generate_ui(interval)
-    countdown.pack(side="bottom")
 
-    photobooth_ui.pack_forget()
+    # photobooth_ui.pack_forget()
     
     camera.capture(
         countdown = countdown,
-        nb_takes = 1,
+        nb_takes = 3,
         end_shooting_callback = pb_anonymous,
-        interval = interval
+        interval = interval,
+        photobooth_ui = photobooth_ui
     )
 
 def print_photo():
@@ -212,13 +212,13 @@ if __name__ == "__main__":
     root.bind("<KeyPress>", quit_)
     
     photobooth_ui.pack(
-            expand="y",
+            expand=True,
             fill="both",
             pady=10,
             padx=10
         )
 
-    os.system('env FLASK_ENV=production; env FLASK_APP=router.py flask run &')
+    # os.system('env FLASK_ENV=production; env FLASK_APP=router.py flask run &')
 
     screen_width = int(root.winfo_screenwidth() / 2)
     screen_height = int(root.winfo_screenheight() / 2)
