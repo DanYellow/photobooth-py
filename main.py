@@ -13,7 +13,7 @@ from functools import partial
 
 root = Tk()
 root['bg'] = 'white'
-root.option_add('*Dialog.msg.width', 20)
+# root.option_add('*Dialog.msg.width', 20)
 # root.attributes("-fullscreen", 1)
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -83,7 +83,7 @@ def set_nlast_photos_in_ram(list_photos):
     return list_last_photos
 
 def create_thumbnails(list_images_obj):
-    TARGET_SIZE = 300, 300
+    TARGET_SIZE = 250, 250
     os.chdir(f"{ROOT_DIR}/_tmp")
 
     for image in list_images_obj:
@@ -131,7 +131,7 @@ def photobooth_workflow(event = None):
         photobooth_ui.pack(
             expand="y",
             fill="both",
-            pady=50,
+            pady=10,
             padx=10
         )
 
@@ -144,20 +144,21 @@ def photobooth_workflow(event = None):
         collage = display_collage(images_in_ram)
         # collage.save("image.jpg", "JPEG", quality=65)
 
-        # countdown.pack_forget()
-        photobooth_ui.btns_panel.pack(side="bottom", expand=True,
+        photobooth_ui.btns_panel.pack(
+            side="bottom", expand=True,
             fill='x')
 
     photobooth_ui.pictures_btn.pack_forget()
 
     interval = 1
     countdown.generate_ui(interval)
-    countdown.pack(side="top")
+    countdown.pack(side="bottom")
+
     photobooth_ui.pack_forget()
     
     camera.capture(
         countdown = countdown,
-        nb_takes = 1,
+        nb_takes = 3,
         end_shooting_callback = pb_anonymous,
         interval = interval
     )
@@ -179,7 +180,9 @@ def reset_ui():
     global is_shooting_running
     is_shooting_running = False
 
+    photobooth_ui.pack()
     photobooth_ui.pictures_btn.pack()
+
     photobooth_ui.btns_panel.pack_forget()
     photobooth_ui.collage_label.pack_forget()
 
@@ -206,7 +209,12 @@ if __name__ == "__main__":
     root.bind("<KeyPress>", photobooth_workflow)
     root.bind("<KeyPress>", quit_)
     
-    photobooth_ui.pack(side="top", expand="y", fill="both", pady=50, padx=10)
+    photobooth_ui.pack(
+            expand="y",
+            fill="both",
+            pady=10,
+            padx=10
+        )
 
     # web_gallery = WebGallery(root_dir=ROOT_DIR)
     # web_gallery.generate_gallery(get_nlast_images(-1)[:: -1])

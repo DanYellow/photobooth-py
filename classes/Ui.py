@@ -12,10 +12,7 @@ class PhotoboothUi(Frame):
         )
         self.pictures_btn.config(command=self.actions['take_pictures'])
 
-        self.btns_panel = Frame(
-            self,
-            pady=0
-        ) 
+        self.btns_panel = Frame(self, bg=self['bg'])
         
         self.print_btn = Button(
             self.btns_panel,
@@ -25,7 +22,7 @@ class PhotoboothUi(Frame):
             fg="red"
         )
         self.print_btn.config(command=self.actions['print'])
-        self.print_btn.pack(side="left", fill="x", expand=True, padx=(0, 4))
+        self.print_btn.pack(side="left", fill="x", expand=True, padx=(0, 10))
 
         self.cancel_btn = Button(
             self.btns_panel,
@@ -33,7 +30,8 @@ class PhotoboothUi(Frame):
             height=3,
             # width=50,
         )
-        self.cancel_btn.pack(side="left", fill="x", expand=True, padx=(4, 0))
+        self.cancel_btn.config(command=self.actions['cancel'])
+        self.cancel_btn.pack(side="left", fill="x", expand=True, padx=(10, 0))
 
         self.loading_label = Label(self, text=self.translation['fr']['loading'])
 
@@ -56,5 +54,4 @@ class PhotoboothUi(Frame):
 
         self.pack()
         self.create_widgets()
-
         

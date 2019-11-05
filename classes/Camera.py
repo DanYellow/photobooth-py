@@ -36,6 +36,8 @@ class Camera:
         if not os.path.exists(FULL_PHOTOS_DIR):
             os.makedirs(FULL_PHOTOS_DIR)
 
+        self.countdown.place(relx=0.5, rely=0.5, anchor="center")
+
         os.chdir(FULL_PHOTOS_DIR)
 
         print('--- capturing ---')
@@ -53,7 +55,8 @@ class Camera:
             --force-overwrite \
             --keep-raw
             """
-        self.countdown.pack_forget()
+        self.countdown.place_forget()
+
         print('Chargement')
         pool = Pool(max_workers=1)
         f = pool.submit(subprocess.call, capture_image_cmd, shell=True)
