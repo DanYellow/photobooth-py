@@ -64,8 +64,9 @@ def get_nlast_images(nb_images):
 def setup_files_and_folders():
     os.chdir(ROOT_DIR)
     full_dir = f"{ROOT_DIR}/_tmp/full/"
+    cards_dir = f"{ROOT_DIR}/_tmp/cards"
 
-    os.popen(f"mkdir -p _tmp/ && cp reset.css ./_tmp/reset.css && mkdir -p {full_dir}" )
+    os.popen(f"mkdir -p {full_dir} && mkdir -p {cards_dir}" )
 
     return 0
 
@@ -89,7 +90,7 @@ def create_thumbnails(list_images_obj):
         image.save(image.filename, "JPEG", quality=65)
 
 def display_collage(list_images):
-    os.chdir(f"{ROOT_DIR}/_tmp")
+    os.chdir(f"{ROOT_DIR}/_tmp/cards")
 
     collage_img_ratio = 10 / 15
     _, collage_img_height = list_images[0].size
@@ -112,6 +113,8 @@ def display_collage(list_images):
 
     photobooth_ui.collage_label.configure(image=img)
     photobooth_ui.collage_label.image = img
+
+    collage_img.save("image.jpg", "JPEG", quality=65)
 
     return collage_img
 

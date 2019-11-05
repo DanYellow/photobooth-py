@@ -47,13 +47,12 @@
         {% for image in images_list %}
             <li>
                 {{ gallery_item(
-                    url_for('full.static', filename=image), 
-                    url_for('thumb.static', filename=image)
+                    url_for('cards.static', filename=image), 
+                    url_for('cards.static', filename=image)
                 )}}
             </li>
         {% endfor %}
     </ul>
-
 </body>
 
 </html>

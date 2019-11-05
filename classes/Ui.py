@@ -13,7 +13,6 @@ class PhotoboothUi(Frame):
         self.pictures_btn.config(command=self.actions['take_pictures'])
 
         self.btns_panel = Frame(self, bg=self['bg'])
-        # self.btns_panel.place(anchor="s")
         
         self.print_btn = Button(
             self.btns_panel,
