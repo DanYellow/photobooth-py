@@ -145,12 +145,15 @@ def photobooth_workflow(event = None):
         # collage.save("image.jpg", "JPEG", quality=65)
 
         photobooth_ui.btns_panel.pack(
-            side="bottom", expand=True,
-            fill='x')
+            side="bottom",
+            expand=True,
+            fill='x',
+            anchor="s",
+        )
 
     photobooth_ui.pictures_btn.pack_forget()
 
-    interval = 1
+    interval = 3
     countdown.generate_ui(interval)
     countdown.pack(side="bottom")
 
@@ -158,7 +161,7 @@ def photobooth_workflow(event = None):
     
     camera.capture(
         countdown = countdown,
-        nb_takes = 3,
+        nb_takes = 1,
         end_shooting_callback = pb_anonymous,
         interval = interval
     )

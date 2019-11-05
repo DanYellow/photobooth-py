@@ -13,13 +13,13 @@ class PhotoboothUi(Frame):
         self.pictures_btn.config(command=self.actions['take_pictures'])
 
         self.btns_panel = Frame(self, bg=self['bg'])
+        # self.btns_panel.place(anchor="s")
         
         self.print_btn = Button(
             self.btns_panel,
             text=self.translation['fr']['print'],
             height=3,
-            # width=90,
-            fg="red"
+            fg="blue"
         )
         self.print_btn.config(command=self.actions['print'])
         self.print_btn.pack(side="left", fill="x", expand=True, padx=(0, 10))
@@ -28,7 +28,8 @@ class PhotoboothUi(Frame):
             self.btns_panel,
             text=self.translation['fr']['cancel'],
             height=3,
-            # width=50,
+            fg="red",
+            font = ('Sans','10','bold')
         )
         self.cancel_btn.config(command=self.actions['cancel'])
         self.cancel_btn.pack(side="left", fill="x", expand=True, padx=(10, 0))
@@ -36,8 +37,8 @@ class PhotoboothUi(Frame):
         self.loading_label = Label(self, text=self.translation['fr']['loading'])
 
     def __init__(self, actions, master=None):
-        Frame.__init__(self, master)
         self['bg'] = 'white'
+        Frame.__init__(self, master, bg=self['bg'])
 
         self.actions = actions
         self.translation = {

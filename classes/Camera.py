@@ -55,11 +55,11 @@ class Camera:
             --force-overwrite \
             --keep-raw
             """
-        self.countdown.place_forget()
 
         print('Chargement')
         pool = Pool(max_workers=1)
         f = pool.submit(subprocess.call, capture_image_cmd, shell=True)
+        self.countdown.place_forget()
         f.add_done_callback(self.post_capture)
 
     def post_capture(self, arg):
