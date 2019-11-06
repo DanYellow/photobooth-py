@@ -2,7 +2,6 @@ import glob
 import os
 import random
 
-
 from tkinter import Tcl
 from flask import Flask, render_template, escape, request, Blueprint
 
