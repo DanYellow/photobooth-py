@@ -82,7 +82,7 @@ def set_nlast_photos_in_ram(list_photos):
     return list_last_photos
 
 def create_thumbnails(list_images_obj):
-    TARGET_SIZE = 250, 250
+    TARGET_SIZE = 450, 450
     os.chdir(f"{ROOT_DIR}/_tmp")
 
     for image in list_images_obj:

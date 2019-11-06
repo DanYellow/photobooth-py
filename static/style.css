@@ -1,29 +1,80 @@
-body {
-    padding: 0 2%;
+body, html {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    background: #f5f4f4;
+    font-size: 16px;
 }
 
-ul {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    grid-gap: 0.25em;
-    margin: 0 auto;
+.section {
+    padding: 2rem;
+    width: 100%;
 }
 
-@media only screen and (max-width: 600px) {
-    ul {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(33%, 1fr));
-        grid-gap: 0.25em;
-        margin: 0 auto;
+@media screen and (min-width: 768px) {
+    .section {
+        padding: 4rem;
     }
 }
 
-img {
-    display: block;
-    max-width: 100%;
+.grid {
+    display: grid;
+    grid-gap: 30px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-auto-rows: 150px;
+    grid-auto-flow: row dense;
+    width: 100%;
 }
 
-figure {
-    height: 150px;
-    overflow: hidden;
+
+
+.item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    box-sizing: border-box;
+    background: #0c9a9a;
+    color: #fff;
+    grid-column-start: auto;
+    grid-row-start: auto;
+    color: #fff;
+}
+
+.item a {
+    display: block;
+    height: 100%;
+    width: 100%;
+}
+
+.item figure {
+    height: inherit;
+    width: inherit;
+}
+
+.item img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.item--medium {
+    grid-row-end: span 2;
+}
+
+.item--large {
+    grid-row-end: span 3;
+}
+
+.item--full {
+    grid-column-end: auto;
+}
+
+@media screen and (min-width: 768px) {
+    .item--full {
+        grid-column: 1/-1;
+        grid-row-end: span 2;
+    }
 }
