@@ -2,23 +2,31 @@
 
 <!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <title>Galerie</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}">
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    </head>
 
-    <body>
-        <div class="section">
-            <div class="grid">
-                {% for image, class in images_list|zip(classes) %}
-                    {{ gallery_item(
-                        url_for('cards.static', filename=image), 
-                        url_for('cards.static', filename=image),
-                        class
-                    )}} 
-                {% endfor %}
-            </div>
+<head>
+    <title>Galerie</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="section">
+        <nav>
+            <ul>
+                <li><a href="/">Général</a></li>
+                <li><a href="/cards">Cartes de voeux</a></li>
+            </ul>
+        </nav>
+        <div class="grid">
+            {% for image, class in images_list|zip(classes) %}
+            {{ gallery_item(
+            url_for('cards.static', filename=image),
+            url_for('cards.static', filename=image),
+            class
+            )}}
+            {% endfor %}
         </div>
-    </body>
+    </div>
+</body>
+
 </html>

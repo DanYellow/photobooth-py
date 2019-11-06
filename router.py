@@ -6,7 +6,12 @@ from tkinter import Tcl
 from flask import Flask, render_template, escape, request, Blueprint
 
 app = Flask(__name__)
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.filters['zip'] = zip
+
+os.environ["FLASK_ENV"] = "development"
+os.environ["FLASK_APP"] = "router.py"
+
 
 gallery_thumb_bp = Blueprint(
     'thumb', 
@@ -38,9 +43,9 @@ def generate_grid_classes(nb_items):
     def get_class(value):
         if(value <= 0.5):
             return None
-        if(value > 0.5 and value <= 0.8):
+        if(value > 0.5 and value <= 0.92):
             return "--medium"
-        if(value > 0.8):
+        if(value > 0.92):
             return "--large"
         else:
             return "--full"
@@ -55,13 +60,15 @@ def generate_grid_classes(nb_items):
 
 @app.route('/')
 def index():
-    os.chdir(f"{ROOT_DIR}/_tmp")
+    path = ROOT_DIR + "/_tmp"
+    os.chdir(path)
 
     images_taken = glob.glob('*.JPG')
     images_taken.extend(glob.glob('*.jpeg'))
     images_taken.extend(glob.glob('*.jpg'))
 
     images_taken_sorted = Tcl().call('lsort', '-dict', images_taken)
+    images_taken_sorted = list(reversed(images_taken_sorted))
 
     return render_template(
         'index.html',
@@ -71,13 +78,17 @@ def index():
 
 @app.route('/cards')
 def cards():
-    os.chdir(f"{ROOT_DIR}/_tmp/cards")
+    path = ROOT_DIR + "/_tmp/cards"
+    os.chdir(path)
+
 
     images_taken = glob.glob('*.JPG')
     images_taken.extend(glob.glob('*.jpeg'))
     images_taken.extend(glob.glob('*.jpg'))
 
     images_taken_sorted = Tcl().call('lsort', '-dict', images_taken)
+    images_taken_sorted = list(reversed(images_taken_sorted))
+
     return render_template(
         'cards.html',
         images_list=images_taken_sorted,
