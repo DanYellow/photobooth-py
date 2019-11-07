@@ -36,6 +36,7 @@ class Camera:
         if(self.shutter_counter == self.nb_takes):
             self.shutter_counter = 0
             self.countdown.place_forget()
+            self.photobooth_ui.loading_screen.pack()
             return self.end_shooting_callback(self.nb_takes)
 
         if not os.path.exists(FULL_PHOTOS_DIR):

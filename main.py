@@ -203,7 +203,7 @@ if __name__ == "__main__":
             padx=10
         )
 
-    # os.system('env FLASK_APP=router.py flask run --host=0.0.0.0 &')
+    os.system('sudo flask run &')
 
     screen_width = int(root.winfo_screenwidth() / 2)
     screen_height = int(root.winfo_screenheight() / 2)

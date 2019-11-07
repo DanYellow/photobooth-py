@@ -9,9 +9,6 @@ app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.filters['zip'] = zip
 
-os.environ["FLASK_ENV"] = "development"
-os.environ["FLASK_APP"] = "router.py"
-
 
 gallery_thumb_bp = Blueprint(
     'thumb', 
@@ -39,6 +36,12 @@ app.register_blueprint(gallery_cards_bp)
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+os.chdir(ROOT_DIR)
+full_dir = f"{ROOT_DIR}/_tmp/full"
+cards_dir = f"{ROOT_DIR}/_tmp/cards"
+
+os.popen(f"mkdir -p {full_dir} && mkdir -p {cards_dir}")
+
 def generate_grid_classes(nb_items):
     def get_class(value):
         if(value <= 0.5):
@@ -60,7 +63,7 @@ def generate_grid_classes(nb_items):
 
 @app.route('/')
 def index():
-    path = ROOT_DIR + "/_tmp"
+    path = f"{ROOT_DIR}/_tmp"
     os.chdir(path)
 
     images_taken = glob.glob('*.JPG')
@@ -78,9 +81,8 @@ def index():
 
 @app.route('/cards')
 def cards():
-    path = ROOT_DIR + "/_tmp/cards"
+    path = f"{ROOT_DIR}/_tmp/cards"
     os.chdir(path)
-
 
     images_taken = glob.glob('*.JPG')
     images_taken.extend(glob.glob('*.jpeg'))
