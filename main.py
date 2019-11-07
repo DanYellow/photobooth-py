@@ -4,6 +4,11 @@ import sys
 
 from tkinter import messagebox, Tk, Tcl, Canvas, PanedWindow, Label, Button
 from PIL import Image, ImageTk, ImageFile
+# import PIL.Image
+# import PIL.ImageTk
+# import PIL.ImageFile
+
+
 from classes.Ui import PhotoboothUi
 from classes.Camera import Camera
 from classes.Countdown import Countdown
@@ -11,8 +16,8 @@ from functools import partial
 
 root = Tk()
 root['bg'] = 'white'
-# root.option_add('*Dialog.msg.width', 20)
 # root.attributes("-fullscreen", 1)
+# root.option_add('*Dialog.msg.width', 20)
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -63,9 +68,9 @@ def create_thumbnails(list_images_obj):
     os.chdir(f"{ROOT_DIR}/_tmp")
 
     for image in list_images_obj:
-        image_copy = Image.copy(image)
+        image_copy = image.copy()
         image_copy.thumbnail(TARGET_SIZE, Image.ANTIALIAS)
-        image_copy.save(image_copy.filename, "JPEG", quality=65)
+        image_copy.save(image.filename, "JPEG", quality=65)
 
 def generate_collage(list_images):
     os.chdir(f"{ROOT_DIR}/_tmp/cards")
@@ -84,7 +89,7 @@ def generate_collage(list_images):
     
     for idx, image_obj in enumerate(list_images):
         try:
-            image_copy = Image.copy(image_obj)
+            image_copy = image_obj.copy()
             image_copy.thumbnail((1000, 1000), Image.ANTIALIAS)
             _, height = image_copy.size
             # image_obj.resize((image_obj.size.width * 2, image_obj.size.height * 2), Image.ANTIALIAS)
@@ -134,7 +139,7 @@ def photobooth_workflow(event = None):
 
     photobooth_ui.pictures_btn.pack_forget()
 
-    interval = 1
+    interval = 3
     countdown.generate_ui(interval)
     
     camera.capture(
