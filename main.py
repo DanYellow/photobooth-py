@@ -40,7 +40,7 @@ def get_nlast_images(nb_images):
 
 def setup_files_and_folders():
     os.chdir(ROOT_DIR)
-    full_dir = f"{ROOT_DIR}/_tmp/full/"
+    full_dir = f"{ROOT_DIR}/_tmp/full"
     cards_dir = f"{ROOT_DIR}/_tmp/cards"
 
     os.popen(f"mkdir -p {full_dir} && mkdir -p {cards_dir}")
@@ -63,15 +63,15 @@ def create_thumbnails(list_images_obj):
     os.chdir(f"{ROOT_DIR}/_tmp")
 
     for image in list_images_obj:
-        image.thumbnail(TARGET_SIZE, Image.ANTIALIAS)
-        image.save(image.filename, "JPEG", quality=65)
+        image_copy = Image.copy(image)
+        image_copy.thumbnail(TARGET_SIZE, Image.ANTIALIAS)
+        image_copy.save(image_copy.filename, "JPEG", quality=65)
 
 def generate_collage(list_images):
     os.chdir(f"{ROOT_DIR}/_tmp/cards")
 
     collage_img_ratio = 10 / 15
-    collage_img_width = 400
-    _, collage_img_height =  list_images[0].size
+    collage_img_width = 1000
 
     collage_img = Image.new('RGB', (
         collage_img_width,
@@ -84,19 +84,19 @@ def generate_collage(list_images):
     
     for idx, image_obj in enumerate(list_images):
         try:
-            _, height = image_obj.size
-            image_obj.thumbnail((1000, 1000), Image.ANTIALIAS)
+            image_copy = Image.copy(image_obj)
+            image_copy.thumbnail((1000, 1000), Image.ANTIALIAS)
+            _, height = image_copy.size
             # image_obj.resize((image_obj.size.width * 2, image_obj.size.height * 2), Image.ANTIALIAS)
-            collage_img.paste(image_obj, (0, height * idx))
+            collage_img.paste(image_copy, (0, height * idx))
         except Exception as e:
             print(e)
-    
-    img = ImageTk.PhotoImage(collage_img)
-
-    photobooth_ui.collage_label.configure(image=img)
-    photobooth_ui.collage_label.image = img
 
     collage_img.save(list_images[0].filename, "JPEG", quality=65)
+
+    collage_img.thumbnail((600, 600))
+    img = ImageTk.PhotoImage(collage_img)
+    photobooth_ui.collage_label.configure(image=img)
 
     return collage_img
 
@@ -118,11 +118,12 @@ def photobooth_workflow(event = None):
 
         n_last_images = get_nlast_images(nb_photos_taken)
         images_in_ram = set_nlast_photos_in_ram(n_last_images)
+        
         create_thumbnails(images_in_ram)
+        generate_collage(images_in_ram)
 
         photobooth_ui.collage_label.pack()
 
-        generate_collage(images_in_ram)
 
         photobooth_ui.btns_panel.pack(
             side="bottom",
@@ -135,8 +136,6 @@ def photobooth_workflow(event = None):
 
     interval = 1
     countdown.generate_ui(interval)
-
-    # photobooth_ui.pack_forget()
     
     camera.capture(
         countdown = countdown,
@@ -199,8 +198,7 @@ if __name__ == "__main__":
             padx=10
         )
 
-    # os.system('python router.py &')
-    os.system('env FLASK_APP=router.py flask run --host=0.0.0.0 &')
+    # os.system('env FLASK_APP=router.py flask run --host=0.0.0.0 &')
 
     screen_width = int(root.winfo_screenwidth() / 2)
     screen_height = int(root.winfo_screenheight() / 2)

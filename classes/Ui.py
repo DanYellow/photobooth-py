@@ -16,9 +16,9 @@ class PhotoboothUi(Frame):
         
         self.print_btn = Button(
             self.btns_panel,
-            text=self.translation['fr']['print'],
-            height=3,
-            fg="blue"
+            text = self.translation['fr']['print'],
+            height = 3,
+            fg = "blue"
         )
         self.print_btn.config(command=self.actions['print'])
         self.print_btn.pack(side="left", fill="x", expand=True, padx=(0, 10))
