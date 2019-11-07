@@ -1,32 +1,22 @@
 version: '3.2'
 
 services:
-  reverseproxy:
-        image: reverseproxy
-        ports:
-            - 8080:8080
-            - 8081:8081
-        restart: always
-
-    nginx:
-        depends_on:
-            - reverseproxy
-        image: nginx:alpine
-        restart: always
-
   flask_app:
     build:
       context: '../'
       dockerfile: 'docker/flask/Dockerfile'
     container_name: flask_app
+    labels:
+     - "traefik.port=8000"
+     - "traefik.enable=true"
+     - "traefik.frontend.rule=Host:example.com"
+     - "traefik.docker.network=web"
     volumes:
       - ../:/app/
-    depends_on:
-      - reverseproxy
-    ports:
-      - "5000:80"
     restart: always
-    environment:
-      - NODE_ENV=development
-      - IS_DOCKER=true
-      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - web
+
+networks:
+  web: 
+    external: true
