@@ -96,3 +96,6 @@ def cards():
         images_list=images_taken_sorted,
         classes=generate_grid_classes(len(images_taken_sorted))
     )
+
+if __name__ == "__main__":
+    print('greger')
