@@ -1,6 +1,8 @@
 import glob
 import os
 import sys
+import random
+
 
 from tkinter import messagebox, Tk, Tcl, Canvas, PanedWindow, Label, Button
 from PIL import Image, ImageTk, ImageFile
@@ -102,6 +104,7 @@ def generate_collage(list_images):
     collage_img.thumbnail((600, 600))
     img = ImageTk.PhotoImage(collage_img)
     photobooth_ui.collage_label.configure(image=img)
+    photobooth_ui.collage_label.image = img
 
     return collage_img
 
@@ -128,7 +131,6 @@ def photobooth_workflow(event = None):
         generate_collage(images_in_ram)
 
         photobooth_ui.collage_label.pack()
-
 
         photobooth_ui.btns_panel.pack(
             side="bottom",
@@ -203,7 +205,7 @@ if __name__ == "__main__":
             padx=10
         )
 
-    os.system('sudo flask run &')
+    # os.system('sudo flask run &')
 
     screen_width = int(root.winfo_screenwidth() / 2)
     screen_height = int(root.winfo_screenheight() / 2)

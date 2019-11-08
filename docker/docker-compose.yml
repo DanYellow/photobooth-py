@@ -11,6 +11,8 @@ services:
      - "traefik.enable=true"
      - "traefik.frontend.rule=Host:example.com"
      - "traefik.docker.network=web"
+    expose:
+      - "8000"
     volumes:
       - ../:/app/
     restart: always
@@ -32,7 +34,3 @@ services:
     restart: always
     networks:
       - web
-
-networks:
-  web: 
-    external: true

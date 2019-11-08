@@ -2,7 +2,7 @@ from tkinter import Label, Button, PanedWindow, Frame
 
 class PhotoboothUi(Frame):
     def create_widgets(self):
-        self.collage_label = Label(self, image=None)
+        self.collage_label = Label(self, image=None, bg=self['bg'])
 
         self.pictures_btn = Button(
             self,
