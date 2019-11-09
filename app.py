@@ -3,12 +3,11 @@ import os
 import random
 
 from tkinter import Tcl
-from flask import Flask, render_template, escape, request, Blueprint
+from flask import Flask, render_template, request, Blueprint
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.filters['zip'] = zip
-
 
 gallery_thumb_bp = Blueprint(
     'thumb', 

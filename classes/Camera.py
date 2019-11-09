@@ -71,7 +71,7 @@ class Camera:
         self.photobooth_ui.lift(self.countdown)
         pool = Pool(max_workers=1)
         f = pool.submit(subprocess.call, capture_image_cmd, shell=True)
-        # self.countdown.place_forget()
+        self.countdown.place_forget()
         f.add_done_callback(self.post_capture)
 
     def post_capture(self, arg):

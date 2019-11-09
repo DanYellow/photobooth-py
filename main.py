@@ -3,13 +3,8 @@ import os
 import sys
 import random
 
-
 from tkinter import messagebox, Tk, Tcl, Canvas, PanedWindow, Label, Button
 from PIL import Image, ImageTk, ImageFile
-# import PIL.Image
-# import PIL.ImageTk
-# import PIL.ImageFile
-
 
 from classes.Ui import PhotoboothUi
 from classes.Camera import Camera
@@ -191,7 +186,23 @@ if __name__ == "__main__":
         on_error=show_error
     )
     photobooth_ui = PhotoboothUi(master=root, actions=actions)
-    photobooth_ui.pictures_btn.pack(side="bottom")
+    photobooth_ui.pictures_btn.pack(side="top", expand=True, fill='x')
+
+    # qr = qrcode.QRCode(
+    #     version = 1,
+    #     error_correction = qrcode.constants.ERROR_CORRECT_L,
+    #     box_size = 3,
+    #     border = 2,
+    # )
+    # qr.add_data('http://lo')
+    # qr.make(fit=True)
+
+    # img_tmp = qr.make_image(fill_color="black", back_color="white")
+    # img = ImageTk.PhotoImage(img_tmp)
+
+    # collage_label = Label(photobooth_ui, image=img)
+    # collage_label.image = img 
+    # collage_label.pack(side = "bottom")
 
     countdown = Countdown(master=root)
 
@@ -205,7 +216,7 @@ if __name__ == "__main__":
             padx=10
         )
 
-    # os.system('sudo flask run &')
+    os.system('sudo flask run &')
 
     screen_width = int(root.winfo_screenwidth() / 2)
     screen_height = int(root.winfo_screenheight() / 2)
