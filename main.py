@@ -125,23 +125,16 @@ def photobooth_workflow(event = None):
         create_thumbnails(images_in_ram)
         generate_collage(images_in_ram)
 
-        photobooth_ui.collage_label.pack()
+        photobooth_ui.collage_screen.pack(expand=True, fill='both')
 
-        photobooth_ui.btns_panel.pack(
-            side="bottom",
-            expand=True,
-            fill='x',
-            anchor="s",
-        )
+    photobooth_ui.home_screen.pack_forget()
 
-    photobooth_ui.pictures_btn.pack_forget()
-
-    interval = 3
+    interval = 1
     countdown.generate_ui(interval)
     
     camera.capture(
         countdown = countdown,
-        nb_takes = 2,
+        nb_takes = 1, 
         end_shooting_callback = pb_anonymous,
         interval = interval,
         photobooth_ui = photobooth_ui
@@ -165,11 +158,9 @@ def reset_ui():
     is_shooting_running = False
 
     photobooth_ui.pack()
-    photobooth_ui.pictures_btn.pack()
+    photobooth_ui.home_screen.pack(expand=True, fill='both')
 
-    photobooth_ui.btns_panel.pack_forget()
-    photobooth_ui.collage_label.pack_forget()
-
+    photobooth_ui.collage_screen.pack_forget()
     countdown.pack_forget()
 
 if __name__ == "__main__":
@@ -186,37 +177,14 @@ if __name__ == "__main__":
         on_error=show_error
     )
     photobooth_ui = PhotoboothUi(master=root, actions=actions)
-    photobooth_ui.pictures_btn.pack(side="top", expand=True, fill='x')
-
-    # qr = qrcode.QRCode(
-    #     version = 1,
-    #     error_correction = qrcode.constants.ERROR_CORRECT_L,
-    #     box_size = 3,
-    #     border = 2,
-    # )
-    # qr.add_data('http://lo')
-    # qr.make(fit=True)
-
-    # img_tmp = qr.make_image(fill_color="black", back_color="white")
-    # img = ImageTk.PhotoImage(img_tmp)
-
-    # collage_label = Label(photobooth_ui, image=img)
-    # collage_label.image = img 
-    # collage_label.pack(side = "bottom")
+    photobooth_ui.home_screen.pack(expand=True, fill='both')
 
     countdown = Countdown(master=root)
 
     root.bind("<KeyPress>", photobooth_workflow)
     root.bind("<KeyPress>", quit_)
     
-    photobooth_ui.pack(
-            expand=True,
-            fill="both",
-            pady=10,
-            padx=10
-        )
-
-    os.system('sudo flask run &')
+    os.system('sudo flask run --host=0.0.0.0 &')
 
     screen_width = int(root.winfo_screenwidth() / 2)
     screen_height = int(root.winfo_screenheight() / 2)

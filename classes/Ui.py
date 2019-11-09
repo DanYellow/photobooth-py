@@ -5,11 +5,18 @@ from PIL import ImageTk
 class PhotoboothUi(Frame):
     def create_widgets(self):
         # COLLAGE SCREEN
-        self.collage_label = Label(self, image=None, bg=self['bg'])
-        # self.home_screen.add(self.collage_label, pady = (0, 5))
+        self.collage_screen = Frame(self, bg=self['bg'])
+        
+        self.collage_label = Label(self.collage_screen, image=None, bg=self['bg'])
+        self.collage_label.pack(side="top", expand=True, fill="both")
 
-
-        self.btns_panel = Frame(self, bg=self['bg'])
+        self.btns_panel = Frame(self.collage_screen, bg = self['bg'])
+        self.btns_panel.pack(
+            side="bottom",
+            expand=True,
+            fill='x',
+            anchor="s",
+        )
         
         self.print_btn = Button(
             self.btns_panel,
@@ -43,14 +50,14 @@ class PhotoboothUi(Frame):
         self.loading_screen.lift()
 
         # HOME SCREEN
-        self.home_screen = PanedWindow(self)
+        self.home_screen = PanedWindow(self, orient = "vertical", bg = self['bg'])
         self.pictures_btn = Button(
             self.home_screen,
-            height = 30,
+            height = 31,
             text = self.translation['fr']['take_pict'],
             command = self.actions['take_pictures']
         )
-        self.home_screen.add(self.pictures_btn, pady = (5, 0))
+        self.home_screen.add(self.pictures_btn, pady=5)
 
         qr = qrcode.QRCode(
             version = 1,
@@ -64,9 +71,13 @@ class PhotoboothUi(Frame):
         img_tmp = qr.make_image(fill_color="black", back_color="white")
         img = ImageTk.PhotoImage(img_tmp)
 
-        qrc_label = Label(self, image=img)
+        qrc_label = Label(
+            self.home_screen,
+            image=img, 
+            bg = self['bg']
+        )
         qrc_label.image = img 
-        self.home_screen.add(self.collage_label, pady = (5, 0))
+        self.home_screen.add(qrc_label, pady = 5)
 
     def __init__(self, actions, master=None):
         bgc = 'white'
@@ -86,6 +97,11 @@ class PhotoboothUi(Frame):
             }
         }
 
-        self.pack()
+        self.pack(
+            expand=True,
+            fill="both",
+            pady=10,
+            padx=10
+        )
         self.create_widgets()
         
