@@ -1,3 +1,5 @@
 FLASK_ENV=production
 FLASK_RUN_PORT=8000
+# FLASK_HOST=0.0.0.0
+FLASK_HOST=photobooth.local
 FLASK_APP=app.py
