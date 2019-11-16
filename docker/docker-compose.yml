@@ -1,6 +1,14 @@
 version: '3.2'
 
 services:
+#   photobooth:
+#     build:
+#       context: '../'
+#       dockerfile: 'docker/photobooth/Dockerfile'
+#     container_name: photobooth
+#     privileged: true
+#     devices:
+#       - '/dev:/dev'
   nginx:
     image: nginx:latest
     container_name: nginx
@@ -18,9 +26,9 @@ services:
       dockerfile: 'docker/flask/Dockerfile'
     container_name: flask
     expose:
-      - "8000"
+      - "5000"
     ports:
-      - 8000:8000
+      - 5000:5000
     volumes:
       - ../:/app/
     restart: always
