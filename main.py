@@ -13,6 +13,7 @@ from functools import partial
 
 root = Tk()
 root['bg'] = 'white'
+root.title('Photomaton de Noel')
 # root.attributes("-fullscreen", 1)
 # root.option_add('*Dialog.msg.width', 20)
 
@@ -134,7 +135,7 @@ def photobooth_workflow(event = None):
     
     camera.capture(
         countdown = countdown,
-        nb_takes = 1, 
+        nb_takes = 2, 
         end_shooting_callback = pb_anonymous,
         interval = interval,
         photobooth_ui = photobooth_ui

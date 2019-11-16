@@ -56,12 +56,6 @@ class Camera:
     def direct_capture(self):
         self.shutter_counter = self.shutter_counter + 1
 
-        capture_image_cmd = f"""gphoto2 \
-            --capture-image-and-download \
-            --force-overwrite \
-            --keep-raw
-            """
-
         # print('Chargement')
         self.photobooth_ui.loading_screen.pack(
             expand=1,
@@ -69,10 +63,17 @@ class Camera:
             side="top"
         )
         self.photobooth_ui.lift(self.countdown)
+
+        capture_image_cmd = f"""gphoto2 \
+            --capture-image-and-download \
+            --force-overwrite \
+            --keep-raw
+            """
         pool = Pool(max_workers=1)
         f = pool.submit(subprocess.call, capture_image_cmd, shell=True)
-        self.countdown.place_forget()
         f.add_done_callback(self.post_capture)
+        
+        self.countdown.place_forget()
 
     def post_capture(self, arg):
         self.photobooth_ui.lower(self.countdown)
