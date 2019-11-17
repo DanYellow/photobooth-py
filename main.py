@@ -115,9 +115,7 @@ def photobooth_workflow(event = None):
     def pb_anonymous(nb_photos_taken):
         photobooth_ui.pack(
             expand = "y",
-            fill = "both",
-            pady = 10,
-            padx = 10
+            fill = "both"
         )
 
         n_last_images = get_nlast_images(nb_photos_taken)
@@ -126,7 +124,8 @@ def photobooth_workflow(event = None):
         create_thumbnails(images_in_ram)
         generate_collage(images_in_ram)
 
-        photobooth_ui.collage_screen.pack(expand=True, fill='both')
+        photobooth_ui.collage_screen.pack(expand=True, fill='both', pady = 10,
+            padx = 10)
 
     photobooth_ui.home_screen.pack_forget()
 
@@ -143,6 +142,14 @@ def photobooth_workflow(event = None):
 
 def print_photo():
     print('------------------ printing --------------')
+    # lpr =  subprocess.Popen("/usr/bin/lpr", stdin=subprocess.PIPE)
+    # lpr.stdin.write(your_data_here)
+    photobooth_ui.collage_screen.pack_forget()
+    photobooth_ui.print_screen.pack(
+            expand=1,
+            fill="both",
+            side="top"
+        )
 
 def show_error(msg):
     root.withdraw()
@@ -159,7 +166,8 @@ def reset_ui():
     is_shooting_running = False
 
     photobooth_ui.pack()
-    photobooth_ui.home_screen.pack(expand=True, fill='both')
+    photobooth_ui.home_screen.pack(expand=True, fill='both', pady = 10,
+            padx = 10)
 
     photobooth_ui.collage_screen.pack_forget()
     countdown.pack_forget()
@@ -178,7 +186,8 @@ if __name__ == "__main__":
         on_error=show_error
     )
     photobooth_ui = PhotoboothUi(master=root, actions=actions)
-    photobooth_ui.home_screen.pack(expand=True, fill='both')
+    photobooth_ui.home_screen.pack(expand=True, fill='both', pady = 10,
+            padx = 10)
 
     countdown = Countdown(master=root)
 

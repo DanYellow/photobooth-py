@@ -65,7 +65,7 @@ class PhotoboothUi(Frame):
             box_size = 3,
             border = 2,
         )
-        qr.add_data('http://photobooth:5000/')
+        qr.add_data('http://rapsberrypi.local/')
         qr.make(fit=True)
 
         img_tmp = qr.make_image(fill_color="black", back_color="white")
@@ -77,7 +77,19 @@ class PhotoboothUi(Frame):
             bg = self['bg']
         )
         qrc_label.image = img 
-        self.home_screen.add(qrc_label, pady = 5)
+        self.home_screen.add(qrc_label)
+
+        #PRINTING SCREEN
+        self.print_screen = Frame(self, bg="blue")
+        self.printing_label = Label(
+            self.print_screen, 
+            text=self.translation['fr']['printing'],
+            fg="white",
+            bg="blue",
+            font = ('Sans','30','bold')
+        )
+        self.printing_label.place(relx=0.5, rely=0.5, anchor="center")
+        self.print_screen.lift()
 
     def __init__(self, actions, master=None):
         bgc = 'white'
@@ -93,15 +105,16 @@ class PhotoboothUi(Frame):
                 'last_collage': "Dernier collage",
                 'ready': 'Prêt ?',
                 'take_another_one': "Prendre une autre photo",
-                'loading': "Chargement"
+                'loading': "Chargement",
+                'printing': "Impression en cours",
             }
         }
 
         self.pack(
             expand=True,
             fill="both",
-            pady=10,
-            padx=10
+            # pady=10,
+            # padx=10
         )
         self.create_widgets()
         
