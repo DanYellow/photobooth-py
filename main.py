@@ -3,6 +3,8 @@ import os
 import sys
 import random
 
+from threading import Timer
+
 from tkinter import messagebox, Tk, Tcl, Canvas, PanedWindow, Label, Button
 from PIL import Image, ImageTk, ImageFile
 
@@ -151,6 +153,9 @@ def print_photo():
             side="top"
         )
 
+    t = Timer(15.0, reset_ui)
+    t.start()
+
 def show_error(msg):
     root.withdraw()
     messagebox.showerror("Error", msg)
@@ -171,6 +176,7 @@ def reset_ui():
 
     photobooth_ui.collage_screen.pack_forget()
     countdown.pack_forget()
+    photobooth_ui.print_screen.pack_forget()
 
 if __name__ == "__main__":
     setup_files_and_folders()

@@ -87,7 +87,15 @@ class Camera:
         self.interval = 0
 
         try:
-            camera_setup_cmd = ['gphoto2', '--set-config', 'capturetarget=1', '--set-config', 'shutterspeed=1/100']
+            camera_setup_cmd = [
+                'gphoto2', 
+                '--set-config', 
+                'capturetarget=1', 
+                '--set-config', 
+                'shutterspeed=1/100',
+                '--set-config',
+                'whitebalance=0'
+            ]
             camera_setup_process = subprocess.Popen(camera_setup_cmd, stdout=subprocess.PIPE)
             if camera_setup_process.wait() != 0:
                 raise RuntimeError()

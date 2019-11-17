@@ -59,6 +59,19 @@ class PhotoboothUi(Frame):
         )
         self.home_screen.add(self.pictures_btn, pady=5)
 
+        qrc_frame = Frame(self, bg=self['bg'])
+        self.home_screen.add(qrc_frame, sticky="s")
+
+        
+        qrc_title_label = Label(
+            qrc_frame, 
+            text=self.translation['fr']['access_gallery'],
+            fg="black",
+            bg=self['bg'],
+            font = ('Sans','15', 'bold')
+        )
+        qrc_title_label.pack()
+
         qr = qrcode.QRCode(
             version = 1,
             error_correction = qrcode.constants.ERROR_CORRECT_L,
@@ -72,19 +85,28 @@ class PhotoboothUi(Frame):
         img = ImageTk.PhotoImage(img_tmp)
 
         qrc_label = Label(
-            self.home_screen,
+            qrc_frame,
             image=img, 
             bg = self['bg']
         )
-        qrc_label.image = img 
-        self.home_screen.add(qrc_label)
+        qrc_label.image = img
+        qrc_label.pack()
+
+        qrc_txt_label = Label(
+            qrc_frame, 
+            text=self.translation['fr']['link_to_gallery'],
+            fg="black",
+            bg=self['bg'],
+            font = ('Sans','10')
+        )
+        qrc_txt_label.pack()
 
         #PRINTING SCREEN
         self.print_screen = Frame(self, bg="blue")
         self.printing_label = Label(
             self.print_screen, 
             text=self.translation['fr']['printing'],
-            fg="white",
+            fg="black",
             bg="blue",
             font = ('Sans','30','bold')
         )
@@ -107,14 +129,14 @@ class PhotoboothUi(Frame):
                 'take_another_one': "Prendre une autre photo",
                 'loading': "Chargement",
                 'printing': "Impression en cours",
+                'access_gallery': "Accéder à la galerie",
+                'link_to_gallery': "ou \nraspberrypi.local",
             }
         }
 
         self.pack(
             expand=True,
-            fill="both",
-            # pady=10,
-            # padx=10
+            fill="both"
         )
         self.create_widgets()
         
