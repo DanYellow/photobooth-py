@@ -5,7 +5,7 @@ import random
 
 from threading import Timer
 
-from tkinter import messagebox, Tk, Tcl, Canvas, PanedWindow, Label, Button
+from tkinter import messagebox, Tk, Tcl, Button
 from PIL import Image, ImageTk, ImageFile
 
 from classes.Ui import PhotoboothUi
@@ -124,6 +124,7 @@ def photobooth_workflow(event = None):
         images_in_ram = set_nlast_photos_in_ram(n_last_images)
         
         create_thumbnails(images_in_ram)
+        photobooth_ui.gallery_bg.load()
         generate_collage(images_in_ram)
 
         photobooth_ui.collage_screen.pack(expand=True, fill='both', pady = 10,
@@ -171,8 +172,7 @@ def reset_ui():
     is_shooting_running = False
 
     photobooth_ui.pack()
-    photobooth_ui.home_screen.pack(expand=True, fill='both', pady = 10,
-            padx = 10)
+    photobooth_ui.home_screen.pack(expand=True, fill='both')
 
     photobooth_ui.collage_screen.pack_forget()
     countdown.pack_forget()
@@ -180,6 +180,9 @@ def reset_ui():
 
 if __name__ == "__main__":
     setup_files_and_folders()
+
+
+    # photobooth_ui.lift(gridy)
 
     actions = { 
         "take_pictures": photobooth_workflow,
@@ -192,8 +195,7 @@ if __name__ == "__main__":
         on_error=show_error
     )
     photobooth_ui = PhotoboothUi(master=root, actions=actions)
-    photobooth_ui.home_screen.pack(expand=True, fill='both', pady = 10,
-            padx = 10)
+    photobooth_ui.home_screen.pack(expand=True, fill='both')
 
     countdown = Countdown(master=root)
 

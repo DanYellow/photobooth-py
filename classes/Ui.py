@@ -1,6 +1,10 @@
 from tkinter import Label, Button, PanedWindow, Frame
-import qrcode
 from PIL import ImageTk
+
+import qrcode
+
+from classes.Gallery import Gallery
+    
 
 class PhotoboothUi(Frame):
     def create_widgets(self):
@@ -51,13 +55,14 @@ class PhotoboothUi(Frame):
 
         # HOME SCREEN
         self.home_screen = PanedWindow(self, orient = "vertical", bg = self['bg'])
+
         self.pictures_btn = Button(
             self.home_screen,
             height = 31,
             text = self.translation['fr']['take_pict'],
             command = self.actions['take_pictures']
         )
-        self.home_screen.add(self.pictures_btn, pady=5)
+        self.home_screen.add(self.pictures_btn, pady=10, padx=10)
 
         qrc_frame = Frame(self, bg=self['bg'])
         self.home_screen.add(qrc_frame, sticky="s")
@@ -100,6 +105,14 @@ class PhotoboothUi(Frame):
             font = ('Sans','10')
         )
         qrc_txt_label.pack()
+
+        self.gallery_bg = Gallery(self.home_screen)
+        self.gallery_bg.place(
+            relx=0.5, rely=0.5,
+            anchor="center",
+            relheight=1.0, relwidth=1.0
+        )
+        self.gallery_bg.lower()
 
         #PRINTING SCREEN
         self.print_screen = Frame(self, bg="blue")
