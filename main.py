@@ -2,16 +2,16 @@ import glob
 import os
 import sys
 import random
-
-from threading import Timer
+import subprocess
 
 from tkinter import messagebox, Tk, Tcl, Button
 from PIL import Image, ImageTk, ImageFile
+from functools import partial
+from concurrent.futures import ThreadPoolExecutor as Pool
 
 from classes.Ui import PhotoboothUi
 from classes.Camera import Camera
 from classes.Countdown import Countdown
-from functools import partial
 
 root = Tk()
 root['bg'] = 'white'
@@ -28,6 +28,7 @@ web_gallery = None
 camera = None
 countdown = None
 SCREEN_WIDTH = 600
+collage_name = None
 
 is_shooting_running = False
 
@@ -73,17 +74,17 @@ def create_thumbnails(list_images_obj):
         image_copy.save(image.filename, "JPEG", quality=65)
 
 def generate_collage(list_images):
+    global collage_name
     os.chdir(f"{ROOT_DIR}/_tmp/cards")
 
     collage_img_ratio = 10 / 15
     collage_img_width = 1000
 
-    collage_img = Image.new('RGB', (
-        collage_img_width,
-        int(collage_img_width * (1 / collage_img_ratio))
+    collage_img_size = (collage_img_width, int(collage_img_width * (1 / collage_img_ratio)))
+    collage_img = Image.new('RGB', collage_img_size
         # int(collage_img_height * (1/collage_img_ratio)),
         # collage_img_height * len(list_images)
-    ))
+    , color=(255,255,255,0))
 
 #    images_positions = [[0, 0], [0, 300], [0, 600]]
     
@@ -97,6 +98,7 @@ def generate_collage(list_images):
         except Exception as e:
             print(e)
 
+    collage_name = list_images[0].filename
     collage_img.save(list_images[0].filename, "JPEG", quality=65)
 
     collage_img.thumbnail((600, 600))
@@ -137,7 +139,7 @@ def photobooth_workflow(event = None):
     
     camera.capture(
         countdown = countdown,
-        nb_takes = 2, 
+        nb_takes = 1, 
         end_shooting_callback = pb_anonymous,
         interval = interval,
         photobooth_ui = photobooth_ui
@@ -145,8 +147,17 @@ def photobooth_workflow(event = None):
 
 def print_photo():
     print('------------------ printing --------------')
-    # lpr =  subprocess.Popen("/usr/bin/lpr", stdin=subprocess.PIPE)
-    # lpr.stdin.write(your_data_here)
+    # print_cmd = [
+    #             'lp',
+    #             '-d Canon_SELPHY_CP1300', 
+    #             f"{ROOT_DIR}/_tmp/cards/IMG_8527.JPG"
+    #             # collage_name
+    #         ]
+    # subprocess.Popen(print_cmd, stdin=subprocess.PIPE)
+
+    # os.system(f"lp -d Canon_SELPHY_CP1300 {ROOT_DIR}/_tmp/cards/{collage_name}")
+
+    # lpr.stdin.write(collage)
     photobooth_ui.collage_screen.pack_forget()
     photobooth_ui.print_screen.pack(
             expand=1,
@@ -154,8 +165,13 @@ def print_photo():
             side="top"
         )
 
-    t = Timer(15.0, reset_ui)
-    t.start()
+    print_cmd = f"""lp \
+        -d Canon_SELPHY_CP1300 \
+        {ROOT_DIR}/_tmp/cards/{collage_name}
+        """
+    pool = Pool(max_workers=1)
+    f = pool.submit(subprocess.call, print_cmd, shell=True)
+    f.add_done_callback(reset_ui)
 
 def show_error(msg):
     root.withdraw()
