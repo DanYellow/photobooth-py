@@ -14,9 +14,9 @@ from classes.Camera import Camera
 from classes.Countdown import Countdown
 
 root = Tk()
-root['bg'] = 'white'
+# root['bg'] = 'white'
 root.title('Photomaton de Noel')
-# root.attributes("-fullscreen", 1)
+root.attributes("-fullscreen", 1)
 # root.option_add('*Dialog.msg.width', 20)
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -39,7 +39,7 @@ def get_nlast_images(nb_images):
     images_taken = glob.glob('*.JPG')
     images_taken.extend(glob.glob('*.jpeg'))
     images_taken.extend(glob.glob('*.jpg'))
-
+# 
     images_taken_sorted = Tcl().call('lsort', '-dict', images_taken)
 
     return images_taken_sorted if nb_images == -1 else images_taken_sorted[-nb_images:]
@@ -147,17 +147,7 @@ def photobooth_workflow(event = None):
 
 def print_photo():
     print('------------------ printing --------------')
-    # print_cmd = [
-    #             'lp',
-    #             '-d Canon_SELPHY_CP1300', 
-    #             f"{ROOT_DIR}/_tmp/cards/IMG_8527.JPG"
-    #             # collage_name
-    #         ]
-    # subprocess.Popen(print_cmd, stdin=subprocess.PIPE)
 
-    # os.system(f"lp -d Canon_SELPHY_CP1300 {ROOT_DIR}/_tmp/cards/{collage_name}")
-
-    # lpr.stdin.write(collage)
     photobooth_ui.collage_screen.pack_forget()
     photobooth_ui.print_screen.pack(
             expand=1,
@@ -183,7 +173,7 @@ def quit_(event):
         sys.exit()
     return 0
 
-def reset_ui():
+def reset_ui(arg=None):
     global is_shooting_running
     is_shooting_running = False
 
@@ -197,8 +187,10 @@ def reset_ui():
 if __name__ == "__main__":
     setup_files_and_folders()
 
+    screen_width = int(root.winfo_screenwidth())
+    screen_height = int(root.winfo_screenheight())
 
-    # photobooth_ui.lift(gridy)
+    root.geometry(f"{screen_width}x{screen_height}")
 
     actions = { 
         "take_pictures": photobooth_workflow,
@@ -217,14 +209,8 @@ if __name__ == "__main__":
 
     root.bind("<KeyPress>", photobooth_workflow)
     root.bind("<KeyPress>", quit_)
+
     
-    # os.system('sudo flask run --host=0.0.0.0 &')
-
-    screen_width = int(root.winfo_screenwidth() / 2)
-    screen_height = int(root.winfo_screenheight() / 2)
-
-    root.geometry(f"600x1024")
-    # root.geometry(f"{screen_width}x{screen_height}")
 
     root.mainloop()
 

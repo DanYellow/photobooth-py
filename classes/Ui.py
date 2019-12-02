@@ -56,13 +56,13 @@ class PhotoboothUi(Frame):
         # HOME SCREEN
         self.home_screen = PanedWindow(self, orient = "vertical", bg = self['bg'])
 
-        self.pictures_btn = Button(
-            self.home_screen,
-            height = 31,
-            text = self.translation['fr']['take_pict'],
-            command = self.actions['take_pictures']
-        )
-        self.home_screen.add(self.pictures_btn, pady=10, padx=10)
+        # self.pictures_btn = Button(
+        #     self.home_screen,
+        #     height = 31,
+        #     text = self.translation['fr']['take_pict'],
+        #     command = self.actions['take_pictures']
+        # )
+        # self.home_screen.add(self.pictures_btn, pady=10, padx=10)
 
         qrc_frame = Frame(self, bg=self['bg'])
         self.home_screen.add(qrc_frame, sticky="s")

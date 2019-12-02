@@ -1,12 +1,14 @@
 import glob
 import os
 
+from math import ceil
 from tkinter import Frame, Label
 from PIL import Image, ImageTk, ImageFile, ImageFilter
 
 class Gallery(Frame):
     def load(self):
-        COLUMNS = 4
+
+        COLUMNS = ceil(self.master.winfo_screenwidth() / 150)
         image_count = 0
 
         for infile in glob.glob(os.path.join("_tmp/", '*.JPG')):
@@ -28,6 +30,7 @@ class Gallery(Frame):
         bgc = 'white'
         Frame.__init__(self, master, image = None, bg = bgc)
         self['bg'] = bgc
+        self.master = master
 
         self.load()
         
