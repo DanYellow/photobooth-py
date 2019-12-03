@@ -56,18 +56,17 @@ class PhotoboothUi(Frame):
         # HOME SCREEN
         self.home_screen = PanedWindow(self, orient = "vertical", bg = self['bg'])
 
-        # self.pictures_btn = Button(
-        #     self.home_screen,
-        #     height = 31,
-        #     text = self.translation['fr']['take_pict'],
-        #     command = self.actions['take_pictures']
-        # )
-        # self.home_screen.add(self.pictures_btn, pady=10, padx=10)
+        self.pictures_btn = Button(
+            self.home_screen,
+            height = 31,
+            text = self.translation['fr']['take_pict'],
+            command = self.actions['take_pictures']
+        )
+        self.home_screen.add(self.pictures_btn, pady=10, padx=10)
 
         qrc_frame = Frame(self, bg=self['bg'])
-        self.home_screen.add(qrc_frame, sticky="s")
+        self.home_screen.add(qrc_frame, sticky="s", pady=10)
 
-        
         qrc_title_label = Label(
             qrc_frame, 
             text=self.translation['fr']['access_gallery'],
@@ -115,7 +114,7 @@ class PhotoboothUi(Frame):
         self.gallery_bg.lower()
 
         #PRINTING SCREEN
-        self.print_screen = Frame(self, bg="blue")
+        self.print_screen = Frame(self, bg="#F0F8FF")
         self.printing_label = Label(
             self.print_screen, 
             text=self.translation['fr']['printing'],
@@ -128,7 +127,7 @@ class PhotoboothUi(Frame):
 
     def __init__(self, actions, master=None):
         bgc = 'white'
-        Frame.__init__(self, master, image = None, bg = bgc)
+        Frame.__init__(self, master, image = None, bg = bgc, cursor="none")
         self['bg'] = bgc
 
         self.actions = actions
@@ -141,7 +140,7 @@ class PhotoboothUi(Frame):
                 'ready': 'Prêt ?',
                 'take_another_one': "Prendre une autre photo",
                 'loading': "Chargement",
-                'printing': "Impression en cours",
+                'printing': "Impression lancée",
                 'access_gallery': "Accéder à la galerie",
                 'link_to_gallery': "ou \nraspberrypi.local",
             }

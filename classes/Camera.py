@@ -92,7 +92,7 @@ class Camera:
                 '--set-config', 
                 'capturetarget=1', 
                 '--set-config', 
-                'shutterspeed=1/100',
+                'shutterspeed=1/80',
                 '--set-config',
                 'whitebalance=0'
             ]

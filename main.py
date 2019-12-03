@@ -3,6 +3,7 @@ import os
 import sys
 import random
 import subprocess
+import threading
 
 from tkinter import messagebox, Tk, Tcl, Button
 from PIL import Image, ImageTk, ImageFile
@@ -145,6 +146,13 @@ def photobooth_workflow(event = None):
         photobooth_ui = photobooth_ui
     )
 
+def check_printing():
+    while True:
+        result = subprocess.run(['lpstat', '-o'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+        if "Canon_SELPHY" not in result:
+            break
+    reset_ui()
+
 def print_photo():
     print('------------------ printing --------------')
 
@@ -153,15 +161,25 @@ def print_photo():
             expand=1,
             fill="both",
             side="top"
-        )
+    )
 
-    print_cmd = f"""lp \
-        -d Canon_SELPHY_CP1300 \
-        {ROOT_DIR}/_tmp/cards/{collage_name}
-        """
-    pool = Pool(max_workers=1)
-    f = pool.submit(subprocess.call, print_cmd, shell=True)
-    f.add_done_callback(reset_ui)
+    os.system("cupsenable Canon_SELPHY_CP1300")
+
+    print_cmd = f"""lp -d Canon_SELPHY_CP1300 -o fit-to-page {ROOT_DIR}/_tmp/cards/{collage_name}"""
+    os.system(print_cmd)
+    # print_cmd = [
+    #     'lp',
+    #     '-d',
+    #     'Canon_SELPHY_CP1300',
+    #     '-o'
+    #     'fit-to-page',
+    #     f"""{ROOT_DIR}/_tmp/cards/{collage_name}""",
+    # ]
+    # print_process = subprocess.Popen(print_cmd, stdout=subprocess.PIPE)
+    
+    ui_thread = threading.Thread(target=check_printing)
+    ui_thread.start()
+
 
 def show_error(msg):
     root.withdraw()
@@ -173,7 +191,7 @@ def quit_(event):
         sys.exit()
     return 0
 
-def reset_ui(arg=None):
+def reset_ui():
     global is_shooting_running
     is_shooting_running = False
 
