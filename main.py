@@ -135,12 +135,12 @@ def photobooth_workflow(event = None):
 
     photobooth_ui.home_screen.pack_forget()
 
-    interval = 1
+    interval = 3
     countdown.generate_ui(interval)
     
     camera.capture(
         countdown = countdown,
-        nb_takes = 1, 
+        nb_takes = 2, 
         end_shooting_callback = pb_anonymous,
         interval = interval,
         photobooth_ui = photobooth_ui
@@ -167,15 +167,6 @@ def print_photo():
 
     print_cmd = f"""lp -d Canon_SELPHY_CP1300 -o fit-to-page {ROOT_DIR}/_tmp/cards/{collage_name}"""
     os.system(print_cmd)
-    # print_cmd = [
-    #     'lp',
-    #     '-d',
-    #     'Canon_SELPHY_CP1300',
-    #     '-o'
-    #     'fit-to-page',
-    #     f"""{ROOT_DIR}/_tmp/cards/{collage_name}""",
-    # ]
-    # print_process = subprocess.Popen(print_cmd, stdout=subprocess.PIPE)
     
     ui_thread = threading.Thread(target=check_printing)
     ui_thread.start()
@@ -227,8 +218,6 @@ if __name__ == "__main__":
 
     root.bind("<KeyPress>", photobooth_workflow)
     root.bind("<KeyPress>", quit_)
-
-    
 
     root.mainloop()
 
