@@ -61,7 +61,6 @@ def generate_grid_classes(nb_items):
 
     return list_values
 
-# @socketio.on('connect', namespace='/test')
 @app.route('/')
 def index():
     path = f"{ROOT_DIR}/_tmp"
@@ -74,7 +73,8 @@ def index():
     images_taken_sorted = Tcl().call('lsort', '-dict', images_taken)
     images_taken_sorted = list(reversed(images_taken_sorted))
 
-    # emit('my response')
+    # emit('response')
+    print('greger')
 
     return render_template(
         'index.html',
@@ -101,5 +101,6 @@ def cards():
     )
 
 if __name__ == "__main__":
-    print('greger')
-    app.run()
+    app.run(port=5000, host="0.0.0.0")
+    # socketio.run(app)
+    print('start')
