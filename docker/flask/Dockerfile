@@ -6,4 +6,5 @@ WORKDIR /app
 
 RUN pip install -r requirements.txt
 
-CMD flask run
+CMD python app.py
+# CMD flask run

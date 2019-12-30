@@ -100,7 +100,7 @@ def generate_collage(list_images):
             image_copy = image_obj.copy()
             image_copy.thumbnail(collage_img_size, Image.ANTIALIAS)
             _, height = image_copy.size
-            
+
             # image_obj.resize((image_obj.size.width * 2, image_obj.size.height * 2), Image.ANTIALIAS)
             collage_img.paste(image_copy, (0, height * idx))
         except Exception as e:
@@ -149,13 +149,13 @@ def photobooth_workflow(event = None):
 
     pb_anonymous()
     
-    # camera.capture(
-    #     countdown = countdown,
-    #     nb_takes = 2, 
-    #     end_shooting_callback = pb_anonymous,
-    #     interval = interval,
-    #     photobooth_ui = photobooth_ui
-    # )
+    camera.capture(
+        countdown = countdown,
+        nb_takes = 2, 
+        end_shooting_callback = pb_anonymous,
+        interval = interval,
+        photobooth_ui = photobooth_ui
+    )
 
 def check_printing():
     while True:
@@ -184,9 +184,9 @@ def print_photo():
 
 
 def show_error(msg):
-    # root.withdraw()
     messagebox.showerror("Error", msg)
-    # sys.exit()
+    root.withdraw()
+    sys.exit()
 
 def quit_(event):
     if event is not None and event.keycode == 9:

@@ -1,10 +1,9 @@
 {% macro gallery_item(url, thumb, class) %}
-
     <div class="item item{{ class }}">
-            <a href="{{ url }}">
-                <figure>
-                    <img src="{{ thumb }}" />
-                </figure>
-            </a>
-        </div>   
+        <a href="{{ url }}">
+            <figure>
+                <img src="{{ thumb }}" />
+            </figure>
+        </a>
+    </div>   
 {% endmacro %}
