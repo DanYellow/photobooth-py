@@ -16,8 +16,8 @@ from classes.Countdown import Countdown
 
 root = Tk()
 # root['bg'] = 'white'
-root.title('Photomaton de Noel')
-root.attributes("-fullscreen", 1)
+root.title('Photomaton')
+# root.attributes("-fullscreen", 1)
 # root.option_add('*Dialog.msg.width', 20)
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -40,7 +40,6 @@ def get_nlast_images(nb_images):
     images_taken = glob.glob('*.JPG')
     images_taken.extend(glob.glob('*.jpeg'))
     images_taken.extend(glob.glob('*.jpg'))
-# 
     images_taken_sorted = Tcl().call('lsort', '-dict', images_taken)
 
     return images_taken_sorted if nb_images == -1 else images_taken_sorted[-nb_images:]
@@ -75,25 +74,33 @@ def create_thumbnails(list_images_obj):
         image_copy.save(image.filename, "JPEG", quality=65)
 
 def generate_collage(list_images):
+    os.chdir(f"{ROOT_DIR}")
+    imtest = Image.open("white.png")
+
     global collage_name
     os.chdir(f"{ROOT_DIR}/_tmp/cards")
 
-    collage_img_ratio = 10 / 15
-    collage_img_width = 1000
+    collage_img_ratio = 15 / 10
+    collage_img_width = 1500
 
-    collage_img_size = (collage_img_width, int(collage_img_width * (1 / collage_img_ratio)))
+    color_white = (255,255,255,0)
+    color_black = (0,0,0,1)
+
+    collage_img_size = (collage_img_width, int(collage_img_width * collage_img_ratio))
+
     collage_img = Image.new('RGB', collage_img_size
         # int(collage_img_height * (1/collage_img_ratio)),
         # collage_img_height * len(list_images)
-    , color=(255,255,255,0))
+    , color=color_black)
 
 #    images_positions = [[0, 0], [0, 300], [0, 600]]
     
     for idx, image_obj in enumerate(list_images):
         try:
             image_copy = image_obj.copy()
-            image_copy.thumbnail((1000, 1000), Image.ANTIALIAS)
+            image_copy.thumbnail(collage_img_size, Image.ANTIALIAS)
             _, height = image_copy.size
+            
             # image_obj.resize((image_obj.size.width * 2, image_obj.size.height * 2), Image.ANTIALIAS)
             collage_img.paste(image_copy, (0, height * idx))
         except Exception as e:
@@ -101,6 +108,8 @@ def generate_collage(list_images):
 
     collage_name = list_images[0].filename
     collage_img.save(list_images[0].filename, "JPEG", quality=65)
+
+    collage_img.paste(imtest)
 
     collage_img.thumbnail((600, 600))
     img = ImageTk.PhotoImage(collage_img)
@@ -117,7 +126,7 @@ def photobooth_workflow(event = None):
         return 0
     is_shooting_running = True
 
-    def pb_anonymous(nb_photos_taken):
+    def pb_anonymous(nb_photos_taken = 2):
         photobooth_ui.pack(
             expand = "y",
             fill = "both"
@@ -137,14 +146,16 @@ def photobooth_workflow(event = None):
 
     interval = 3
     countdown.generate_ui(interval)
+
+    pb_anonymous()
     
-    camera.capture(
-        countdown = countdown,
-        nb_takes = 2, 
-        end_shooting_callback = pb_anonymous,
-        interval = interval,
-        photobooth_ui = photobooth_ui
-    )
+    # camera.capture(
+    #     countdown = countdown,
+    #     nb_takes = 2, 
+    #     end_shooting_callback = pb_anonymous,
+    #     interval = interval,
+    #     photobooth_ui = photobooth_ui
+    # )
 
 def check_printing():
     while True:
@@ -173,9 +184,9 @@ def print_photo():
 
 
 def show_error(msg):
-    root.withdraw()
+    # root.withdraw()
     messagebox.showerror("Error", msg)
-    sys.exit()
+    # sys.exit()
 
 def quit_(event):
     if event is not None and event.keycode == 9:
@@ -199,11 +210,12 @@ if __name__ == "__main__":
     screen_width = int(root.winfo_screenwidth())
     screen_height = int(root.winfo_screenheight())
 
-    root.geometry(f"{screen_width}x{screen_height}")
+    root.geometry(f"600x800")
+    # root.geometry(f"{screen_width}x{screen_height}")
 
     actions = { 
         "take_pictures": photobooth_workflow,
-        "cancel": reset_ui,
+        "not_print": reset_ui,
         "print": print_photo
     }
 

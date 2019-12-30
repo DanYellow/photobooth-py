@@ -33,12 +33,12 @@ class PhotoboothUi(Frame):
 
         self.cancel_btn = Button(
             self.btns_panel,
-            text=self.translation['fr']['cancel'],
+            text=self.translation['fr']['not_print'],
             height=3,
             fg="red",
             font = ('Sans','10','bold')
         )
-        self.cancel_btn.config(command=self.actions['cancel'])
+        self.cancel_btn.config(command=self.actions['not_print'])
         self.cancel_btn.pack(side="left", fill="x", expand=True, padx=(10, 0))
 
         # LOADING SCREEN
@@ -82,7 +82,7 @@ class PhotoboothUi(Frame):
             box_size = 3,
             border = 2,
         )
-        qr.add_data('http://rapsberrypi.local/')
+        qr.add_data('http://raspberrypi.local/')
         qr.make(fit=True)
 
         img_tmp = qr.make_image(fill_color="black", back_color="white")
@@ -136,6 +136,7 @@ class PhotoboothUi(Frame):
                 'take_pict': "Prendre des photos !",
                 'print': 'Imprimer',
                 'cancel': "Annuler",
+                'not_print': "Ne pas imprimer",
                 'last_collage': "Dernier collage",
                 'ready': 'Prêt ?',
                 'take_another_one': "Prendre une autre photo",
