@@ -1,9 +1,6 @@
-import glob
-import os
-import sys
-import random
-import subprocess
-import threading
+import time
+import glob, os, sys, random, subprocess, threading, eventlet, socketio
+import _thread
 
 from tkinter import messagebox, Tk, Tcl, Button
 from PIL import Image, ImageTk, ImageFile
@@ -32,6 +29,12 @@ SCREEN_WIDTH = 600
 collage_name = None
 
 is_shooting_running = False
+
+# create a Socket.IO server
+sio = socketio.Server(cors_allowed_origins="*")
+    
+# wrap with a WSGI application
+app = socketio.WSGIApp(sio)
 
 def get_nlast_images(nb_images):
     imgs_list_full_dir = f"{ROOT_DIR}/_tmp/full/"
@@ -118,7 +121,11 @@ def generate_collage(list_images):
 
     return collage_img
 
+@sio.event
 def photobooth_workflow(event = None):
+    sio.emit('xbox', {'data': 'foobar'})
+
+    return
     global is_shooting_running
     if event is not None and event.keycode != 36:
         return 0
@@ -184,9 +191,10 @@ def print_photo():
 
 
 def show_error(msg):
-    messagebox.showerror("Error", msg)
-    root.withdraw()
-    sys.exit()
+    # messagebox.showerror("Error", msg)
+    # root.withdraw()
+    # sys.exit()
+    print('show_error ---')
 
 def quit_(event):
     if event is not None and event.keycode == 9:
@@ -204,6 +212,14 @@ def reset_ui():
     countdown.pack_forget()
     photobooth_ui.print_screen.pack_forget()
 
+@sio.on('xboxz')
+def another_event(event_name):
+    sio.emit('xbox')
+    print('-------------------------------- gregre')
+
+def start_socketio_server():
+    eventlet.wsgi.server(eventlet.listen(('', 8000)), app)
+
 if __name__ == "__main__":
     setup_files_and_folders()
 
@@ -212,6 +228,9 @@ if __name__ == "__main__":
 
     root.geometry(f"600x800")
     # root.geometry(f"{screen_width}x{screen_height}")
+
+    
+
 
     actions = { 
         "take_pictures": photobooth_workflow,
@@ -227,6 +246,15 @@ if __name__ == "__main__":
     photobooth_ui.home_screen.pack(expand=True, fill='both')
 
     countdown = Countdown(master=root)
+
+    # pool = Pool(max_workers=1)
+    # f = pool.submit(subprocess.call, start_socketio_server, shell=True)
+    # f.add_done_callback(start_socketio_server)
+    sio.emit('xbox', {'data': 'foobar'})
+    start_socketio_server()
+    # _thread.start_new_thread(start_socketio_server, ())
+
+    # sio.emit('my event', {'data': 'foobar'})
 
     root.bind("<KeyPress>", photobooth_workflow)
     root.bind("<KeyPress>", quit_)
