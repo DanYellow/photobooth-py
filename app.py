@@ -2,12 +2,10 @@ import os, time, glob, random
 
 from tkinter import Tcl
 from flask import Flask, render_template, request, Blueprint
-from flask_cors import CORS
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.filters['zip'] = zip
-CORS(app)
 
 gallery_thumb_bp = Blueprint(
     'thumb', 
@@ -95,8 +93,5 @@ def cards():
         classes=generate_grid_classes(len(images_taken_sorted))
     )
 
-
-
 if __name__ == "__main__":
     app.run(port=5000, host="0.0.0.0")
-    print('start')

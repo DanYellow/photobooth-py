@@ -1,14 +1,6 @@
 version: '3.2'
 
 services:
-#   photobooth:
-#     build:
-#       context: '../'
-#       dockerfile: 'docker/photobooth/Dockerfile'
-#     container_name: photobooth
-#     privileged: true
-#     devices:
-#       - '/dev:/dev'
   nginx:
     image: nginx:latest
     container_name: nginx

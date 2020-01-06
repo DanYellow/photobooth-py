@@ -31,7 +31,9 @@ collage_name = None
 is_shooting_running = False
 
 # create a Socket.IO server
-sio = socketio.Server(cors_allowed_origins="*")
+sio = socketio.Server(cors_allowed_origins="*", 
+engineio_logger=True, logger=True
+)
     
 # wrap with a WSGI application
 app = socketio.WSGIApp(sio)
@@ -121,48 +123,58 @@ def generate_collage(list_images):
 
     return collage_img
 
-@sio.event
-def photobooth_workflow(event = None):
-    sio.emit('xbox', {'data': 'foobar'})
+# @sio.on('xbox')
+def photobooth_workflow(sid = "hello"):
+    print('sid', sid)
+    sio.emit('xbox', "hello")
 
-    return
-    global is_shooting_running
-    if event is not None and event.keycode != 36:
-        return 0
-    if is_shooting_running is True:
-        return 0
-    is_shooting_running = True
+    # return
+    # global is_shooting_running
+    # if event is not None and event.keycode != 36:
+    #     return 0
+    # if is_shooting_running is True:
+    #     return 0
+    # is_shooting_running = True
 
-    def pb_anonymous(nb_photos_taken = 2):
-        photobooth_ui.pack(
-            expand = "y",
-            fill = "both"
-        )
+    # def pb_anonymous(nb_photos_taken = 2):
+    #     photobooth_ui.pack(
+    #         expand = "y",
+    #         fill = "both"
+    #     )
 
-        n_last_images = get_nlast_images(nb_photos_taken)
-        images_in_ram = set_nlast_photos_in_ram(n_last_images)
+    #     n_last_images = get_nlast_images(nb_photos_taken)
+    #     images_in_ram = set_nlast_photos_in_ram(n_last_images)
         
-        create_thumbnails(images_in_ram)
-        photobooth_ui.gallery_bg.load()
-        generate_collage(images_in_ram)
+    #     create_thumbnails(images_in_ram)
+    #     photobooth_ui.gallery_bg.load()
+    #     generate_collage(images_in_ram)
 
-        photobooth_ui.collage_screen.pack(expand=True, fill='both', pady = 10,
-            padx = 10)
+    #     photobooth_ui.collage_screen.pack(expand=True, fill='both', pady = 10,
+    #         padx = 10)
 
-    photobooth_ui.home_screen.pack_forget()
+    # photobooth_ui.home_screen.pack_forget()
 
-    interval = 3
-    countdown.generate_ui(interval)
+    # interval = 3
+    # countdown.generate_ui(interval)
 
-    pb_anonymous()
+    # pb_anonymous()
     
-    camera.capture(
-        countdown = countdown,
-        nb_takes = 2, 
-        end_shooting_callback = pb_anonymous,
-        interval = interval,
-        photobooth_ui = photobooth_ui
-    )
+    # camera.capture(
+    #     countdown = countdown,
+    #     nb_takes = 2, 
+    #     end_shooting_callback = pb_anonymous,
+    #     interval = interval,
+    #     photobooth_ui = photobooth_ui
+    # )
+
+@sio.event
+def my_event(sid, data):
+    print('f', sid, data)
+    pass
+
+@sio.event
+def connect(sid, environ):
+    print('connect ', sid)
 
 def check_printing():
     while True:
@@ -212,10 +224,12 @@ def reset_ui():
     countdown.pack_forget()
     photobooth_ui.print_screen.pack_forget()
 
-@sio.on('xboxz')
+# @sio.on('xbox')
 def another_event(event_name):
-    sio.emit('xbox')
-    print('-------------------------------- gregre')
+    sio.emit('xbox', "greger")
+
+def foo():
+    another_event("event_name")
 
 def start_socketio_server():
     eventlet.wsgi.server(eventlet.listen(('', 8000)), app)
@@ -231,9 +245,9 @@ if __name__ == "__main__":
 
     
 
-
+    another_event("event_name")
     actions = { 
-        "take_pictures": photobooth_workflow,
+        "take_pictures": foo,
         "not_print": reset_ui,
         "print": print_photo
     }
@@ -250,9 +264,8 @@ if __name__ == "__main__":
     # pool = Pool(max_workers=1)
     # f = pool.submit(subprocess.call, start_socketio_server, shell=True)
     # f.add_done_callback(start_socketio_server)
-    sio.emit('xbox', {'data': 'foobar'})
-    start_socketio_server()
-    # _thread.start_new_thread(start_socketio_server, ())
+    
+    _thread.start_new_thread(start_socketio_server, ())
 
     # sio.emit('my event', {'data': 'foobar'})
 

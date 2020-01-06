@@ -32,15 +32,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js">
     </script>
     <script>
-        var socket = io.connect('http://0.0.0.0:8000');
+        var socket = io.connect('ws://0.0.0.0:8000');
         // var socket = io.connect('http://' + document.domain + ':' + location.port);
         socket.on('xbox', function(msg) {
-            console.log('greger')
+            console.log('greger', msg)
         });
 
+
         document.getElementById('foo').onclick = (() => {
-            console.log('hello')
-            socket.emit('ps')
+            socket.emit('xbox')
         })
 
     </script>
