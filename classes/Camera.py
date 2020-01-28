@@ -94,7 +94,7 @@ class Camera:
                 '--set-config', 
                 'shutterspeed=1/80',
                 '--set-config',
-                'whitebalance=0'
+                'whitebalance=0',
                 '--set-config',
                 'iso=Auto'
             ]
