@@ -94,7 +94,7 @@ def generate_collage(list_images):
     collage_img = Image.new('RGB', collage_img_size
         # int(collage_img_height * (1/collage_img_ratio)),
         # collage_img_height * len(list_images)
-    , color=color_black)
+    , color=color_white)
 
 #    images_positions = [[0, 0], [0, 300], [0, 600]]
     
