@@ -112,7 +112,8 @@ def generate_collage(list_images):
     collage_name = list_images[0].filename
     collage_img.save(list_images[0].filename, "JPEG", quality=65)
 
-    collage_img.paste(imtest)
+    # test for design
+    # collage_img.paste(imtest)
 
     collage_img.thumbnail((600, 600))
     img = ImageTk.PhotoImage(collage_img)
@@ -121,11 +122,7 @@ def generate_collage(list_images):
 
     return collage_img
 
-@sio.event
 def photobooth_workflow(event = None):
-    sio.emit('xbox', {'data': 'foobar'})
-
-    return
     global is_shooting_running
     if event is not None and event.keycode != 36:
         return 0
@@ -133,7 +130,7 @@ def photobooth_workflow(event = None):
         return 0
     is_shooting_running = True
 
-    def pb_anonymous(nb_photos_taken = 2):
+    def shooting_callback(nb_photos_taken = 2):
         photobooth_ui.pack(
             expand = "y",
             fill = "both"
@@ -153,13 +150,11 @@ def photobooth_workflow(event = None):
 
     interval = 3
     countdown.generate_ui(interval)
-
-    pb_anonymous()
     
     camera.capture(
         countdown = countdown,
         nb_takes = 2, 
-        end_shooting_callback = pb_anonymous,
+        end_shooting_callback = shooting_callback,
         interval = interval,
         photobooth_ui = photobooth_ui
     )
@@ -191,10 +186,9 @@ def print_photo():
 
 
 def show_error(msg):
-    # messagebox.showerror("Error", msg)
-    # root.withdraw()
-    # sys.exit()
-    print('show_error ---')
+    messagebox.showerror("Error", msg)
+    root.withdraw()
+    sys.exit()
 
 def quit_(event):
     if event is not None and event.keycode == 9:
@@ -212,14 +206,6 @@ def reset_ui():
     countdown.pack_forget()
     photobooth_ui.print_screen.pack_forget()
 
-@sio.on('xboxz')
-def another_event(event_name):
-    sio.emit('xbox')
-    print('-------------------------------- gregre')
-
-def start_socketio_server():
-    eventlet.wsgi.server(eventlet.listen(('', 8000)), app)
-
 if __name__ == "__main__":
     setup_files_and_folders()
 
@@ -228,9 +214,6 @@ if __name__ == "__main__":
 
     root.geometry(f"600x800")
     # root.geometry(f"{screen_width}x{screen_height}")
-
-    
-
 
     actions = { 
         "take_pictures": photobooth_workflow,
@@ -246,15 +229,6 @@ if __name__ == "__main__":
     photobooth_ui.home_screen.pack(expand=True, fill='both')
 
     countdown = Countdown(master=root)
-
-    # pool = Pool(max_workers=1)
-    # f = pool.submit(subprocess.call, start_socketio_server, shell=True)
-    # f.add_done_callback(start_socketio_server)
-    sio.emit('xbox', {'data': 'foobar'})
-    start_socketio_server()
-    # _thread.start_new_thread(start_socketio_server, ())
-
-    # sio.emit('my event', {'data': 'foobar'})
 
     root.bind("<KeyPress>", photobooth_workflow)
     root.bind("<KeyPress>", quit_)
