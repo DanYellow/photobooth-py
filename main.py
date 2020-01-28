@@ -112,7 +112,8 @@ def generate_collage(list_images):
     collage_name = list_images[0].filename
     collage_img.save(list_images[0].filename, "JPEG", quality=65)
 
-    collage_img.paste(imtest)
+    # test for design
+    # collage_img.paste(imtest)
 
     collage_img.thumbnail((600, 600))
     img = ImageTk.PhotoImage(collage_img)

@@ -88,13 +88,15 @@ class Camera:
 
         try:
             camera_setup_cmd = [
-                'gphoto2', 
+                'gphoto2',
                 '--set-config', 
                 'capturetarget=1', 
                 '--set-config', 
-                'shutterspeed=1/60',
+                'shutterspeed=1/80',
                 '--set-config',
                 'whitebalance=0'
+                '--set-config',
+                'iso=Auto'
             ]
             camera_setup_process = subprocess.Popen(camera_setup_cmd, stdout=subprocess.PIPE)
             if camera_setup_process.wait() != 0:
