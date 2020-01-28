@@ -16,7 +16,6 @@
                 <li><a href="/" class="active">Général</a></li>
                 <li><a href="/cards">Cartes de voeux</a></li>
             </ul>
-            <button id="foo"> hello</button>
         </nav>
         <div class="grid">
             {% for image, class in images_list|zip(classes) %}
@@ -28,22 +27,6 @@
             {% endfor %}
         </div>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js">
-    </script>
-    <script>
-        var socket = io.connect('http://0.0.0.0:8000');
-        // var socket = io.connect('http://' + document.domain + ':' + location.port);
-        socket.on('xbox', function(msg) {
-            console.log('greger')
-        });
-
-        document.getElementById('foo').onclick = (() => {
-            console.log('hello')
-            socket.emit('ps')
-        })
-
-    </script>
 </body>
 
 </html>

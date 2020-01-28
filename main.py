@@ -129,7 +129,7 @@ def photobooth_workflow(event = None):
         return 0
     is_shooting_running = True
 
-    def pb_anonymous(nb_photos_taken = 2):
+    def shooting_callback(nb_photos_taken = 2):
         photobooth_ui.pack(
             expand = "y",
             fill = "both"
@@ -149,13 +149,11 @@ def photobooth_workflow(event = None):
 
     interval = 3
     countdown.generate_ui(interval)
-
-    pb_anonymous()
     
     camera.capture(
         countdown = countdown,
         nb_takes = 2, 
-        end_shooting_callback = pb_anonymous,
+        end_shooting_callback = shooting_callback,
         interval = interval,
         photobooth_ui = photobooth_ui
     )
@@ -206,8 +204,6 @@ def reset_ui():
     photobooth_ui.collage_screen.pack_forget()
     countdown.pack_forget()
     photobooth_ui.print_screen.pack_forget()
-
-
 
 if __name__ == "__main__":
     setup_files_and_folders()
