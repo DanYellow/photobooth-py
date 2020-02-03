@@ -5,6 +5,7 @@
 ## Then
 #  sudo chmod 744 /bin/photobooth-exec.bash
 
+docker container stop street_photo_flask
 # starts the server
 cd ~/Documents/projects/photobooth-py/docker
 docker-compose up -d

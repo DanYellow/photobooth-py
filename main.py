@@ -1,5 +1,5 @@
 import time
-import glob, os, sys, random, subprocess, threading, eventlet, socketio
+import glob, os, sys, random, subprocess, threading
 import _thread
 
 from tkinter import messagebox, Tk, Tcl, Button
@@ -12,7 +12,7 @@ from classes.Camera import Camera
 from classes.Countdown import Countdown
 
 root = Tk()
-# root['bg'] = 'white'
+root['bg'] = 'black'
 root.title('Photomaton')
 # root.attributes("-fullscreen", 1)
 # root.option_add('*Dialog.msg.width', 20)
@@ -29,12 +29,6 @@ SCREEN_WIDTH = 600
 collage_name = None
 
 is_shooting_running = False
-
-# create a Socket.IO server
-sio = socketio.Server(cors_allowed_origins="*")
-    
-# wrap with a WSGI application
-app = socketio.WSGIApp(sio)
 
 def get_nlast_images(nb_images):
     imgs_list_full_dir = f"{ROOT_DIR}/_tmp/full/"
@@ -181,8 +175,8 @@ def print_photo():
     print_cmd = f"""lp -d Canon_SELPHY_CP1300 -o fit-to-page {ROOT_DIR}/_tmp/cards/{collage_name}"""
     os.system(print_cmd)
     
-    ui_thread = threading.Thread(target=check_printing)
-    ui_thread.start()
+    # ui_thread = threading.Thread(target=check_printing)
+    # ui_thread.start()
 
 
 def show_error(msg):
