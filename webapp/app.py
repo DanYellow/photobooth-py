@@ -1,4 +1,4 @@
-import os, time, glob, random
+import os, glob, random
 
 from tkinter import Tcl
 from flask import Flask, render_template, request, Blueprint
@@ -23,30 +23,30 @@ gallery_full_bp = Blueprint(
 )
 app.register_blueprint(gallery_full_bp)
 
-gallery_cards_bp = Blueprint(
-    'cards', 
+gallery_collages_bp = Blueprint(
+    'collages', 
     __name__, 
-    static_url_path='/_tmp/cards', 
-    static_folder='_tmp/cards'
+    static_url_path='/_tmp/collages', 
+    static_folder='_tmp/collages'
 )
-app.register_blueprint(gallery_cards_bp)
+app.register_blueprint(gallery_collages_bp)
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-
 os.chdir(ROOT_DIR)
-full_dir = f"{ROOT_DIR}/_tmp/full"
-cards_dir = f"{ROOT_DIR}/_tmp/cards"
 
-os.popen(f"mkdir -p {full_dir} && mkdir -p {cards_dir}")
+full_dir = f"{ROOT_DIR}/_tmp/full"
+collages_dir = f"{ROOT_DIR}/_tmp/collages"
+
+os.popen(f"mkdir -p {full_dir} && mkdir -p {collages_dir}")
 
 def generate_grid_classes(nb_items):
     def get_class(value):
         if(value <= 0.5):
             return None
         elif(value > 0.5 and value <= 0.87):
-            return "--medium"
+            return "item--medium"
         else:
-            return "--large"
+            return "item--large"
 
     list_values = []
     for _ in range(nb_items):
@@ -73,9 +73,9 @@ def index():
         classes=generate_grid_classes(len(images_taken_sorted))
     )
 
-@app.route('/cards')
-def cards():
-    path = f"{ROOT_DIR}/_tmp/cards"
+@app.route('/collages')
+def collages():
+    path = f"{ROOT_DIR}/_tmp/collages"
     os.chdir(path)
 
     images_taken = glob.glob('*.JPG')
@@ -86,7 +86,7 @@ def cards():
     images_taken_sorted = list(reversed(images_taken_sorted))
 
     return render_template(
-        'cards.html',
+        'collages.html',
         images_list=images_taken_sorted,
         classes=generate_grid_classes(len(images_taken_sorted))
     )
