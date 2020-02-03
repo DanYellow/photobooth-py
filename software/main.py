@@ -19,7 +19,7 @@ root.title('Photomaton')
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT_DIR = f"{os.path.dirname(os.path.abspath(__file__))}/.."  
 
 photobooth_ui = None
 web_gallery = None
@@ -44,9 +44,9 @@ def get_nlast_images(nb_images):
 def setup_files_and_folders():
     os.chdir(ROOT_DIR)
     full_dir = f"{ROOT_DIR}/_tmp/full"
-    cards_dir = f"{ROOT_DIR}/_tmp/cards"
+    collages_dir = f"{ROOT_DIR}/_tmp/collages"
 
-    os.popen(f"mkdir -p {full_dir} && mkdir -p {cards_dir}")
+    os.popen(f"mkdir -p {full_dir} && mkdir -p {collages_dir}")
 
     return 0
 
@@ -75,7 +75,7 @@ def generate_collage(list_images):
     imtest = Image.open("white.png")
 
     global collage_name
-    os.chdir(f"{ROOT_DIR}/_tmp/cards")
+    os.chdir(f"{ROOT_DIR}/_tmp/collages")
 
     collage_img_ratio = 15 / 10
     collage_img_width = 1500
@@ -172,7 +172,7 @@ def print_photo():
 
     os.system("cupsenable Canon_SELPHY_CP1300")
 
-    print_cmd = f"""lp -d Canon_SELPHY_CP1300 -o fit-to-page {ROOT_DIR}/_tmp/cards/{collage_name}"""
+    print_cmd = f"""lp -d Canon_SELPHY_CP1300 -o fit-to-page {ROOT_DIR}/_tmp/collages/{collage_name}"""
     os.system(print_cmd)
     
     # ui_thread = threading.Thread(target=check_printing)

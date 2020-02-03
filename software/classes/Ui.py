@@ -1,4 +1,6 @@
 from tkinter import Label, Button, PanedWindow, Frame
+import tkinter.font as tkFont
+
 from PIL import ImageTk
 
 import qrcode
@@ -56,12 +58,14 @@ class PhotoboothUi(Frame):
         # HOME SCREEN
         self.home_screen = PanedWindow(self, orient = "vertical", bg = self['bg'])
 
+        helv36 = tkFont.Font(family='Helvetica', size=30, weight='bold')
         self.pictures_btn = Button(
             self.home_screen,
-            height = 31,
+            height = 5,
             text = self.translation['fr']['take_pict'],
             command = self.actions['take_pictures']
         )
+        self.pictures_btn['font'] = helv36
         self.home_screen.add(self.pictures_btn, pady=10, padx=10)
 
         qrc_frame = Frame(self, bg=self['bg'])

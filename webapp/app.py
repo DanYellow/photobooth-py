@@ -42,7 +42,7 @@ os.popen(f"mkdir -p {full_dir} && mkdir -p {collages_dir}")
 def generate_grid_classes(nb_items):
     def get_class(value):
         if(value <= 0.5):
-            return None
+            return ""
         elif(value > 0.5 and value <= 0.87):
             return "item--medium"
         else:

@@ -14,16 +14,16 @@
         <nav>
             <ul>
                 <li><a href="/">Général</a></li>
-                <li><a href="/cards" class="active">Cartes de voeux</a></li>
+                <li><a href="/collages" class="active">Collages</a></li>
             </ul>
         </nav>
         <div class="grid">
             {% for image, class in images_list|zip(classes) %}
-            {{ gallery_item(
-            url_for('cards.static', filename=image),
-            url_for('cards.static', filename=image),
-            class
-            )}}
+                {{ gallery_item(
+                    url_for('collages.static', filename=image), 
+                    url_for('collages.static', filename=image),
+                    class
+                )}} 
             {% endfor %}
         </div>
     </div>
