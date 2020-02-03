@@ -1,9 +1,11 @@
 FROM python:3.7
 
-COPY . /app
-
 WORKDIR /app
 
-RUN pip install -r requirements.txt
+COPY ./webapp/ /app
 
-CMD python app.py
+RUN pip install --upgrade pip
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+ENTRYPOINT python app.py

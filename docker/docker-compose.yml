@@ -1,41 +1,16 @@
 version: '3.2'
 
 services:
-#   photobooth:
-#     build:
-#       context: '../'
-#       dockerfile: 'docker/photobooth/Dockerfile'
-#     container_name: photobooth
-#     privileged: true
-#     devices:
-#       - '/dev:/dev'
-  nginx:
-    image: nginx:latest
-    container_name: nginx
-    ports:
-      - 80:80
-    volumes:
-      - ../nginx.conf:/etc/nginx/conf.d/default.conf
-    depends_on:
-      - flask
-    networks:
-      - my-network
-  flask:
+  photobooth_webapp:
     build:
       context: '../'
       dockerfile: 'docker/flask/Dockerfile'
-    container_name: flask
+    container_name: photobooth_webapp
     expose:
       - "5000"
     ports:
       - 80:5000
     volumes:
-      - ../:/app/
+      - ../webapp/:/app/
+      - ../_tmp/:/app/_tmp
     restart: always
-    networks:
-      my-network:
-        aliases:
-          - photobooth.local
-
-networks:
-    my-network:

@@ -11,5 +11,5 @@ cd ~/Documents/projects/photobooth-py/docker
 docker-compose up -d
 
 # starts the photobooth app
-cd ~/Documents/projects/photobooth-py
+cd ~/Documents/projects/photobooth-py/software
 python main.py

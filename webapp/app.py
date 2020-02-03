@@ -2,12 +2,10 @@ import os, time, glob, random
 
 from tkinter import Tcl
 from flask import Flask, render_template, request, Blueprint
-# from flask_cors import CORS
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.filters['zip'] = zip
-# CORS(app)
 
 gallery_thumb_bp = Blueprint(
     'thumb', 
@@ -39,7 +37,7 @@ os.chdir(ROOT_DIR)
 full_dir = f"{ROOT_DIR}/_tmp/full"
 cards_dir = f"{ROOT_DIR}/_tmp/cards"
 
-os.popen(f"sudo mkdir -p {full_dir} && sudo mkdir -p {cards_dir}")
+os.popen(f"mkdir -p {full_dir} && mkdir -p {cards_dir}")
 
 def generate_grid_classes(nb_items):
     def get_class(value):
@@ -47,7 +45,7 @@ def generate_grid_classes(nb_items):
             return None
         elif(value > 0.5 and value <= 0.87):
             return "--medium"
-        else
+        else:
             return "--large"
 
     list_values = []
