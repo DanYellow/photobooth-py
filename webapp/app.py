@@ -34,10 +34,9 @@ app.register_blueprint(gallery_collages_bp)
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 os.chdir(ROOT_DIR)
 
+thumbs_dir = f"{ROOT_DIR}/_tmp"
 full_dir = f"{ROOT_DIR}/_tmp/full"
 collages_dir = f"{ROOT_DIR}/_tmp/collages"
-
-os.popen(f"mkdir -p {full_dir} && mkdir -p {collages_dir}")
 
 def generate_grid_classes(nb_items):
     def get_class(value):
@@ -75,8 +74,7 @@ def index():
 
 @app.route('/collages')
 def collages():
-    path = f"{ROOT_DIR}/_tmp/collages"
-    os.chdir(path)
+    os.chdir(collages_dir)
 
     images_taken = glob.glob('*.JPG')
     images_taken.extend(glob.glob('*.jpeg'))

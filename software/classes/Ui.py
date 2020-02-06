@@ -63,7 +63,12 @@ class PhotoboothUi(Frame):
             self.home_screen,
             height = 5,
             text = self.translation['fr']['take_pict'],
-            command = self.actions['take_pictures']
+            command = self.actions['take_pictures'],
+            background="white",
+            highlightthickness=4, 
+            highlightcolor="#37d3ff", 
+            highlightbackground="#37d3ff", 
+            borderwidth=0
         )
         self.pictures_btn['font'] = helv36
         self.home_screen.add(self.pictures_btn, pady=10, padx=10)
@@ -131,13 +136,13 @@ class PhotoboothUi(Frame):
 
     def __init__(self, actions, master=None):
         bgc = 'white'
-        Frame.__init__(self, master, image = None, bg = bgc, cursor="none")
+        Frame.__init__(self, master, image = None, bg = bgc) # , cursor="none"
         self['bg'] = bgc
 
         self.actions = actions
         self.translation = {
             'fr': {
-                'take_pict': "Prendre des photos !",
+                'take_pict': "Commencer",
                 'print': 'Imprimer',
                 'cancel': "Annuler",
                 'not_print': "Ne pas imprimer",

@@ -19,7 +19,7 @@ root.title('Photomaton')
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-ROOT_DIR = f"{os.path.dirname(os.path.abspath(__file__))}/.."  
+ROOT_DIR = f"{os.path.dirname(os.path.abspath(__file__))}/.."
 
 photobooth_ui = None
 web_gallery = None
@@ -72,7 +72,7 @@ def create_thumbnails(list_images_obj):
 
 def generate_collage(list_images):
     os.chdir(f"{ROOT_DIR}")
-    imtest = Image.open("white.png")
+    # imtest = Image.open("white.png")
 
     global collage_name
     os.chdir(f"{ROOT_DIR}/_tmp/collages")
@@ -180,9 +180,10 @@ def print_photo():
 
 
 def show_error(msg):
-    messagebox.showerror("Error", msg)
-    root.withdraw()
-    sys.exit()
+    print('m', msg)
+    # messagebox.showerror("Error", msg)
+    # root.withdraw()
+    # sys.exit() 
 
 def quit_(event):
     if event is not None and event.keycode == 9:
