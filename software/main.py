@@ -19,7 +19,7 @@ class PhotoboothApplication(ttk.Frame):
         self.translation = {
             'fr': {
                 'take_pict': "COMMENCER",
-                'help': "aide".upper(),
+                'help': "aide",
                 'print': 'Imprimer',
                 'cancel': "Annuler",
                 'not_print': "Ne pas imprimer",
@@ -68,12 +68,24 @@ class PhotoboothApplication(ttk.Frame):
             height="520",
             style='HomeScreenBtnsContainer.TFrame'
         )
-        # navigation.configure(width=500, height=450)
+        
+
+        qrc_frame = tk.Frame(navigation)
+        qrc_frame.pack(pady=10)
+
+        qrc_title_label = tk.Label(
+            qrc_frame, 
+            text=self.translation['fr']['access_gallery'],
+            fg="black",
+            bg=self['bg'],
+            font = ('Sans','15', 'bold')
+        )
+        qrc_title_label.pack()
+
 
         navigation.pack(pady=30)
         navigation.pack_propagate(0)
         
-
         btns_container = tk.Frame(
             navigation,
         )
@@ -98,7 +110,7 @@ class PhotoboothApplication(ttk.Frame):
         help_btn = tk.Button(
             btns_container,
             height = 2,
-            text = self.translation['fr']['help'],
+            text = self.translation['fr']['help'].upper(),
             # command = self.actions['take_pictures'],
             background="#e67e22",
             highlightthickness=2, 
