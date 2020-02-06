@@ -1,7 +1,8 @@
 import tkinter.ttk as ttk
 import tkinter as tk
 import tkinter.font as tkFont
-import glob, os, qrcode
+import glob, os, qrcode, sys
+from PIL import ImageTk
 
 from classes.Gallery import Gallery
 
@@ -28,14 +29,21 @@ class PhotoboothApplication(ttk.Frame):
                 'take_another_one': "Prendre une autre photo",
                 'loading': "Chargement",
                 'printing': "Impression lancée",
-                'access_gallery': "Accéder à la galerie",
-                'link_to_gallery': "ou \nraspberrypi.local",
+                'access_gallery': "Accès aux photos \n raspberrypi.local \n ou",
+                'link_to_gallery': "raspberrypi.local",
             }
         }
+
+        parent.bind("<KeyPress>", self.quit_)
 
         self.configure_gui()
         self.create_widgets()
         self.setup_files_and_folders()
+
+    def quit_(self, event):
+        if event is not None and event.keycode == 9:
+            sys.exit()
+        return 0
 
     def configure_gui(self):
         # screen_width = int(root.winfo_screenwidth())
@@ -60,36 +68,61 @@ class PhotoboothApplication(ttk.Frame):
         main_container = tk.Frame(self, bg = "white")
         main_container.pack(fill="both", expand=True)
 
+        navigation_style_bg = "#262727"
         navigation_style = ttk.Style()
-        navigation_style.configure('HomeScreenBtnsContainer.TFrame', background="#262727")
+        navigation_style.configure(
+            'HomeScreenBtnsContainer.TFrame',
+            background=navigation_style_bg,
+            highlightthickness=4,
+            highlightcolor="red"
+        )
         navigation = ttk.Frame(
             main_container,
             width="360",
             height="520",
-            style='HomeScreenBtnsContainer.TFrame'
+            style='HomeScreenBtnsContainer.TFrame',
         )
-        
+        navigation.pack(pady=30)
+        navigation.pack_propagate(0)
 
-        qrc_frame = tk.Frame(navigation)
-        qrc_frame.pack(pady=10)
+        qrc_frame = tk.Frame(navigation, bg=navigation_style_bg)
+        qrc_frame.pack(pady=0)
 
         qrc_title_label = tk.Label(
             qrc_frame, 
             text=self.translation['fr']['access_gallery'],
-            fg="black",
-            bg=self['bg'],
-            font = ('Sans','15', 'bold')
+            bg=navigation_style_bg,
+            font = ('DejaVu Sans Mono','15'),
+            fg="white"
         )
-        qrc_title_label.pack()
+        qrc_title_label.pack(side="top", pady=(30, 10))
 
+        qr = qrcode.QRCode(
+            version = 1,
+            error_correction = qrcode.constants.ERROR_CORRECT_L,
+            box_size = 5,
+            border = 0,
+        )
+        qr.add_data('http://raspberrypi.local/')
+        qr.make(fit=True)
+        img_tmp = qr.make_image(fill_color="black", back_color="white")
+        img = ImageTk.PhotoImage(img_tmp)
 
-        navigation.pack(pady=30)
-        navigation.pack_propagate(0)
+        qrc_label = tk.Label(
+            qrc_frame,
+            image=img, 
+            bg=navigation_style_bg,
+        )
+        qrc_label.image = img
+        qrc_label.pack(side="bottom")
+
+        
         
         btns_container = tk.Frame(
             navigation,
+            bg=navigation_style_bg,
         )
-        btns_container.pack(side="top", fill="x", expand=True)
+        btns_container.pack(side="bottom", fill="x", expand=True, padx=50)
 
         btns_container_font_style = tkFont.Font(family='DejaVu Sans Mono', size=15)
         start_btn = tk.Button(
@@ -105,7 +138,7 @@ class PhotoboothApplication(ttk.Frame):
             fg="white",
             font=btns_container_font_style
         )
-        start_btn.pack(fill="x", expand=True, padx=10, pady=5)
+        start_btn.pack(fill="x", expand=True, pady=(0, 8))
 
         help_btn = tk.Button(
             btns_container,
@@ -120,7 +153,7 @@ class PhotoboothApplication(ttk.Frame):
             fg="white",
             font=btns_container_font_style
         )
-        help_btn.pack(fill="x", expand=True, padx=10, pady=5)
+        help_btn.pack(fill="x", expand=True, pady=(8, 0))
 
         gallery_bg = Gallery(main_container, self.parent)
         gallery_bg.place(
