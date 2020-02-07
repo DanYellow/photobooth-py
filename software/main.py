@@ -51,12 +51,11 @@ class PhotoboothApplication(ttk.Frame):
         return 0
 
     def configure_gui(self):
-        # screen_width = int(root.winfo_screenwidth())
-        # screen_height = int(root.winfo_screenheight())
-        # root.geometry(f"{screen_width}x{screen_height}")
+        screen_width = int(root.winfo_screenwidth()) if int(root.winfo_screenwidth()) < 1000 else 600
+        screen_height = int(root.winfo_screenheight()) if int(root.winfo_screenheight()) < 1000 else 800
+        self.parent.geometry(f"{screen_width}x{screen_height}")
 
         self.parent.title('Photobooth')
-        self.parent.geometry(f"600x800")
         self.parent.resizable(False, False)
 
     def create_widgets(self):

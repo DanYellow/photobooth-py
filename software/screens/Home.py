@@ -23,7 +23,15 @@ class Home(tk.Frame):
         btns_container = self.create_btns_container(navigation)
         qr_code_area = self.create_qr_code_area(navigation)
 
-        w = tk.Canvas(navigation, width=200, height=1, bg="white")
+        w = tk.Canvas(
+            navigation,
+            width=200,
+            height=10,
+            bg=ttk.Style().lookup(navigation['style'], "background"),
+            highlightthickness=0,
+            relief='ridge'
+        )
+        w.create_line(2, 2, 600, 2, fill="white")
         w.pack(fill="x", pady=30, padx=40)
 
         # w.create_rectangle(0, 0, 150, 1, fill="blue", )
@@ -46,7 +54,7 @@ class Home(tk.Frame):
             'HomeScreenBtnsContainer.TFrame',
             background=navigation_style_bg,
             highlightthickness=4,
-            highlightcolor="red"
+            highlightbackground="red"
         )
         navigation = ttk.Frame(
             self,
