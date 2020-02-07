@@ -55,7 +55,8 @@ class Home(tk.Frame):
             background=navigation_style_bg,
             borderwidth=4,
             highlightbackground="black",
-            highlightthickness=1
+            highlightthickness=10,
+            bordercolor="red"
         )
         navigation = ttk.Frame(
             self,
@@ -77,7 +78,6 @@ class Home(tk.Frame):
         )
         btns_container_btns_height = 70
         btns_container_font_style = tkFont.Font(family='DejaVu Sans Mono', size=20)
-
 
         start_btn_bgc = '#a1d4f0'
         start_btn_icon_src = PIL.Image.open(f"{ROOT_DIR}/../assets/camera-icon.png").convert("RGBA")
