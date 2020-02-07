@@ -78,6 +78,9 @@ class Home(tk.Frame):
         btns_container_btns_height = 70
         btns_container_font_style = tkFont.Font(family='DejaVu Sans Mono', size=20)
         
+        img = Image.open("{ROOT_DIR}/../assets/photo-icon.png")
+        img = img.resize((50,50), Image.ANTIALIAS)
+        photoImg = PIL.ImageTk.PhotoImage(img)
 
         self.image = tk.PhotoImage(file=f"{ROOT_DIR}/../assets/photo-icon.png")
         self.start_btn = tk.Button(
@@ -90,7 +93,7 @@ class Home(tk.Frame):
             activebackground="#bceefe", 
             borderwidth=0,
             fg="white",
-            image=self.image,
+            image=photoImg,
             text = self.texts['take_pict'].upper(),
             font=btns_container_font_style,
             compound="left"
