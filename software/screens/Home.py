@@ -1,10 +1,12 @@
 import tkinter.ttk as ttk
 import tkinter as tk
 import tkinter.font as tkFont
-import qrcode
+import qrcode, os
 from PIL import ImageTk
 
 from classes.Gallery import Gallery
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class Home(tk.Frame):
     def __init__(self, master, root, texts, *args, **kwargs):
@@ -34,8 +36,6 @@ class Home(tk.Frame):
         w.create_line(2, 2, 600, 2, fill="white")
         w.pack(fill="x", pady=30, padx=40)
 
-        # w.create_rectangle(0, 0, 150, 1, fill="blue", )
-
         qr_code_area.pack(pady=0)
         btns_container.pack(side="bottom", fill="x", expand=False, padx=40, pady=(0, 20))
 
@@ -48,13 +48,14 @@ class Home(tk.Frame):
         gallery_bg.lower()
 
     def create_navigation(self):
-        navigation_style_bg = "#262727"
+        navigation_style_bg = "#333333"
         navigation_style = ttk.Style()
         navigation_style.configure(
             'HomeScreenBtnsContainer.TFrame',
             background=navigation_style_bg,
-            highlightthickness=4,
-            highlightbackground="red"
+            borderwidth=4,
+            highlightbackground="black",
+            highlightthickness=1
         )
         navigation = ttk.Frame(
             self,
@@ -74,19 +75,25 @@ class Home(tk.Frame):
             wrapper,
             bg = ttk.Style().lookup(wrapper['style'], "background"),
         )
-        btns_container_btns_height = 2
+        btns_container_btns_height = 70
         btns_container_font_style = tkFont.Font(family='DejaVu Sans Mono', size=20)
+        
+
+        self.image = tk.PhotoImage(file=f"{ROOT_DIR}/../assets/photo-icon.png")
         self.start_btn = tk.Button(
             btns_container,
             height = btns_container_btns_height,
             background="#a1d4f0",
-            highlightthickness=2, 
-            highlightcolor="red", 
             highlightbackground="#8e9ae9", 
+            highlightthickness=2,
+            activeforeground="#033754", 
+            activebackground="#bceefe", 
             borderwidth=0,
             fg="white",
+            image=self.image,
             text = self.texts['take_pict'].upper(),
-            font=btns_container_font_style
+            font=btns_container_font_style,
+            compound="left"
         )
         self.start_btn.pack(fill="x", expand=True, pady=(0, 8))
 
@@ -100,7 +107,9 @@ class Home(tk.Frame):
             borderwidth=0,
             fg="white",
             text = self.texts['help'].upper(),
-            font=btns_container_font_style
+            font=btns_container_font_style,
+            image=self.image,
+            compound="left"
         )
         self.help_btn.pack(fill="x", expand=True, pady=(8, 0))
 
