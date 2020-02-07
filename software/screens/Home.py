@@ -78,52 +78,63 @@ class Home(tk.Frame):
         btns_container_btns_height = 70
         btns_container_font_style = tkFont.Font(family='DejaVu Sans Mono', size=20)
 
-        R_NEW, G_NEW, B_NEW = (0, 174, 239)
-        
-        img = PIL.Image.open(f"{ROOT_DIR}/../assets/photo-icon.png").convert("RGBA")
-        pixels = img.load()
-        width, height = img.size
-        for x in range(width):
-            for y in range(height):
-                pixels[x, y] = (255, 255, 255, 1)
 
-        img = img.resize((20,20), PIL.Image.ANTIALIAS)
-        img_com = PIL.Image.composite(img, PIL.Image.new('RGB', img.size, '#a1d4f0'), img)
-        photoImg = PIL.ImageTk.PhotoImage(img_com)
+        start_btn_bgc = '#a1d4f0'
+        start_btn_icon_src = PIL.Image.open(f"{ROOT_DIR}/../assets/camera-icon.png").convert("RGBA")
+        start_btn_icon_src = start_btn_icon_src.resize((30, 30), PIL.Image.ANTIALIAS)
+        start_btn_bgc_tmp = PIL.Image.composite(
+            start_btn_icon_src,
+            PIL.Image.new('RGB', start_btn_icon_src.size, start_btn_bgc),
+            start_btn_icon_src
+        )
+        start_btn_icon = PIL.ImageTk.PhotoImage(start_btn_bgc_tmp)
 
-        self.image = tk.PhotoImage(file=f"{ROOT_DIR}/../assets/photo-icon.png")
         self.start_btn = tk.Button(
             btns_container,
             height = btns_container_btns_height,
-            background="#a1d4f0",
+            background=start_btn_bgc,
             highlightbackground="#8e9ae9", 
             highlightthickness=2,
             activeforeground="#033754", 
-            activebackground="#bceefe", 
+            activebackground=start_btn_bgc, 
             borderwidth=0,
             fg="white",
-            image=photoImg,
+            image=start_btn_icon,
             text = self.texts['take_pict'].upper(),
             font=btns_container_font_style,
             compound="left"
         )
-        self.start_btn.image = photoImg
+        self.start_btn.image = start_btn_icon
         self.start_btn.pack(fill="x", expand=True, pady=(0, 8))
+
+
+        help_btn_bgc = '#e67e22'
+        help_btn_icon_src = PIL.Image.open(f"{ROOT_DIR}/../assets/help-icon.png").convert("RGBA")
+        help_btn_icon_src = help_btn_icon_src.resize((30, 30), PIL.Image.ANTIALIAS)
+        help_btn_bgc_tmp = PIL.Image.composite(
+            help_btn_icon_src,
+            PIL.Image.new('RGB', help_btn_icon_src.size, help_btn_bgc),
+            help_btn_icon_src
+        )
+        help_btn_icon = PIL.ImageTk.PhotoImage(help_btn_bgc_tmp)
 
         self.help_btn = tk.Button(
             btns_container,
             height = btns_container_btns_height,
-            background="#e67e22",
+            background=help_btn_bgc,
             highlightthickness=2, 
             highlightcolor="red", 
-            highlightbackground="#f2a560", 
+            highlightbackground="#f2a560",
+            activeforeground="#f2a560", 
+            activebackground=help_btn_bgc, 
             borderwidth=0,
             fg="white",
             text = self.texts['help'].upper(),
             font=btns_container_font_style,
-            image=self.image,
+            image=help_btn_icon,
             compound="left"
         )
+        self.help_btn.image = help_btn_icon
         self.help_btn.pack(fill="x", expand=True, pady=(8, 0))
 
         return btns_container
