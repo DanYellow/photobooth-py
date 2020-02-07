@@ -77,10 +77,18 @@ class Home(tk.Frame):
         )
         btns_container_btns_height = 70
         btns_container_font_style = tkFont.Font(family='DejaVu Sans Mono', size=20)
+
+        R_NEW, G_NEW, B_NEW = (0, 174, 239)
         
-        img = PIL.Image.open(f"{ROOT_DIR}/../assets/IMG_9355.JPG")
-        img = img.resize((50,50), PIL.Image.ANTIALIAS)
-        img_com = PIL.Image.composite(img, PIL.Image.new('RGB', img.size, 'white'), img)
+        img = PIL.Image.open(f"{ROOT_DIR}/../assets/photo-icon.png").convert("RGBA")
+        pixels = img.load()
+        width, height = img.size
+        for x in range(width):
+            for y in range(height):
+                pixels[x, y] = (255, 255, 255, 1)
+
+        img = img.resize((20,20), PIL.Image.ANTIALIAS)
+        img_com = PIL.Image.composite(img, PIL.Image.new('RGB', img.size, '#a1d4f0'), img)
         photoImg = PIL.ImageTk.PhotoImage(img_com)
 
         self.image = tk.PhotoImage(file=f"{ROOT_DIR}/../assets/photo-icon.png")
