@@ -2,7 +2,7 @@ import tkinter.ttk as ttk
 import tkinter as tk
 import tkinter.font as tkFont
 import qrcode, os
-from PIL import ImageTk
+import PIL
 
 from classes.Gallery import Gallery
 
@@ -78,9 +78,10 @@ class Home(tk.Frame):
         btns_container_btns_height = 70
         btns_container_font_style = tkFont.Font(family='DejaVu Sans Mono', size=20)
         
-        img = Image.open("{ROOT_DIR}/../assets/photo-icon.png")
-        img = img.resize((50,50), Image.ANTIALIAS)
-        photoImg = PIL.ImageTk.PhotoImage(img)
+        img = PIL.Image.open(f"{ROOT_DIR}/../assets/IMG_9355.JPG")
+        img = img.resize((50,50), PIL.Image.ANTIALIAS)
+        img_com = PIL.Image.composite(img, PIL.Image.new('RGB', img.size, 'white'), img)
+        photoImg = PIL.ImageTk.PhotoImage(img_com)
 
         self.image = tk.PhotoImage(file=f"{ROOT_DIR}/../assets/photo-icon.png")
         self.start_btn = tk.Button(
@@ -98,6 +99,7 @@ class Home(tk.Frame):
             font=btns_container_font_style,
             compound="left"
         )
+        self.start_btn.image = photoImg
         self.start_btn.pack(fill="x", expand=True, pady=(0, 8))
 
         self.help_btn = tk.Button(
@@ -153,7 +155,7 @@ class Home(tk.Frame):
         qr.add_data('http://raspberrypi.local/')
         qr.make(fit=True)
         img_tmp = qr.make_image(fill_color="black", back_color="white")
-        img = ImageTk.PhotoImage(img_tmp)
+        img = PIL.ImageTk.PhotoImage(img_tmp)
 
         qrc_label = tk.Label(
             qrc_frame,
