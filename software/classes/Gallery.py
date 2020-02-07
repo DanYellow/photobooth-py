@@ -5,12 +5,14 @@ import tkinter as tk
 from math import ceil
 from PIL import Image, ImageTk, ImageFile, ImageFilter
 
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+
 class Gallery(tk.Frame):
     def load(self):
+
         COLUMNS = ceil(self.root.winfo_width() / 150)
         image_count = 0
-
-        for infile in glob.glob(os.path.join("../_tmp/", '*.JPG')):
+        for infile in glob.glob(os.path.join(f"{ROOT_DIR}/../../_tmp/", '*.JPG')):
             image_count += 1
             r, c = divmod(image_count - 1, COLUMNS)
 
@@ -21,14 +23,13 @@ class Gallery(tk.Frame):
             img_container.image = tkimage
 
             img_container.grid(row=r, column=c)
-
+            
             self.grid_rowconfigure(r, pad=0)
             self.grid_columnconfigure(c, pad=0)
 
-    def __init__(self, master=None, root=None):
-        bgc = 'white'
-        tk.Frame.__init__(self, master, image = None, bg = bgc)
-        self['bg'] = bgc
+    def __init__(self, master=None, root=None, bg="white"):
+        tk.Frame.__init__(self, master, image = None, bg = bg)
+    
         self.master = master
         self.root = root
 
