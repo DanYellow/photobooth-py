@@ -1,8 +1,7 @@
 import tkinter.ttk as ttk
 import tkinter as tk
 import tkinter.font as tkFont
-import qrcode, os
-import PIL
+import os, PIL
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -59,7 +58,7 @@ class Result(tk.Frame):
             height = btns_container_btns_height,
             background=continue_btn_bgc,
             highlightthickness=2,
-            activeforeground="#033754", 
+            activeforeground="#f2a560",
             activebackground=continue_btn_bgc,
             highlightbackground="#f2a560",
             borderwidth=0,

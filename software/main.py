@@ -5,13 +5,14 @@ import glob, os, sys, PIL
 
 from screens.Home import Home
 from screens.Result import Result
+from screens.Countdown import Countdown
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class PhotoboothApplication(ttk.Frame):
-    def __init__(self, parent, *args, **kwargs):
-        self.parent = parent
-        ttk.Frame.__init__(self, self.parent, *args, **kwargs)
+    def __init__(self, root, *args, **kwargs):
+        self.root = root
+        ttk.Frame.__init__(self, self.root, *args, **kwargs)
         main_style = ttk.Style()
         main_style.configure('App.TFrame', background="white")
         self['style'] = 'App.TFrame'
@@ -40,17 +41,23 @@ class PhotoboothApplication(ttk.Frame):
         # self.create_widgets()
         self.setup_files_and_folders()
 
-        parent.bind("<KeyPress>", self.quit_)
+        root.bind("<KeyPress>", self.quit_)
 
-        self.home_screen = Home(self, self.parent, self.translation['fr'])
-        self.home_screen.start_btn.configure(command=self.start_photoshooting)
-        self.home_screen.pack(fill="both", expand=True)
+        self.countdown_screen = Countdown(
+            master=self,
+            root=self.root,
+            texts = self.translation['fr']
+        )
+        self.countdown_screen.pack(side="top", fill="both", expand=1)
+        
+        # self.home_screen = Home(self, self.root, self.translation['fr'])
+        # self.home_screen.start_btn.configure(command=self.start_photoshooting)
+        # self.home_screen.pack(fill="both", expand=True)
 
-        collage_path = f"{ROOT_DIR}/../_tmp/collages/IMG_9354.JPG"
-
-        self.result_screen = Result(self, self.parent, collage_path, self.translation['fr'])
-        self.result_screen.print_btn.configure(command=self.go_to_home_screen)
-        self.result_screen.continue_btn.configure(command=self.go_to_home_screen)
+        # collage_path = f"{ROOT_DIR}/../_tmp/collages/IMG_9354.JPG"
+        # self.result_screen = Result(self, self.root, collage_path, self.translation['fr'])
+        # self.result_screen.print_btn.configure(command=self.go_to_home_screen)
+        # self.result_screen.continue_btn.configure(command=self.go_to_home_screen)
 
     def quit_(self, event):
         if event is not None and event.keycode == 9:
@@ -60,10 +67,10 @@ class PhotoboothApplication(ttk.Frame):
     def configure_gui(self):
         screen_width = int(root.winfo_screenwidth()) if int(root.winfo_screenwidth()) < 1000 else 600
         screen_height = int(root.winfo_screenheight()) if int(root.winfo_screenheight()) < 1000 else 800
-        self.parent.geometry(f"{screen_width}x{screen_height}")
+        self.root.geometry(f"{screen_width}x{screen_height}")
 
-        self.parent.title('Photobooth')
-        self.parent.resizable(False, False)
+        self.root.title('Photobooth')
+        self.root.resizable(False, False)
 
     # def create_widgets(self):
     #     self.create_home_screen()
@@ -83,13 +90,9 @@ class PhotoboothApplication(ttk.Frame):
         self.result_screen.pack_forget()
         self.home_screen.pack(fill="both", expand=True)
 
-def callback():
-    print('hello')
-
 if __name__ == "__main__":
     root = tk.Tk()
     photobooth_app = PhotoboothApplication(root)
-    # photobooth_app.home_screen.start_btn.configure(command=callback, text="HELLO")
     photobooth_app.pack(side="top", fill="both", expand=True)
     
     root.mainloop()

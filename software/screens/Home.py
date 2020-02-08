@@ -144,7 +144,6 @@ class Home(tk.Frame):
             wrapper,
             bg= ttk.Style().lookup(wrapper['style'], "background")
         )
-        
         qrc_frame.pack(pady=0)
 
         qrc_title_label = tk.Label(
