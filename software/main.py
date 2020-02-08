@@ -44,12 +44,14 @@ class PhotoboothApplication(ttk.Frame):
         parent.bind("<KeyPress>", self.quit_)
 
         self.home_screen = Home(self, self.parent, self.translation['fr'])
-        # self.home_screen.pack(fill="both", expand=True)
+        self.home_screen.start_btn.configure(command=self.start_photoshooting)
+        self.home_screen.pack(fill="both", expand=True)
 
         collage_path = f"{ROOT_DIR}/../_tmp/collages/IMG_9354.JPG"
 
         self.result_screen = Result(self, self.parent, collage_path, self.translation['fr'])
-        self.result_screen.pack(fill="both", expand=True)
+        self.result_screen.print_btn.configure(command=self.go_to_home_screen)
+        self.result_screen.continue_btn.configure(command=self.go_to_home_screen)
 
     def quit_(self, event):
         if event is not None and event.keycode == 9:
@@ -73,6 +75,14 @@ class PhotoboothApplication(ttk.Frame):
         collages_dir = f"{self.ROOT_DIR}/_tmp/collages"
 
         os.popen(f"mkdir -p {full_dir} && mkdir -p {collages_dir}")
+
+    def start_photoshooting(self):
+        self.result_screen.pack(fill="both", expand=True)
+        self.home_screen.pack_forget()
+
+    def go_to_home_screen(self):
+        self.result_screen.pack_forget()
+        self.home_screen.pack(fill="both", expand=True)
 
 def callback():
     print('hello')
