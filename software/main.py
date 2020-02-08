@@ -93,7 +93,14 @@ class PhotoboothApplication(ttk.Frame):
         self.home_screen.pack(fill="both", expand=True)
 
     def on_countdown_ended(self):
+        self.countdown_screen.reset()
         self.countdown_screen.pack_forget()
+
+        self.root.after(5000, self.toast)
+
+    def toast(self):
+        self.countdown_screen.start_countdown()
+        self.countdown_screen.pack(side="top", fill="both", expand=1)
 
 if __name__ == "__main__":
     root = tk.Tk()

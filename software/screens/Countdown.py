@@ -70,12 +70,13 @@ class Countdown(tk.Frame):
             )
             self.root.after(10, self.countdown_font_size_anim)
     
-    def reset_ui(self):
+    def reset(self):
+        self.count = self.init_start_count
         self.countdown_label_style = tkFont.Font(
             family='DejaVu Sans Mono', 
             size=self.init_size 
         )
         self.countdown_label.configure(
-            text=self.init_start_count,
+            text=self.count,
             font = self.countdown_label_style
         )
