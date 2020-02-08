@@ -44,10 +44,12 @@ class PhotoboothApplication(ttk.Frame):
         root.bind("<KeyPress>", self.quit_)
 
         self.countdown_screen = Countdown(
-            master=self,
-            root=self.root,
-            texts = self.translation['fr']
+            master = self,
+            root = self.root,
+            texts = self.translation['fr'],
+            callback = self.on_countdown_ended
         )
+        self.countdown_screen.start_countdown()
         self.countdown_screen.pack(side="top", fill="both", expand=1)
         
         # self.home_screen = Home(self, self.root, self.translation['fr'])
@@ -89,6 +91,9 @@ class PhotoboothApplication(ttk.Frame):
     def go_to_home_screen(self):
         self.result_screen.pack_forget()
         self.home_screen.pack(fill="both", expand=True)
+
+    def on_countdown_ended(self):
+        self.countdown_screen.pack_forget()
 
 if __name__ == "__main__":
     root = tk.Tk()

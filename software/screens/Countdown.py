@@ -3,47 +3,79 @@ import tkinter as tk
 import tkinter.font as tkFont
 
 class Countdown(tk.Frame):
-    def __init__(self, master, root, texts, *args, **kwargs):
+    def __init__(self, master, root, texts, callback=None, start_count=3, *args, **kwargs):
         tk.Frame.__init__(self, master, *args, **kwargs, background="wheat") # , cursor="none"
 
         self.root = root
-        self.count = 3
-        self.root.update()
+        self.init_start_count = start_count
+        self.count = start_count
+        self.callback = callback
 
-        self.canvas = tk.Canvas(
-            self,
-            width=self.root.winfo_width(),
-            height = self.root.winfo_height()
-        )
-        w = tk.Label(master, text="Hello, world!")
-        self.labels_container_window = self.canvas.create_window(
-            30, 
-            30, 
-            window=w, 
-            anchor="nw",
-            
-        )
-        self.canvas.create_rectangle(0, 0, 60, 90, fill="blue", tags = "circle")
-        self.canvas.pack()
         self.create_widgets()
-        self.countdown()
+        
 
     def create_widgets(self):
+        self.init_size = 20
+        self.countdown_label_style = tkFont.Font(
+            family='DejaVu Sans Mono', 
+            size=self.init_size 
+        )
         self.countdown_label = tk.Label(self, 
             background=self["bg"],
             borderwidth=0,
             text=self.count,
-            font = ('DejaVu Sans Mono', 70)
+            font = self.countdown_label_style
         )
 
         self.countdown_label.pack(side="top", expand=1, fill="both")
 
+    def start_countdown(self):
+        self.countdown()
+        self.countdown_font_size_anim()
+
     def countdown(self):
-        self.canvas.scale("circle", 1, 1, 1.5, 1.5)
         if self.count > 0:
-            # call countdown again after 1000ms (1s)
-            self.countdown_label.configure(text=self.count)
+            self.countdown_label_style.configure(
+                size=self.init_size
+            )
+            self.countdown_label.configure(
+                text = self.count,
+                font = self.countdown_label_style
+            )
             self.root.after(1000, self.countdown)
             self.count = self.count-1
         else:
-            self.countdown_label.configure(text="Souriez !")
+            self.countdown_label_style.configure(
+                size=70
+            )
+            self.count = self.count-1
+            self.countdown_label.configure(
+                text="Souriez !",
+                font = self.countdown_label_style
+            )
+
+            if self.callback is not None:
+                self.root.after(1000, self.on_countdown_end)
+    
+    def on_countdown_end(self):
+        self.callback()
+
+    def countdown_font_size_anim(self):
+        if self.count >= 0:
+            self.countdown_label_style.configure(
+                size=self.countdown_label_style['size'] + 1
+            )
+            self.countdown_label.configure(
+                font = self.countdown_label_style
+            )
+            self.root.after(10, self.countdown_font_size_anim)
+    
+    def reset_ui(self):
+        self.countdown_label_style = tkFont.Font(
+            family='DejaVu Sans Mono', 
+            size=self.init_size 
+        )
+        self.countdown_label.configure(
+            text=self.init_start_count,
+            font = self.countdown_label_style
+        )
