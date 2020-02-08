@@ -3,7 +3,6 @@ import tkinter as tk
 import tkinter.font as tkFont
 import glob, os, sys, PIL
 
-from classes.Gallery import Gallery
 from screens.Home import Home
 from screens.Result import Result
 

@@ -7,7 +7,7 @@ from PIL import Image, ImageTk, ImageFile, ImageFilter
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
-class Gallery(tk.Frame):
+class UiGallery(tk.Frame):
     def create_widgets(self):
         COLUMNS = ceil(self.root.winfo_width() / 150)
         image_count = 0

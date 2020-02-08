@@ -4,7 +4,7 @@ import tkinter.font as tkFont
 import qrcode, os
 import PIL
 
-from classes.Gallery import Gallery
+from classes.UiGallery import UiGallery
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -68,7 +68,7 @@ class Home(tk.Frame):
         return navigation
 
     def create_gallery_bg(self):
-        gallery_bg = Gallery(self, self.root, bg = "#f6e2c3")
+        gallery_bg = UiGallery(self, self.root, bg = "#f6e2c3")
         return gallery_bg
 
     def create_btns_container(self, wrapper):
