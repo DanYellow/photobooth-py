@@ -6,11 +6,10 @@ import os, PIL
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class Result(tk.Frame):
-    def __init__(self, master, root, collage_path, texts, *args, **kwargs):
+    def __init__(self, master, root, texts, *args, **kwargs):
         tk.Frame.__init__(self, master, *args, **kwargs) # , cursor="none"
         
         self.root = root
-        self.collage_path = collage_path
         self.texts = texts
         self.is_fullscreen = False
 
@@ -19,11 +18,11 @@ class Result(tk.Frame):
 
     def create_widgets(self):
         btns_container = self.create_btns_container()
-        collage_container = self.create_collage_container()
+        self.collage_container = self.create_collage_container()
         self.fullscreen_collage = self.create_fullscreen_collage_ui()
 
-        collage_container.pack(side="top", pady=(15, 0))
-        collage_container.pack_propagate(0)
+        self.collage_container.pack(side="top", pady=(15, 0))
+        self.collage_container.pack_propagate(0)
 
         btns_container.pack(side="top", fill="x", expand=True, pady=(15, 0), padx=40)
 
@@ -72,12 +71,7 @@ class Result(tk.Frame):
         return btns_container
 
     def create_collage_container(self):
-        collage_src = PIL.Image.open(self.collage_path)
-        collage_src.thumbnail((self.root.winfo_width(), self.root.winfo_width()))
-        collage = PIL.ImageTk.PhotoImage(collage_src)
-
         collage_label = tk.Button(self, 
-            image=collage,
             bg=self['bg'],
             activebackground=self['bg'],
             relief="flat",
@@ -86,7 +80,6 @@ class Result(tk.Frame):
             width=round(self.root.winfo_width() * 0.7),
             command=self.toggle_fullscreen_collage
         )
-        collage_label.image = collage
 
         return collage_label
 
@@ -121,3 +114,11 @@ class Result(tk.Frame):
                 relheight=1.0, relwidth=1.0
             )
         self.is_fullscreen = bools[self.is_fullscreen]
+
+    def set_collage_image(self, collage_path):
+        collage_src = PIL.Image.open(collage_path)
+        collage_src.thumbnail((self.root.winfo_width(), self.root.winfo_width()))
+        collage = PIL.ImageTk.PhotoImage(collage_src)
+
+        self.collage_container.configure(image=collage)
+        self.collage_container.image = collage

@@ -12,8 +12,11 @@ from classes.Camera import Camera
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class PhotoboothApplication(ttk.Frame):
-    def __init__(self, root, *args, **kwargs):
+    def __init__(self, root, nb_shoots_max = 2, *args, **kwargs):
         self.root = root
+        self.nb_shoots_max = nb_shoots_max
+        self.nb_shoots_taken = 0
+
         ttk.Frame.__init__(self, self.root, *args, **kwargs)
         main_style = ttk.Style()
         main_style.configure('App.TFrame', background="white")
@@ -54,12 +57,10 @@ class PhotoboothApplication(ttk.Frame):
             texts = self.translation['fr'],
             callback = self.on_countdown_ended
         )
-        self.countdown_screen.start_countdown()
-        self.countdown_screen.pack(side="top", fill="both", expand=1)
-        
-        # self.home_screen = Home(self, self.root, self.translation['fr'])
-        # self.home_screen.start_btn.configure(command=self.start_photoshooting)
-        # self.home_screen.pack(fill="both", expand=True)
+
+        self.home_screen = Home(self, self.root, self.translation['fr'])
+        self.home_screen.start_btn.configure(command=self.start_photoshoot)
+        self.home_screen.pack(fill="both", expand=True)
 
         # collage_path = f"{ROOT_DIR}/../_tmp/collages/IMG_9354.JPG"
         # self.result_screen = Result(self, self.root, collage_path, self.translation['fr'])
@@ -91,9 +92,12 @@ class PhotoboothApplication(ttk.Frame):
 
         os.popen(f"mkdir -p {full_dir} && mkdir -p {collages_dir}")
 
-    def start_photoshooting(self):
-        self.result_screen.pack(fill="both", expand=True)
+    def start_photoshoot(self):
         self.home_screen.pack_forget()
+
+        self.countdown_screen.start_countdown()
+        self.countdown_screen.pack(side="top", fill="both", expand=1)
+        # self.result_screen.pack(fill="both", expand=True)
 
     def go_to_home_screen(self):
         self.result_screen.pack_forget()
@@ -105,15 +109,16 @@ class PhotoboothApplication(ttk.Frame):
         self.countdown_screen.pack_forget()
 
     def on_taken_pic(self, temp):
-        self.countdown_screen.start_countdown()
-        self.countdown_screen.pack(side="top", fill="both", expand=1)
-
-        # self.root.after(5000, self.toast)
-
-    # def toast(self):
+        self.nb_shoots_taken += 1
+        print(self.nb_shoots_taken, self.nb_shoots_max)
+        if self.nb_shoots_taken < self.nb_shoots_max:
+            self.countdown_screen.start_countdown()
+            self.countdown_screen.pack(side="top", fill="both", expand=1)
+        else:
+            print("shooting ended")
 
     def on_missing_camera(self):
-        print('on_missing_camera')
+        print('missing_camera')
 
 if __name__ == "__main__":
     root = tk.Tk()
