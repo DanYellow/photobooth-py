@@ -7,6 +7,8 @@ from screens.Home import Home
 from screens.Result import Result
 from screens.Countdown import Countdown
 
+from classes.Camera import Camera
+
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class PhotoboothApplication(ttk.Frame):
@@ -34,6 +36,7 @@ class PhotoboothApplication(ttk.Frame):
                 'printing': "Impression lancée",
                 'access_gallery': "Accès aux photos",
                 'link_to_gallery': "raspberrypi.local\nou",
+                'cheese': "Souriez !"
              }
         }
 
@@ -41,7 +44,9 @@ class PhotoboothApplication(ttk.Frame):
         # self.create_widgets()
         self.setup_files_and_folders()
 
-        root.bind("<KeyPress>", self.quit_)
+        self.camera = Camera(
+            on_error=self.on_missing_camera
+        )
 
         self.countdown_screen = Countdown(
             master = self,
@@ -60,6 +65,8 @@ class PhotoboothApplication(ttk.Frame):
         # self.result_screen = Result(self, self.root, collage_path, self.translation['fr'])
         # self.result_screen.print_btn.configure(command=self.go_to_home_screen)
         # self.result_screen.continue_btn.configure(command=self.go_to_home_screen)
+
+        root.bind("<KeyPress>", self.quit_)
 
     def quit_(self, event):
         if event is not None and event.keycode == 9:
@@ -93,14 +100,20 @@ class PhotoboothApplication(ttk.Frame):
         self.home_screen.pack(fill="both", expand=True)
 
     def on_countdown_ended(self):
+        self.camera.capture(f"{ROOT_DIR}/../_tmp/full", callback=self.on_taken_pic)
         self.countdown_screen.reset()
         self.countdown_screen.pack_forget()
 
-        self.root.after(5000, self.toast)
-
-    def toast(self):
+    def on_taken_pic(self, temp):
         self.countdown_screen.start_countdown()
         self.countdown_screen.pack(side="top", fill="both", expand=1)
+
+        # self.root.after(5000, self.toast)
+
+    # def toast(self):
+
+    def on_missing_camera(self):
+        print('on_missing_camera')
 
 if __name__ == "__main__":
     root = tk.Tk()

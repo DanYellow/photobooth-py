@@ -7,6 +7,7 @@ class Countdown(tk.Frame):
         tk.Frame.__init__(self, master, *args, **kwargs, background="wheat") # , cursor="none"
 
         self.root = root
+        self.texts = texts
         self.init_start_count = start_count
         self.count = start_count
         self.callback = callback
@@ -50,7 +51,7 @@ class Countdown(tk.Frame):
             )
             self.count = self.count-1
             self.countdown_label.configure(
-                text="Souriez !",
+                text=self.texts["cheese"],
                 font = self.countdown_label_style
             )
 
