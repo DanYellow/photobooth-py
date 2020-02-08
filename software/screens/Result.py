@@ -24,7 +24,7 @@ class Result(tk.Frame):
         collage_container.pack(side="top", pady=(15, 0))
         collage_container.pack_propagate(0)
 
-        btns_container.pack(side="top", fill="x", expand=True, pady=(15, 0))
+        btns_container.pack(side="top", fill="x", expand=True, pady=(15, 0), padx=40)
         # btns_container.pack_propagate(0)
 
 
@@ -38,7 +38,7 @@ class Result(tk.Frame):
         btns_container_font_style = tkFont.Font(family='DejaVu Sans Mono', size=20)
 
         print_btn_bgc = '#a1d4f0'
-        self.start_btn = tk.Button(
+        print_btn = tk.Button(
             btns_container,
             height = btns_container_btns_height,
             background=print_btn_bgc,
@@ -51,7 +51,25 @@ class Result(tk.Frame):
             text = self.texts['print'].upper(),
             font=btns_container_font_style,
         )
-        self.start_btn.pack(side="left", pady=(0, 8), ipadx=30, ipady=5)
+        print_btn.pack(side="left", pady=(0, 8), ipadx=30, ipady=5)
+
+
+        continue_btn_bgc = '#e67e22'
+        continue_btn = tk.Button(
+            btns_container,
+            height = btns_container_btns_height,
+            background=continue_btn_bgc,
+            highlightbackground="#8e9ae9", 
+            highlightthickness=2,
+            activeforeground="#033754", 
+            activebackground=continue_btn_bgc, 
+            borderwidth=0,
+            fg="white",
+            text = self.texts['continue'].upper(),
+            font=btns_container_font_style,
+        )
+
+        continue_btn.pack(side="right", pady=(0, 8), ipadx=30, ipady=5)
 
         return btns_container
 
