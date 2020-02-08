@@ -25,8 +25,6 @@ class Result(tk.Frame):
         collage_container.pack_propagate(0)
 
         btns_container.pack(side="top", fill="x", expand=True, pady=(15, 0), padx=40)
-        # btns_container.pack_propagate(0)
-
 
     def create_btns_container(self):
         btns_container = tk.Frame(
@@ -52,7 +50,6 @@ class Result(tk.Frame):
             font=btns_container_font_style,
         )
         print_btn.pack(side="left", pady=(0, 8), ipadx=30, ipady=5)
-
 
         continue_btn_bgc = '#e67e22'
         continue_btn = tk.Button(
