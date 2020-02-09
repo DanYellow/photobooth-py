@@ -12,17 +12,18 @@ from classes.Camera import Camera
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class PhotoboothApplication(ttk.Frame):
-    def __init__(self, root, nb_shoots_max = 2, *args, **kwargs):
+    def __init__(self, root, nb_shoots_max = 2, start_count = 2, *args, **kwargs):
         self.root = root
         self.nb_shoots_max = nb_shoots_max
         self.nb_shoots_taken = 0
+        self.collage_pics_name_buffer = []
 
         ttk.Frame.__init__(self, self.root, *args, **kwargs)
         main_style = ttk.Style()
         main_style.configure('App.TFrame', background="white")
         self['style'] = 'App.TFrame'
 
-        self.ROOT_DIR = f"{os.path.dirname(os.path.abspath(__file__))}/.."
+        self.ROOT_DIR = f"{ROOT_DIR}/.."
 
         self.translation = {
             'fr': {
@@ -55,14 +56,14 @@ class PhotoboothApplication(ttk.Frame):
             master = self,
             root = self.root,
             texts = self.translation['fr'],
-            callback = self.on_countdown_ended
+            callback = self.on_countdown_ended,
+            start_count = start_count
         )
 
         self.home_screen = Home(self, self.root, self.translation['fr'])
         self.home_screen.start_btn.configure(command=self.start_photoshoot)
         self.home_screen.pack(fill="both", expand=True)
 
-        # collage_path = f"{ROOT_DIR}/../_tmp/collages/IMG_9354.JPG"
         self.result_screen = Result(self, self.root, self.translation['fr'])
         self.result_screen.print_btn.configure(command=self.go_to_home_screen)
         self.result_screen.continue_btn.configure(command=self.go_to_home_screen)
@@ -97,7 +98,6 @@ class PhotoboothApplication(ttk.Frame):
 
         self.countdown_screen.start_countdown()
         self.countdown_screen.pack(side="top", fill="both", expand=1)
-        # self.result_screen.pack(fill="both", expand=True)
 
     def go_to_home_screen(self):
         self.result_screen.pack_forget()
@@ -110,6 +110,10 @@ class PhotoboothApplication(ttk.Frame):
 
     def on_taken_pic(self, temp):
         self.nb_shoots_taken += 1
+        latest_pic = self.get_latest_pic()
+        self.collage_pics_name_buffer.append(latest_pic)
+        self.create_thumbnail(latest_pic)
+
         if self.nb_shoots_taken < self.nb_shoots_max:
             self.countdown_screen.start_countdown()
             self.countdown_screen.pack(side="top", fill="both", expand=1)
@@ -117,17 +121,70 @@ class PhotoboothApplication(ttk.Frame):
             self.on_photoshoot_ended()
 
     def on_photoshoot_ended(self):
-        collage_path = f"{ROOT_DIR}/../_tmp/collages/IMG_9354.JPG"
+        collage_path = self.create_collage()
+
         self.result_screen.set_collage_image(collage_path)
         self.result_screen.set_fullscreen_collage_image(collage_path)
         self.result_screen.pack(fill="both", expand=True)
+        self.collage_pics_name_buffer = []
+        self.nb_shoots_taken = 0
 
     def on_missing_camera(self, msg):
         print('missing_camera')
 
+    def get_latest_pic(self, folder = None):
+        os.chdir(f"{self.ROOT_DIR}/_tmp/full")
+        images_taken = glob.glob('*.JPG')
+        images_taken.extend(glob.glob('*.jpeg'))
+        images_taken.extend(glob.glob('*.jpg'))
+        latest_pic = max(images_taken, key=os.path.getctime)
+
+        return latest_pic
+
+    def create_thumbnail(self, img_name):
+        img_path = f"{self.ROOT_DIR}/_tmp/full/{img_name}"
+        TARGET_SIZE = 450, 450
+        os.chdir(f"{self.ROOT_DIR}/_tmp")
+
+        tmp_img = PIL.Image.open(img_path)
+        tmp_img.thumbnail(TARGET_SIZE, PIL.Image.ANTIALIAS)
+        tmp_img.save(img_name, "JPEG", quality=65)
+
+    def create_collage(self):
+        os.chdir(f"{self.ROOT_DIR}/_tmp/collages")
+        list_collage_pics_paths = map(
+            lambda img_name: f"{self.ROOT_DIR}/_tmp/full/{img_name}",
+            self.collage_pics_name_buffer
+        )
+
+        collage_img_ratio = 15 / 10
+        collage_img_width = 1500
+
+        color_white = (255,255,255,0)
+
+        collage_img_size = (collage_img_width, int(collage_img_width * collage_img_ratio))
+        collage_img = PIL.Image.new('RGB', collage_img_size, color=color_white)
+
+        for idx, img_path in enumerate(list(list_collage_pics_paths)):
+            try:
+                tmp_img = PIL.Image.open(img_path)
+                tmp_img.thumbnail(collage_img_size, PIL.Image.ANTIALIAS)
+                _, height = tmp_img.size
+
+                collage_img.paste(tmp_img, (0, height * idx))
+            except Exception as e:
+                print(e)
+
+        filename, file_extension = os.path.splitext(self.collage_pics_name_buffer[0])
+        collage_name = f"{filename}-f{file_extension}"
+        collage_path = f"{self.ROOT_DIR}/_tmp/collages/{collage_name}"
+        collage_img.save(collage_path, "JPEG", quality=65)
+
+        return collage_path
+
 if __name__ == "__main__":
     root = tk.Tk()
-    photobooth_app = PhotoboothApplication(root, nb_shoots_max = 1)
+    photobooth_app = PhotoboothApplication(root, nb_shoots_max = 2, start_count = 1)
     photobooth_app.pack(side="top", fill="both", expand=True)
     
     root.mainloop()
