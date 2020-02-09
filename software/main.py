@@ -6,6 +6,7 @@ import glob, os, sys, PIL
 from screens.Home import Home
 from screens.Result import Result
 from screens.Countdown import Countdown
+from screens.Loading import Loading
 
 from classes.Camera import Camera
 
@@ -40,7 +41,7 @@ class PhotoboothApplication(ttk.Frame):
                 'printing': "Impression lancée",
                 'access_gallery': "Accès aux photos",
                 'link_to_gallery': "raspberrypi.local\nou",
-                'cheese': "Souriez !"
+                'cheese': "Souriez !",
              }
         }
 
@@ -60,6 +61,7 @@ class PhotoboothApplication(ttk.Frame):
             start_count = start_count
         )
 
+
         self.home_screen = Home(self, self.root, self.translation['fr'])
         self.home_screen.start_btn.configure(command=self.start_photoshoot)
         self.home_screen.pack(fill="both", expand=True)
@@ -67,6 +69,8 @@ class PhotoboothApplication(ttk.Frame):
         self.result_screen = Result(self, self.root, self.translation['fr'])
         self.result_screen.print_btn.configure(command=self.print_pic)
         self.result_screen.continue_btn.configure(command=self.go_to_home_screen)
+
+        self.loading_screen = Loading(self, self.translation['fr'])
 
         root.bind("<KeyPress>", self.quit_)
 
@@ -105,8 +109,8 @@ class PhotoboothApplication(ttk.Frame):
 
     def on_countdown_ended(self):
         self.camera.capture(f"{ROOT_DIR}/../_tmp/full", callback=self.on_taken_pic)
-        self.countdown_screen.reset()
-        self.countdown_screen.pack_forget()
+
+        # self.loading_screen.pack(side="top", fill="both", expand=1)
 
     def on_taken_pic(self, temp):
         self.nb_shoots_taken += 1
@@ -114,14 +118,20 @@ class PhotoboothApplication(ttk.Frame):
         self.collage_pics_name_buffer.append(latest_pic)
         self.create_thumbnail(latest_pic)
 
+        self.countdown_screen.reset()
+        self.countdown_screen.pack_forget()
         if self.nb_shoots_taken < self.nb_shoots_max:
             self.countdown_screen.start_countdown()
             self.countdown_screen.pack(side="top", fill="both", expand=1)
         else:
+            self.loading_screen.pack(side="top", fill="both", expand=1)
             self.on_photoshoot_ended()
+        self.loading_screen.pack_forget()
 
     def on_photoshoot_ended(self):
         collage_path = self.create_collage()
+
+        self.loading_screen.pack_forget()
 
         self.result_screen.set_collage_image(collage_path)
         self.result_screen.set_fullscreen_collage_image(collage_path)

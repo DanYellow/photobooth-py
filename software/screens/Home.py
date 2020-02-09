@@ -53,16 +53,17 @@ class Home(tk.Frame):
         navigation_style.configure(
             'HomeScreenBtnsContainer.TFrame',
             background=navigation_style_bg,
-            borderwidth=4,
-            highlightbackground="black",
             highlightthickness=10,
-            bordercolor="red"
         )
         navigation = ttk.Frame(
             self,
             width="360",
             height="520",
             style='HomeScreenBtnsContainer.TFrame',
+            relief="solid",
+            borderwidth=3
+            # highlightthickness=10,
+            # highlightbackground="black",
         )
 
         return navigation

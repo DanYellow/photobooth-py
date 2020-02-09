@@ -86,8 +86,7 @@ class Result(tk.Frame):
 
     def create_fullscreen_collage_ui(self):
         collage_label = tk.Button(self, 
-            bg=self['bg'],
-            activebackground=self['bg'],
+            activebackground="black",
             relief="flat",
             overrelief="flat",
             borderwidth=0,
@@ -102,12 +101,14 @@ class Result(tk.Frame):
 
         if(self.is_fullscreen):
             self.fullscreen_collage.place_forget()
+            self.configure(bg="wheat")
         else:
             self.fullscreen_collage.place(
                 relx=0.5, rely=0.5,
                 anchor="center",
                 relheight=1.0, relwidth=1.0
             )
+            self.configure(bg="black")
         self.is_fullscreen = bools[self.is_fullscreen]
 
     def set_collage_image(self, collage_path):

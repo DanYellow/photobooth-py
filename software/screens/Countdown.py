@@ -56,7 +56,7 @@ class Countdown(tk.Frame):
             )
 
             if self.callback is not None:
-                self.root.after(1000, self.on_countdown_end)
+                self.on_countdown_end()
     
     def on_countdown_end(self):
         self.callback()
@@ -69,7 +69,7 @@ class Countdown(tk.Frame):
             self.countdown_label.configure(
                 font = self.countdown_label_style
             )
-            self.root.after(10, self.countdown_font_size_anim)
+            self.root.after(1, self.countdown_font_size_anim)
     
     def reset(self):
         self.count = self.init_start_count
