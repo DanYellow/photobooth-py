@@ -25,6 +25,11 @@ class UiGallery(tk.Frame):
             
             self.grid_rowconfigure(r, pad=0)
             self.grid_columnconfigure(c, pad=0)
+    
+    def update(self):
+        for child in list(self.winfo_children()):
+            child.grid_forget()
+        self.create_widgets()
 
     def __init__(self, master=None, root=None, bg="white"):
         tk.Frame.__init__(self, master, image = None, bg = bg)

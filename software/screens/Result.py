@@ -78,7 +78,8 @@ class Result(tk.Frame):
             overrelief="flat",
             borderwidth=0,
             width=round(self.root.winfo_width() * 0.7),
-            command=self.toggle_fullscreen_collage
+            command=self.toggle_fullscreen_collage,
+            highlightthickness=0,
         )
 
         return collage_label

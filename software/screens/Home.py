@@ -39,13 +39,13 @@ class Home(tk.Frame):
         qr_code_area.pack(pady=0)
         btns_container.pack(side="bottom", fill="x", expand=False, padx=40, pady=(0, 20))
 
-        gallery_bg = self.create_gallery_bg()
-        gallery_bg.place(
+        self.gallery_bg = self.create_gallery_bg()
+        self.gallery_bg.place(
             relx=0.5, rely=0.5,
             anchor="center",
             relheight=1.0, relwidth=1.0
         )
-        gallery_bg.lower()
+        self.gallery_bg.lower()
 
     def create_navigation(self):
         navigation_style_bg = "#333333"

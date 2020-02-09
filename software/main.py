@@ -65,7 +65,7 @@ class PhotoboothApplication(ttk.Frame):
         self.home_screen.pack(fill="both", expand=True)
 
         self.result_screen = Result(self, self.root, self.translation['fr'])
-        self.result_screen.print_btn.configure(command=self.go_to_home_screen)
+        self.result_screen.print_btn.configure(command=self.print_pic)
         self.result_screen.continue_btn.configure(command=self.go_to_home_screen)
 
         root.bind("<KeyPress>", self.quit_)
@@ -128,6 +128,7 @@ class PhotoboothApplication(ttk.Frame):
         self.result_screen.pack(fill="both", expand=True)
         self.collage_pics_name_buffer = []
         self.nb_shoots_taken = 0
+        self.home_screen.gallery_bg.update()
 
     def on_missing_camera(self, msg):
         print('missing_camera')
