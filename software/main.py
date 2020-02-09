@@ -182,6 +182,14 @@ class PhotoboothApplication(ttk.Frame):
 
         return collage_path
 
+    def print_pic():
+        print('------------------ printing --------------')
+
+        os.system("cupsenable Canon_SELPHY_CP1300")
+
+        print_cmd = f"""lp -d Canon_SELPHY_CP1300 -o fit-to-page {ROOT_DIR}/_tmp/collages/{collage_name}"""
+        os.system(print_cmd)
+
 if __name__ == "__main__":
     root = tk.Tk()
     photobooth_app = PhotoboothApplication(root, nb_shoots_max = 2, start_count = 1)
