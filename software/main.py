@@ -63,9 +63,9 @@ class PhotoboothApplication(ttk.Frame):
         self.home_screen.pack(fill="both", expand=True)
 
         # collage_path = f"{ROOT_DIR}/../_tmp/collages/IMG_9354.JPG"
-        # self.result_screen = Result(self, self.root, collage_path, self.translation['fr'])
-        # self.result_screen.print_btn.configure(command=self.go_to_home_screen)
-        # self.result_screen.continue_btn.configure(command=self.go_to_home_screen)
+        self.result_screen = Result(self, self.root, self.translation['fr'])
+        self.result_screen.print_btn.configure(command=self.go_to_home_screen)
+        self.result_screen.continue_btn.configure(command=self.go_to_home_screen)
 
         root.bind("<KeyPress>", self.quit_)
 
@@ -110,19 +110,24 @@ class PhotoboothApplication(ttk.Frame):
 
     def on_taken_pic(self, temp):
         self.nb_shoots_taken += 1
-        print(self.nb_shoots_taken, self.nb_shoots_max)
         if self.nb_shoots_taken < self.nb_shoots_max:
             self.countdown_screen.start_countdown()
             self.countdown_screen.pack(side="top", fill="both", expand=1)
         else:
-            print("shooting ended")
+            self.on_photoshoot_ended()
 
-    def on_missing_camera(self):
+    def on_photoshoot_ended(self):
+        collage_path = f"{ROOT_DIR}/../_tmp/collages/IMG_9354.JPG"
+        self.result_screen.set_collage_image(collage_path)
+        self.result_screen.set_fullscreen_collage_image(collage_path)
+        self.result_screen.pack(fill="both", expand=True)
+
+    def on_missing_camera(self, msg):
         print('missing_camera')
 
 if __name__ == "__main__":
     root = tk.Tk()
-    photobooth_app = PhotoboothApplication(root)
+    photobooth_app = PhotoboothApplication(root, nb_shoots_max = 1)
     photobooth_app.pack(side="top", fill="both", expand=True)
     
     root.mainloop()

@@ -7,7 +7,7 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class Result(tk.Frame):
     def __init__(self, master, root, texts, *args, **kwargs):
-        tk.Frame.__init__(self, master, *args, **kwargs) # , cursor="none"
+        tk.Frame.__init__(self, master, *args, **kwargs, bg="wheat") # , cursor="none"
         
         self.root = root
         self.texts = texts
@@ -84,12 +84,7 @@ class Result(tk.Frame):
         return collage_label
 
     def create_fullscreen_collage_ui(self):
-        collage_src = PIL.Image.open(self.collage_path)
-        collage_src.thumbnail((self.root.winfo_height(), self.root.winfo_height()))
-        collage = PIL.ImageTk.PhotoImage(collage_src)
-
         collage_label = tk.Button(self, 
-            image=collage,
             bg=self['bg'],
             activebackground=self['bg'],
             relief="flat",
@@ -98,7 +93,6 @@ class Result(tk.Frame):
             width=self.root.winfo_width(),
             command=self.toggle_fullscreen_collage
         )
-        collage_label.image = collage
 
         return collage_label
 
@@ -122,3 +116,11 @@ class Result(tk.Frame):
 
         self.collage_container.configure(image=collage)
         self.collage_container.image = collage
+
+    def set_fullscreen_collage_image(self, collage_path):
+        collage_src = PIL.Image.open(collage_path)
+        collage_src.thumbnail((self.root.winfo_height(), self.root.winfo_height()))
+        collage = PIL.ImageTk.PhotoImage(collage_src)
+
+        self.fullscreen_collage.configure(image=collage)
+        self.fullscreen_collage.image = collage
