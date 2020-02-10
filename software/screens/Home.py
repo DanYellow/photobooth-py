@@ -17,6 +17,8 @@ class Home(tk.Frame):
 
         self.create_widgets()
 
+        self.is_notification_animating = False
+
     def create_widgets(self):
         navigation = self.create_navigation()
         navigation.pack(pady=30)
@@ -48,7 +50,7 @@ class Home(tk.Frame):
         self.gallery_bg.lower()
 
         self.print_notification_canvas = self.create_print_notification()
-        self.print_notification_canvas.place(relx=0.5, rely=0, anchor="n", y=-100)
+        # self.print_notification_canvas.place(relx=0.5, rely=0, anchor="n", y=-60)
 
     def create_navigation(self):
         navigation_style_bg = "#333333"
@@ -189,9 +191,8 @@ class Home(tk.Frame):
 
         return qrc_frame
 
-    def create_print_notification(self):
-        print_notification_canvas = tk.Canvas(self, width=220, height=100)
-        # print_notification_canvas.create_rectangle(0, 0, 60, 80, fill="#ddf1d1")
+    def create_print_notification(self):  
+        print_notification_canvas = tk.Canvas(self, width=220, height=120)
 
         self.print_notification_container = tk.Frame(
             self, 
@@ -211,11 +212,7 @@ class Home(tk.Frame):
             window=self.print_notification_container, 
             anchor="nw", 
             tag="print_notification",
-           
         )
-        # self.print_notification_container.place(relx=0.5, rely=0, anchor="n", y=-65, width=220,
-        #     height=60)
-        # self.print_notification_container.lift()
 
         self.countdown_label_style = tkFont.Font(
             family='DejaVu Sans Mono', 
@@ -248,20 +245,24 @@ class Home(tk.Frame):
             font = self.countdown_label_style,
             bg=self.print_notification_container["bg"],
             justify="left"
-        )
+         )
         printing_label.pack(side="left")
 
         return print_notification_canvas
 
 
     def animate_print_notification_in(self):
+        # if self.is_notification_animating == False:
         x_pos, y_pos = self.print_notification_canvas.coords('print_notification')
+        print("animate_print_notification_in", y_pos)
 
-        if(y_pos < 150):
+        if(y_pos < 60):
             self.print_notification_canvas.move('print_notification', 0, 1)
             self.root.after(1, self.animate_print_notification_in)
         else:
+            self.is_notification_animating = True
             self.root.after(1500, self.animate_print_notification_out)
+
 
     def animate_print_notification_out(self):
         x_pos, y_pos = self.print_notification_canvas.coords('print_notification')
@@ -269,3 +270,6 @@ class Home(tk.Frame):
         if(y_pos > 0):
             self.print_notification_canvas.move('print_notification', 0, -1)
             self.root.after(1, self.animate_print_notification_out)
+        else:
+            self.is_notification_animating = False
+            self.print_notification_canvas.place(relx=0.5, rely=0, anchor="n", y=-60)

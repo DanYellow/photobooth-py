@@ -9,6 +9,7 @@ from screens.Countdown import Countdown
 from screens.Loading import Loading
 
 from classes.Camera import Camera
+from classes.UiNotification import UiNotification
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -61,9 +62,9 @@ class PhotoboothApplication(ttk.Frame):
             start_count = start_count
         )
 
-
         self.home_screen = Home(self, self.root, self.translation['fr'])
-        self.home_screen.start_btn.configure(command=self.start_photoshoot)
+        self.home_screen.start_btn.configure(command=self.print_pic)
+        # self.home_screen.start_btn.configure(command=self.start_photoshoot)
         self.home_screen.pack(fill="both", expand=True)
 
         self.result_screen = Result(self, self.root, self.translation['fr'])
@@ -71,6 +72,8 @@ class PhotoboothApplication(ttk.Frame):
         self.result_screen.continue_btn.configure(command=self.go_to_home_screen)
 
         self.loading_screen = Loading(self, self.translation['fr'])
+
+        self.notification_manager = UiNotification(master = self.root, texts = self.translation['fr'])
 
         root.bind("<KeyPress>", self.quit_)
 
@@ -197,7 +200,8 @@ class PhotoboothApplication(ttk.Frame):
         print('------------------ printing --------------')
 
         self.go_to_home_screen()
-        self.home_screen.animate_print_notification_in()
+        self.notification_manager.create_print_notification()
+        # self.home_screen.animate_print_notification_in()
         # os.system("cupsenable Canon_SELPHY_CP1300")
 
         # print_cmd = f"""lp -d Canon_SELPHY_CP1300 -o fit-to-page {ROOT_DIR}/_tmp/collages/{collage_name}"""
