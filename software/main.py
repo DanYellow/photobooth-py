@@ -43,11 +43,11 @@ class PhotoboothApplication(ttk.Frame):
                 'access_gallery': "Accès aux photos",
                 'link_to_gallery': "raspberrypi.local\nou",
                 'cheese': "Souriez !",
+                'missing_camera': "Appareil\nnon detecté"
              }
         }
 
         self.configure_gui()
-        # self.create_widgets()
         self.setup_files_and_folders()
 
         self.camera = Camera(
@@ -101,10 +101,13 @@ class PhotoboothApplication(ttk.Frame):
         os.popen(f"mkdir -p {full_dir} && mkdir -p {collages_dir}")
 
     def start_photoshoot(self):
-        self.home_screen.pack_forget()
+        if self.camera.is_camera_up():
+            self.home_screen.pack_forget()
 
-        self.countdown_screen.start_countdown()
-        self.countdown_screen.pack(side="top", fill="both", expand=1)
+            self.countdown_screen.start_countdown()
+            self.countdown_screen.pack(side="top", fill="both", expand=1)
+        else:
+            self.notification_manager.create_error_notification('missing_camera')
 
     def go_to_home_screen(self):
         self.result_screen.pack_forget()

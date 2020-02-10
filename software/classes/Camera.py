@@ -20,6 +20,23 @@ class Camera:
         if callback is not None:
             f.add_done_callback(callback)
 
+    def is_camera_up(self):
+        try:
+            camera_setup_cmd = [
+                'gphoto2',
+                '--set-config', 
+                'capturetarget=1',
+            ]
+            camera_setup_process = subprocess.Popen(camera_setup_cmd, stdout=subprocess.PIPE)
+            if camera_setup_process.wait() != 0:
+                return False
+                raise RuntimeError()
+            else:
+                return True
+
+        except:
+            return False
+
     def __init__(self, on_error=None):
         try:
             camera_setup_cmd = [
