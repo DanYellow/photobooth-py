@@ -50,10 +50,6 @@ class PhotoboothApplication(ttk.Frame):
         self.configure_gui()
         self.setup_files_and_folders()
 
-        self.camera = Camera(
-            on_error=self.on_missing_camera
-        )
-
         self.countdown_screen = Countdown(
             master = self,
             root = self.root,
@@ -74,6 +70,10 @@ class PhotoboothApplication(ttk.Frame):
         self.loading_screen = Loading(self, self.translation['fr'])
 
         self.notification_manager = UiNotification(master = self.root, texts = self.translation['fr'])
+
+        self.camera = Camera(
+            on_error=self.on_missing_camera
+        )
 
         root.bind("<KeyPress>", self.quit_)
 
@@ -147,6 +147,7 @@ class PhotoboothApplication(ttk.Frame):
         self.home_screen.gallery_bg.update()
 
     def on_missing_camera(self, msg):
+        self.notification_manager.create_error_notification('missing_camera')
         print('missing_camera')
 
     def get_latest_pic(self, folder = None):

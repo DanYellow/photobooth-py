@@ -88,7 +88,7 @@ class UiNotification(tk.Canvas):
             image=btn_icon, 
             bg=notification_container["bg"]
         )
-        label.image = btn_icon # keep a reference!
+        label.image = btn_icon
         label.pack(side="left", padx=(15, 15))
         
         label = tk.Label(
