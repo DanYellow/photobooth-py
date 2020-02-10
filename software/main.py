@@ -38,7 +38,7 @@ class PhotoboothApplication(ttk.Frame):
                 'ready': 'Prêt ?',
                 'take_another_one': "Prendre une autre photo",
                 'loading': "Chargement",
-                'printing': "Impression lancée",
+                'printing': "Impression\nlancée",
                 'access_gallery': "Accès aux photos",
                 'link_to_gallery': "raspberrypi.local\nou",
                 'cheese': "Souriez !",
@@ -65,6 +65,8 @@ class PhotoboothApplication(ttk.Frame):
         self.home_screen = Home(self, self.root, self.translation['fr'])
         self.home_screen.start_btn.configure(command=self.start_photoshoot)
         self.home_screen.pack(fill="both", expand=True)
+
+        self.home_screen.show_print_notification()
 
         self.result_screen = Result(self, self.root, self.translation['fr'])
         self.result_screen.print_btn.configure(command=self.print_pic)
@@ -193,17 +195,19 @@ class PhotoboothApplication(ttk.Frame):
 
         return collage_path
 
-    def print_pic():
+    def print_pic(self):
         print('------------------ printing --------------')
 
-        os.system("cupsenable Canon_SELPHY_CP1300")
+        self.home_screen.show_print_notification()
+        self.go_to_home_screen()
+        # os.system("cupsenable Canon_SELPHY_CP1300")
 
-        print_cmd = f"""lp -d Canon_SELPHY_CP1300 -o fit-to-page {ROOT_DIR}/_tmp/collages/{collage_name}"""
-        os.system(print_cmd)
+        # print_cmd = f"""lp -d Canon_SELPHY_CP1300 -o fit-to-page {ROOT_DIR}/_tmp/collages/{collage_name}"""
+        # os.system(print_cmd)
 
 if __name__ == "__main__":
     root = tk.Tk()
-    photobooth_app = PhotoboothApplication(root, nb_shoots_max = 2, start_count = 1)
+    photobooth_app = PhotoboothApplication(root, nb_shoots_max = 1, start_count = 1)
     photobooth_app.pack(side="top", fill="both", expand=True)
     
     root.mainloop()
