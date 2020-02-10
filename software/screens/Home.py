@@ -49,9 +49,6 @@ class Home(tk.Frame):
         )
         self.gallery_bg.lower()
 
-        self.print_notification_canvas = self.create_print_notification()
-        # self.print_notification_canvas.place(relx=0.5, rely=0, anchor="n", y=-60)
-
     def create_navigation(self):
         navigation_style_bg = "#333333"
         navigation_style = ttk.Style()
@@ -190,86 +187,3 @@ class Home(tk.Frame):
         qrc_label.pack(side="bottom")
 
         return qrc_frame
-
-    def create_print_notification(self):  
-        print_notification_canvas = tk.Canvas(self, width=220, height=120)
-
-        self.print_notification_container = tk.Frame(
-            self, 
-            text = None,
-            padx = 5,
-            pady = 5,
-            bg = "#ddf1d1",
-            borderwidth=2,
-            relief="flat",
-            highlightbackground="#64b747",
-            highlightthickness=2,
-            width=220,
-            height=60
-        )
-        self.print_notification_container.pack_propagate(0)
-        print_notification_canvas.create_window(0, 0, 
-            window=self.print_notification_container, 
-            anchor="nw", 
-            tag="print_notification",
-        )
-
-        self.countdown_label_style = tkFont.Font(
-            family='DejaVu Sans Mono', 
-            size=12
-        )
-
-        image = PIL.Image.open(f"{ROOT_DIR}/../assets/loading-icon.png")
-        photo = PIL.ImageTk.PhotoImage(image)
-
-        print_btn_icon_src = PIL.Image.open(f"{ROOT_DIR}/../assets/printer-icon.png").convert("RGBA")
-        print_btn_icon_src = print_btn_icon_src.resize((30, 30), PIL.Image.ANTIALIAS)
-        print_btn_bgc_tmp = PIL.Image.composite(
-            print_btn_icon_src,
-            PIL.Image.new('RGB', print_btn_icon_src.size, self.print_notification_container["bg"]),
-            print_btn_icon_src
-        )
-        print_btn_icon = PIL.ImageTk.PhotoImage(print_btn_bgc_tmp)
-
-        label = tk.Label(
-            self.print_notification_container, 
-            image=print_btn_icon, 
-            bg=self.print_notification_container["bg"]
-        )
-        label.image = print_btn_icon # keep a reference!
-        label.pack(side="left", padx=(15, 15))
-        
-        printing_label = tk.Label(
-            self.print_notification_container, 
-            text=self.texts["printing"],
-            font = self.countdown_label_style,
-            bg=self.print_notification_container["bg"],
-            justify="left"
-         )
-        printing_label.pack(side="left")
-
-        return print_notification_canvas
-
-
-    def animate_print_notification_in(self):
-        # if self.is_notification_animating == False:
-        x_pos, y_pos = self.print_notification_canvas.coords('print_notification')
-        print("animate_print_notification_in", y_pos)
-
-        if(y_pos < 60):
-            self.print_notification_canvas.move('print_notification', 0, 1)
-            self.root.after(1, self.animate_print_notification_in)
-        else:
-            self.is_notification_animating = True
-            self.root.after(1500, self.animate_print_notification_out)
-
-
-    def animate_print_notification_out(self):
-        x_pos, y_pos = self.print_notification_canvas.coords('print_notification')
-
-        if(y_pos > 0):
-            self.print_notification_canvas.move('print_notification', 0, -1)
-            self.root.after(1, self.animate_print_notification_out)
-        else:
-            self.is_notification_animating = False
-            self.print_notification_canvas.place(relx=0.5, rely=0, anchor="n", y=-60)

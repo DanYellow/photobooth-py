@@ -88,4 +88,3 @@ class UiNotification(tk.Canvas):
             self.master.after(1, lambda: self.animate_print_notification_out(tag_name) )
         else:
             self.place_forget()
-            # self.place(relx=0.5, rely=0, anchor="n", y=-60)

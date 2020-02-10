@@ -63,8 +63,8 @@ class PhotoboothApplication(ttk.Frame):
         )
 
         self.home_screen = Home(self, self.root, self.translation['fr'])
-        self.home_screen.start_btn.configure(command=self.print_pic)
-        # self.home_screen.start_btn.configure(command=self.start_photoshoot)
+        # self.home_screen.start_btn.configure(command=self.print_pic)
+        self.home_screen.start_btn.configure(command=self.start_photoshoot)
         self.home_screen.pack(fill="both", expand=True)
 
         self.result_screen = Result(self, self.root, self.translation['fr'])
