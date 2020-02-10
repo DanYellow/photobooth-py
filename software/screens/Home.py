@@ -47,6 +47,9 @@ class Home(tk.Frame):
         )
         self.gallery_bg.lower()
 
+        self.print_notification_canvas = self.create_print_notification()
+        self.print_notification_canvas.place(relx=0.5, rely=0, anchor="n", y=-100)
+
     def create_navigation(self):
         navigation_style_bg = "#333333"
         navigation_style = ttk.Style()
@@ -186,11 +189,9 @@ class Home(tk.Frame):
 
         return qrc_frame
 
-    def show_print_notification(self):
-        self.print_notification_canvas = tk.Canvas(self, width=220, height=100)
-        # self.print_notification_canvas.create_rectangle(0, 0, 60, 80, fill="#ddf1d1")
-
-        self.print_notification_canvas.place(relx=0.5, rely=0, anchor="n", y=-100)
+    def create_print_notification(self):
+        print_notification_canvas = tk.Canvas(self, width=220, height=100)
+        # print_notification_canvas.create_rectangle(0, 0, 60, 80, fill="#ddf1d1")
 
         self.print_notification_container = tk.Frame(
             self, 
@@ -206,7 +207,7 @@ class Home(tk.Frame):
             height=60
         )
         self.print_notification_container.pack_propagate(0)
-        self.print_notification_canvas.create_window(0, 0, 
+        print_notification_canvas.create_window(0, 0, 
             window=self.print_notification_container, 
             anchor="nw", 
             tag="print_notification",
@@ -250,7 +251,8 @@ class Home(tk.Frame):
         )
         printing_label.pack(side="left")
 
-        self.animate_print_notification_in()
+        return print_notification_canvas
+
 
     def animate_print_notification_in(self):
         x_pos, y_pos = self.print_notification_canvas.coords('print_notification')

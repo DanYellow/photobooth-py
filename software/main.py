@@ -66,8 +66,6 @@ class PhotoboothApplication(ttk.Frame):
         self.home_screen.start_btn.configure(command=self.start_photoshoot)
         self.home_screen.pack(fill="both", expand=True)
 
-        self.home_screen.show_print_notification()
-
         self.result_screen = Result(self, self.root, self.translation['fr'])
         self.result_screen.print_btn.configure(command=self.print_pic)
         self.result_screen.continue_btn.configure(command=self.go_to_home_screen)
@@ -198,8 +196,8 @@ class PhotoboothApplication(ttk.Frame):
     def print_pic(self):
         print('------------------ printing --------------')
 
-        self.home_screen.show_print_notification()
         self.go_to_home_screen()
+        self.home_screen.animate_print_notification_in()
         # os.system("cupsenable Canon_SELPHY_CP1300")
 
         # print_cmd = f"""lp -d Canon_SELPHY_CP1300 -o fit-to-page {ROOT_DIR}/_tmp/collages/{collage_name}"""

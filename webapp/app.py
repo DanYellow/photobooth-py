@@ -34,6 +34,8 @@ app.register_blueprint(gallery_collages_bp)
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 os.chdir(ROOT_DIR)
 
+print("gallery_collages_bp", gallery_collages_bp)
+
 thumbs_dir = f"{ROOT_DIR}/_tmp"
 full_dir = f"{ROOT_DIR}/_tmp/full"
 collages_dir = f"{ROOT_DIR}/_tmp/collages"
@@ -53,6 +55,23 @@ def generate_grid_classes(nb_items):
         list_values.append(get_class(weight))
 
     return list_values
+
+def generate_diaporama_key_frames_animations(list_images):
+    nb_items = len(list_images)
+    percentage_progress_base = 100 / nb_items
+
+    list_frames_anim = []
+    for i in range(nb_items+1):
+        percentage_tmp = percentage_progress_base * i
+        percentage = float("{0:.2f}".format(percentage_tmp))
+
+        if percentage >= 100:
+            list_frames_anim.append(f"{percentage}%{{background-image: url(_tmp/{list_images[0]});}}")
+        else:
+            list_frames_anim.append(f"{percentage}%{{background-image: url(/_tmp/{list_images[i]});}}")
+
+    return list_frames_anim
+
 
 @app.route('/')
 def index():
@@ -87,6 +106,27 @@ def collages():
         'collages.html',
         images_list=images_taken_sorted,
         classes=generate_grid_classes(len(images_taken_sorted))
+    )
+
+@app.route('/diaporama')
+def diaporama():
+    path = f"{ROOT_DIR}/_tmp"
+    os.chdir(path)
+
+    images_taken = glob.glob('*.JPG')
+    images_taken.extend(glob.glob('*.jpeg'))
+    images_taken.extend(glob.glob('*.jpg'))
+
+    images_taken_sorted = Tcl().call('lsort', '-dict', images_taken)
+    images_taken_sorted = list(reversed(images_taken_sorted))
+
+    animation=generate_diaporama_key_frames_animations(images_taken_sorted)
+
+    return render_template(
+        'diaporama.html',
+        animation=' '.join(animation),
+        animation_time=len(images_taken_sorted) * 5,
+        images_list=images_taken_sorted,
     )
 
 if __name__ == "__main__":
