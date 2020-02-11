@@ -1,7 +1,5 @@
-import os
 from functools import partial
-import subprocess
-import time
+import subprocess, time, os, re
 from concurrent.futures import ThreadPoolExecutor as Pool
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -32,6 +30,22 @@ class Camera:
         except:
             return False
 
+    def get_battery_level(self):
+        camera_get_level_cmd = [
+            'gphoto2',
+            '--get-config=batterylevel',
+        ]
+        camera_setup_process = subprocess.Popen(camera_get_level_cmd, stdout=subprocess.PIPE)
+        out, err = camera_setup_process.communicate()
+
+        if err:
+            return None
+            
+        search_battery_level_percent = re.search(r'\d+%', str(out), re.I)
+        search_battery_level = re.search(r'\d+', str(search_battery_level_percent.group()), re.I).group()
+
+        return int(search_battery_level)
+
     def __init__(self, on_error=None):
         self.camera_setup_cmd = [
             'gphoto2',
@@ -44,7 +58,11 @@ class Camera:
             '--set-config',
             'iso=Auto',
             '--set-config',
-            'imageformat=RAW + Small Normal JPEG'
+            'imageformat=RAW + Small Normal JPEG',
+            '--set-config',
+            'picturestyle=Portrait',
+            '--set-config',
+            'drivemode=Single'
         ]
         try:
             camera_setup_process = subprocess.Popen(self.camera_setup_cmd, stdout=subprocess.PIPE)

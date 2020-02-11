@@ -17,8 +17,6 @@ class Home(tk.Frame):
 
         self.create_widgets()
 
-        self.is_notification_animating = False
-
     def create_widgets(self):
         navigation = self.create_navigation()
         navigation.pack(pady=30)
@@ -109,7 +107,6 @@ class Home(tk.Frame):
         )
         self.start_btn.image = start_btn_icon
         self.start_btn.pack(fill="x", expand=True, pady=(0, 8))
-
 
         help_btn_bgc = '#e67e22'
         help_btn_icon_src = PIL.Image.open(f"{ROOT_DIR}/../assets/help-icon.png").convert("RGBA")

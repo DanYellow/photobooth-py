@@ -76,6 +76,8 @@ class PhotoboothApplication(ttk.Frame):
             on_error=self.on_missing_camera
         )
 
+        self.camera.get_battery_level()
+
         root.bind("<KeyPress>", self.quit_)
 
     def quit_(self, event):
@@ -133,12 +135,12 @@ class PhotoboothApplication(ttk.Frame):
         self.loading_screen.pack_forget()
 
     def on_photoshoot_ended(self):
-        collage_path = self.create_collage()
+        self.collage_path = self.create_collage()
 
         self.loading_screen.pack_forget()
 
-        self.result_screen.set_collage_image(collage_path)
-        self.result_screen.set_fullscreen_collage_image(collage_path)
+        self.result_screen.set_collage_image(self.collage_path)
+        self.result_screen.set_fullscreen_collage_image(self.collage_path)
         self.result_screen.pack(fill="both", expand=True)
         self.collage_pics_name_buffer = []
         self.nb_shoots_taken = 0
@@ -206,7 +208,7 @@ class PhotoboothApplication(ttk.Frame):
         # self.home_screen.animate_print_notification_in()
         # os.system("cupsenable Canon_SELPHY_CP1300")
 
-        # print_cmd = f"""lp -d Canon_SELPHY_CP1300 -o fit-to-page {ROOT_DIR}/_tmp/collages/{collage_name}"""
+        # print_cmd = f"""lp -d Canon_SELPHY_CP1300 -o fit-to-page {self.collage_path}"""
         # os.system(print_cmd)
 
 if __name__ == "__main__":
