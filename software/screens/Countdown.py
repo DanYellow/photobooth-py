@@ -12,6 +12,8 @@ class Countdown(tk.Frame):
         self.count = start_count
         self.callback = callback
 
+        self.countpics_label_var = tk.StringVar()
+
         self.create_widgets()
         
 
@@ -30,7 +32,21 @@ class Countdown(tk.Frame):
 
         self.countdown_label.pack(side="top", expand=1, fill="both")
 
-    def start_countdown(self):
+        countpics_label_style = tkFont.Font(
+            family='DejaVu Sans Mono', 
+            size=15
+        )
+        countpics_label = tk.Label(self, background=self["bg"],
+            borderwidth=0,
+            textvariable=self.countpics_label_var,
+            font = countpics_label_style)
+
+        countpics_label.pack(side="bottom", expand=0, fill="x", pady=((0, 15)))
+
+    def start_countdown(self, photocount = None, maxcount = None):
+        if photocount is not None:
+            self.countpics_label_var.set('Photo {}/{}'.format(photocount, maxcount))
+
         self.countdown()
         self.countdown_font_size_anim()
 

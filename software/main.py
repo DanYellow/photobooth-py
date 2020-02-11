@@ -57,6 +57,7 @@ class PhotoboothApplication(ttk.Frame):
             callback = self.on_countdown_ended,
             start_count = start_count
         )
+        # self.countdown_screen.pack(side="top", fill="both", expand=1)
 
         self.home_screen = Home(self, self.root, self.translation['fr'])
         # self.home_screen.start_btn.configure(command=self.print_pic)
@@ -90,9 +91,6 @@ class PhotoboothApplication(ttk.Frame):
         self.root.title('Photobooth')
         self.root.resizable(False, False)
 
-    # def create_widgets(self):
-    #     self.create_home_screen()
-
     def setup_files_and_folders(self):
         os.chdir(self.ROOT_DIR)
         full_dir = f"{self.ROOT_DIR}/_tmp/full"
@@ -104,7 +102,7 @@ class PhotoboothApplication(ttk.Frame):
         if self.camera.is_camera_up():
             self.home_screen.pack_forget()
 
-            self.countdown_screen.start_countdown()
+            self.countdown_screen.start_countdown(self.nb_shoots_taken + 1, self.nb_shoots_max)
             self.countdown_screen.pack(side="top", fill="both", expand=1)
         else:
             self.notification_manager.create_error_notification('missing_camera')
@@ -127,7 +125,7 @@ class PhotoboothApplication(ttk.Frame):
         self.countdown_screen.reset()
         self.countdown_screen.pack_forget()
         if self.nb_shoots_taken < self.nb_shoots_max:
-            self.countdown_screen.start_countdown()
+            self.countdown_screen.start_countdown(self.nb_shoots_taken + 1, self.nb_shoots_max)
             self.countdown_screen.pack(side="top", fill="both", expand=1)
         else:
             self.loading_screen.pack(side="top", fill="both", expand=1)
@@ -213,7 +211,7 @@ class PhotoboothApplication(ttk.Frame):
 
 if __name__ == "__main__":
     root = tk.Tk()
-    photobooth_app = PhotoboothApplication(root, nb_shoots_max = 1, start_count = 1)
+    photobooth_app = PhotoboothApplication(root, nb_shoots_max = 2, start_count = 1)
     photobooth_app.pack(side="top", fill="both", expand=True)
     
     root.mainloop()
