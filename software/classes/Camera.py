@@ -22,18 +22,7 @@ class Camera:
 
     def is_camera_up(self):
         try:
-            camera_setup_cmd = [
-                'gphoto2',
-                '--set-config', 
-                'capturetarget=1', 
-                '--set-config', 
-                'shutterspeed=1/80',
-                '--set-config',
-                'whitebalance=0',
-                '--set-config',
-                'iso=Auto'
-            ]
-            camera_setup_process = subprocess.Popen(camera_setup_cmd, stdout=subprocess.PIPE)
+            camera_setup_process = subprocess.Popen(self.camera_setup_cmd, stdout=subprocess.PIPE)
             if camera_setup_process.wait() != 0:
                 return False
                 raise RuntimeError()
@@ -44,19 +33,21 @@ class Camera:
             return False
 
     def __init__(self, on_error=None):
+        self.camera_setup_cmd = [
+            'gphoto2',
+            '--set-config', 
+            'capturetarget=1', 
+            '--set-config', 
+            'shutterspeed=1/80',
+            '--set-config',
+            'whitebalance=0',
+            '--set-config',
+            'iso=Auto',
+            '--set-config',
+            'imageformat=RAW + Small Normal JPEG'
+        ]
         try:
-            camera_setup_cmd = [
-                'gphoto2',
-                '--set-config', 
-                'capturetarget=1', 
-                '--set-config', 
-                'shutterspeed=1/80',
-                '--set-config',
-                'whitebalance=0',
-                '--set-config',
-                'iso=Auto'
-            ]
-            camera_setup_process = subprocess.Popen(camera_setup_cmd, stdout=subprocess.PIPE)
+            camera_setup_process = subprocess.Popen(self.camera_setup_cmd, stdout=subprocess.PIPE)
             if camera_setup_process.wait() != 0:
                 raise RuntimeError()
         except:
