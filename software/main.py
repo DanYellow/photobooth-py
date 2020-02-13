@@ -181,13 +181,14 @@ class PhotoboothApplication(ttk.Frame):
         collage_img = PIL.Image.new('RGB', collage_img_size, color=collage_img_bg)
 
         space_between_thumbs = 10
+        bottom_space = 200 # 200
 
         for idx, img_path in enumerate(list_collage_pics_paths):
             try:
                 tmp_img = PIL.Image.open(img_path)
                 collage_img_width, collage_img_height = collage_img_size
         
-                tmp_img_height = math.ceil(collage_img_height / len(list_collage_pics_paths))
+                tmp_img_height = math.ceil((collage_img_height - bottom_space) / len(list_collage_pics_paths))
                 tmp_img_height = tmp_img_height - space_between_thumbs
                 tmp_img.thumbnail([1500, tmp_img_height], PIL.Image.ANTIALIAS)
 
@@ -224,7 +225,7 @@ if __name__ == "__main__":
     root = tk.Tk()
     photobooth_app = PhotoboothApplication(
         root, 
-        nb_shoots_max = 5,
+        nb_shoots_max = 2,
         start_count = 0
     )
     photobooth_app.pack(side="top", fill="both", expand=True)
