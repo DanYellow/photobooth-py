@@ -11,7 +11,8 @@ class Camera:
         capture_image_cmd = f"""gphoto2 \
             --capture-image-and-download \
             --force-overwrite \
-            --keep-raw
+            --keep-raw \
+            --filename %f-photobooth.jpg
             """
         pool = Pool(max_workers=1)
         f = pool.submit(subprocess.call, capture_image_cmd, shell=True)
