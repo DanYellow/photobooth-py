@@ -1,8 +1,7 @@
 import tkinter.ttk as ttk
 import tkinter as tk
 import tkinter.font as tkFont
-import qrcode, os, PIL, pyqrcode
-
+import os, PIL, pyqrcode
 
 class UiHelp(tk.Frame):
     def __init__(self, master, texts, *args, **kwargs): 
