@@ -17,7 +17,7 @@ class UiGallery(tk.Frame):
         image_count = 0
         list_images = glob.glob(os.path.join(f"{ROOT_DIR}/../../_tmp/", '*.JPG'))[:NB_ROWS*NB_COLUMNS]
 
-        for infile in list_images:
+        for infile in reversed(list_images):
             image_count += 1
             r, c = divmod(image_count - 1, NB_COLUMNS)
 
