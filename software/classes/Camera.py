@@ -38,13 +38,14 @@ class Camera:
         camera_setup_process = subprocess.Popen(camera_get_level_cmd, stdout=subprocess.PIPE)
         out, err = camera_setup_process.communicate()
 
+        print('err', out)
         if err:
             return None
-            
-        search_battery_level_percent = re.search(r'\d+%', str(out), re.I)
-        search_battery_level = re.search(r'\d+', str(search_battery_level_percent.group()), re.I).group()
+        else:
+            search_battery_level_percent = re.search(r'\d+%', str(out), re.I)
+            search_battery_level = re.search(r'\d+', str(search_battery_level_percent.group()), re.I).group()
 
-        return int(search_battery_level)
+            return int(search_battery_level)
 
     def __init__(self, on_error=None):
         self.camera_setup_cmd = [

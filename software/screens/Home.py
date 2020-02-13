@@ -1,10 +1,10 @@
 import tkinter.ttk as ttk
 import tkinter as tk
 import tkinter.font as tkFont
-import qrcode, os
-import PIL
+import qrcode, os, PIL
 
 from classes.UiGallery import UiGallery
+from classes.UiHelp import UiHelp
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -25,7 +25,7 @@ class Home(tk.Frame):
         btns_container = self.create_btns_container(navigation)
         qr_code_area = self.create_qr_code_area(navigation)
 
-        w = tk.Canvas(
+        separator = tk.Canvas(
             navigation,
             width=200,
             height=10,
@@ -33,8 +33,8 @@ class Home(tk.Frame):
             highlightthickness=0,
             relief='ridge'
         )
-        w.create_line(2, 2, 600, 2, fill="white")
-        w.pack(fill="x", pady=30, padx=40)
+        separator.create_line(2, 2, 600, 2, fill="white")
+        separator.pack(fill="x", pady=30, padx=40)
 
         qr_code_area.pack(pady=0)
         btns_container.pack(side="bottom", fill="x", expand=False, padx=40, pady=(0, 20))
@@ -46,6 +46,29 @@ class Home(tk.Frame):
             relheight=1.0, relwidth=1.0
         )
         self.gallery_bg.lower()
+
+        self.help_view = UiHelp(master=self, texts = self.texts)
+
+        
+
+        btns_container_font_style = tkFont.Font(family='DejaVu Sans Mono', size=20)
+        self.close_help_btn = tk.Button(
+            self,
+            # height = btns_container_btns_height,
+            background="red",
+            highlightbackground="#8e9ae9", 
+            highlightthickness=2,
+            activeforeground="#033754", 
+            # activebackground=start_btn_bgc, 
+            borderwidth=0,
+            fg="white",
+            text = self.texts['close'], 
+            font=btns_container_font_style,
+            command=self.hide_help_view
+        )
+
+        self.show_help_view()
+
 
     def create_navigation(self):
         navigation_style_bg = "#333333"
@@ -62,8 +85,6 @@ class Home(tk.Frame):
             style='HomeScreenBtnsContainer.TFrame',
             relief="solid",
             borderwidth=3
-            # highlightthickness=10,
-            # highlightbackground="black",
         )
 
         return navigation
@@ -132,8 +153,11 @@ class Home(tk.Frame):
             text = self.texts['help'].upper(),
             font=btns_container_font_style,
             image=help_btn_icon,
-            compound="left"
+            compound="left",
+            command=self.show_help_view
         )
+
+        
         self.help_btn.image = help_btn_icon
         self.help_btn.pack(fill="x", expand=True, pady=(8, 0))
 
@@ -184,3 +208,22 @@ class Home(tk.Frame):
         qrc_label.pack(side="bottom")
 
         return qrc_frame
+
+    def show_help_view(self):
+        self.help_view.place(
+            relx=0.5, rely=0.5,
+            anchor="center",
+            width="445",
+            height="615",
+        )
+        self.help_view.lift()
+
+        self.close_help_btn.place(
+            relx=0.5, rely=0.88,
+            anchor="center"
+        )
+        self.close_help_btn.lift()
+
+    def hide_help_view(self):
+        self.help_view.place_forget()
+        self.close_help_btn.place_forget()

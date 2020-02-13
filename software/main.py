@@ -43,7 +43,8 @@ class PhotoboothApplication(ttk.Frame):
                 'access_gallery': "Accès aux photos",
                 'link_to_gallery': "raspberrypi.local\nou",
                 'cheese': "Souriez !",
-                'missing_camera': "Appareil\nnon detecté"
+                'missing_camera': "Appareil\nnon detecté",
+                'close': "Fermer"
              }
         }
 
@@ -76,7 +77,8 @@ class PhotoboothApplication(ttk.Frame):
             on_error=self.on_missing_camera
         )
 
-        self.camera.get_battery_level()
+        if self.camera.is_camera_up():
+            self.camera.get_battery_level()
 
         root.bind("<KeyPress>", self.quit_)
 
@@ -213,7 +215,7 @@ class PhotoboothApplication(ttk.Frame):
 
 if __name__ == "__main__":
     root = tk.Tk()
-    photobooth_app = PhotoboothApplication(root, nb_shoots_max = 2, start_count = 1)
+    photobooth_app = PhotoboothApplication(root, nb_shoots_max = 5, start_count = 5)
     photobooth_app.pack(side="top", fill="both", expand=True)
     
     root.mainloop()
