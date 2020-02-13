@@ -77,9 +77,6 @@ class PhotoboothApplication(ttk.Frame):
             on_error=self.on_missing_camera
         )
 
-        if self.camera.is_camera_up():
-            self.camera.get_battery_level()
-
         root.bind("<KeyPress>", self.quit_)
 
     def quit_(self, event):
@@ -179,31 +176,31 @@ class PhotoboothApplication(ttk.Frame):
 
         collage_img_ratio = 15 / 10
         collage_img_width = 1500
-
         collage_img_bg = (255, 255, 255, 0)
-
         collage_img_size = (collage_img_width, int(collage_img_width * collage_img_ratio))
         collage_img = PIL.Image.new('RGB', collage_img_size, color=collage_img_bg)
 
-        for idx, img_path in enumerate(list(list_collage_pics_paths)):
+        space_between_thumbs = 10
+
+        for idx, img_path in enumerate(list_collage_pics_paths):
             try:
                 tmp_img = PIL.Image.open(img_path)
                 collage_img_width, collage_img_height = collage_img_size
         
                 tmp_img_height = math.ceil(collage_img_height / len(list_collage_pics_paths))
-                thumbnail_size = math.ceil(tmp_img_height * collage_img_ratio), tmp_img_height
-
-                thumbnail_resized = tmp_img.resize(thumbnail_size, PIL.Image.ANTIALIAS)
+                tmp_img_height = tmp_img_height - space_between_thumbs
+                tmp_img.thumbnail([1500, tmp_img_height], PIL.Image.ANTIALIAS)
 
                 collage_img.paste(
-                    thumbnail_resized, 
-                        (
-                            math.ceil(collage_img_width / 2) - math.ceil(thumbnail_size[0] / 2), 
-                            tmp_img_height * idx
+                    tmp_img, 
+                        (                            
+                            math.ceil(collage_img_width / 2) - math.ceil(tmp_img.size[0] / 2), 
+                            tmp_img.size[1] * idx + (space_between_thumbs * idx)
                         )
                 )
             except Exception as e:
                 print(e)
+
 
         filename, file_extension = os.path.splitext(self.collage_pics_name_buffer[0])
         collage_name = f"{filename}-f{file_extension}"
@@ -227,8 +224,8 @@ if __name__ == "__main__":
     root = tk.Tk()
     photobooth_app = PhotoboothApplication(
         root, 
-        nb_shoots_max = 2,
-        start_count = 3
+        nb_shoots_max = 5,
+        start_count = 0
     )
     photobooth_app.pack(side="top", fill="both", expand=True)
     

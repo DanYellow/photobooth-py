@@ -12,7 +12,7 @@ class Camera:
             --capture-image-and-download \
             --force-overwrite \
             --keep-raw \
-            --filename %f-photobooth.jpg
+            --filename %f-photobooth.JPG
             """
         pool = Pool(max_workers=1)
         f = pool.submit(subprocess.call, capture_image_cmd, shell=True)
