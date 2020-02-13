@@ -1,7 +1,7 @@
 import tkinter.ttk as ttk
 import tkinter as tk
 import tkinter.font as tkFont
-import glob, os, sys, PIL
+import glob, os, sys, PIL, math
 
 from screens.Home import Home
 from screens.Result import Result
@@ -150,7 +150,7 @@ class PhotoboothApplication(ttk.Frame):
 
     def on_missing_camera(self, msg):
         self.notification_manager.create_error_notification('missing_camera')
-        print('missing_camera')
+        print('log : missing_camera')
 
     def get_latest_pic(self, folder = None):
         os.chdir(f"{self.ROOT_DIR}/_tmp/full")
@@ -172,26 +172,36 @@ class PhotoboothApplication(ttk.Frame):
 
     def create_collage(self):
         os.chdir(f"{self.ROOT_DIR}/_tmp/collages")
-        list_collage_pics_paths = map(
+        list_collage_pics_paths = list(map(
             lambda img_name: f"{self.ROOT_DIR}/_tmp/full/{img_name}",
             self.collage_pics_name_buffer
-        )
+        ))
 
         collage_img_ratio = 15 / 10
         collage_img_width = 1500
 
-        color_white = (255,255,255,0)
+        collage_img_bg = (255, 255, 255, 0)
 
         collage_img_size = (collage_img_width, int(collage_img_width * collage_img_ratio))
-        collage_img = PIL.Image.new('RGB', collage_img_size, color=color_white)
+        collage_img = PIL.Image.new('RGB', collage_img_size, color=collage_img_bg)
 
         for idx, img_path in enumerate(list(list_collage_pics_paths)):
             try:
                 tmp_img = PIL.Image.open(img_path)
-                tmp_img.thumbnail(collage_img_size, PIL.Image.ANTIALIAS)
-                _, height = tmp_img.size
+                collage_img_width, collage_img_height = collage_img_size
+        
+                tmp_img_height = math.ceil(collage_img_height / len(list_collage_pics_paths))
+                thumbnail_size = math.ceil(tmp_img_height * collage_img_ratio), tmp_img_height
 
-                collage_img.paste(tmp_img, (0, height * idx))
+                thumbnail_resized = tmp_img.resize(thumbnail_size, PIL.Image.ANTIALIAS)
+
+                collage_img.paste(
+                    thumbnail_resized, 
+                        (
+                            math.ceil(collage_img_width / 2) - math.ceil(thumbnail_size[0] / 2), 
+                            tmp_img_height * idx
+                        )
+                )
             except Exception as e:
                 print(e)
 
@@ -209,14 +219,13 @@ class PhotoboothApplication(ttk.Frame):
         self.notification_manager.create_print_notification()
         # self.home_screen.animate_print_notification_in()
         # os.system("cupsenable Canon_SELPHY_CP1300")
-
-        # print_cmd = f"""lp -d Canon_SELPHY_CP1300 -o fit-to-page {self.collage_path}"""
+        printer_name = "Canon_SELPHY_CP1300"
+        # print_cmd = f"""lp -d {printer_name} -o fit-to-page {self.collage_path}"""
         # os.system(print_cmd)
 
 if __name__ == "__main__":
     root = tk.Tk()
-    photobooth_app = PhotoboothApplication(root, nb_shoots_max = 5, start_count = 5)
+    photobooth_app = PhotoboothApplication(root, nb_shoots_max = 10, start_count = 0)
     photobooth_app.pack(side="top", fill="both", expand=True)
     
     root.mainloop()
-    root.destroy()

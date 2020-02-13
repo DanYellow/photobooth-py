@@ -1,7 +1,7 @@
 import tkinter.ttk as ttk
 import tkinter as tk
 import tkinter.font as tkFont
-import qrcode, os, PIL
+import pyqrcode, os, PIL
 
 from classes.UiGallery import UiGallery
 from classes.UiHelp import UiHelp
@@ -34,7 +34,7 @@ class Home(tk.Frame):
             relief='ridge'
         )
         separator.create_line(2, 2, 600, 2, fill="white")
-        separator.pack(fill="x", pady=30, padx=40)
+        separator.pack(fill="x", pady=20, padx=40)
 
         qr_code_area.pack(pady=0)
         btns_container.pack(side="bottom", fill="x", expand=False, padx=40, pady=(0, 20))
@@ -52,7 +52,6 @@ class Home(tk.Frame):
         btns_container_font_style = tkFont.Font(family='DejaVu Sans Mono', size=20)
         self.close_help_btn = tk.Button(
             self,
-            height = "1",
             background="#a1d4f0",
             highlightbackground="#8e9ae9", 
             highlightthickness=2,
@@ -92,7 +91,7 @@ class Home(tk.Frame):
             wrapper,
             bg = ttk.Style().lookup(wrapper['style'], "background"),
         )
-        btns_container_btns_height = 70
+        btns_container_btns_height = 60
         btns_container_font_style = tkFont.Font(family='DejaVu Sans Mono', size=20)
 
         start_btn_bgc = '#a1d4f0'
@@ -150,7 +149,6 @@ class Home(tk.Frame):
             compound="left",
             command=self.show_help_view
         )
-
         
         self.help_btn.image = help_btn_icon
         self.help_btn.pack(fill="x", expand=True, pady=(8, 0))
@@ -182,24 +180,14 @@ class Home(tk.Frame):
         )
         qrc_txt_label.pack(pady=(0, 10))
 
-        qr = qrcode.QRCode(
-            version = 1,
-            error_correction = qrcode.constants.ERROR_CORRECT_L,
-            box_size = 5,
-            border = 0,
-        )
-        qr.add_data('http://raspberrypi.local/')
-        qr.make(fit=True)
-        img_tmp = qr.make_image(fill_color="black", back_color="white")
-        img = PIL.ImageTk.PhotoImage(img_tmp)
+        qr = pyqrcode.create(f'http://raspberrypi.local/')
+        qr_xbm = qr.xbm(scale=4, quiet_zone=1)
+        site_qr_code = tk.BitmapImage(data=qr_xbm)
+        site_qr_code.config(background="white")
+        site_qr_code_label = tk.Label(qrc_frame, image=site_qr_code)
+        site_qr_code_label.image = site_qr_code
+        site_qr_code_label.pack(side="bottom")
 
-        qrc_label = tk.Label(
-            qrc_frame,
-            image=img, 
-            bg=ttk.Style().lookup(wrapper['style'], "background"),
-        )
-        qrc_label.image = img
-        qrc_label.pack(side="bottom")
 
         return qrc_frame
 
