@@ -109,5 +109,6 @@ movie.mjpg
 *.tmp.*
 *.cr2
 IMG_*.JPG
+IMG_*.jpg
 white.jpg
 white.png

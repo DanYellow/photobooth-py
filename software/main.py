@@ -22,7 +22,7 @@ class PhotoboothApplication(ttk.Frame):
 
         ttk.Frame.__init__(self, self.root, *args, **kwargs)
         main_style = ttk.Style()
-        main_style.configure('App.TFrame', background="white")
+        main_style.configure('App.TFrame', background="wheat")
         self['style'] = 'App.TFrame'
 
         self.ROOT_DIR = f"{ROOT_DIR}/.."
@@ -225,7 +225,11 @@ class PhotoboothApplication(ttk.Frame):
 
 if __name__ == "__main__":
     root = tk.Tk()
-    photobooth_app = PhotoboothApplication(root, nb_shoots_max = 10, start_count = 0)
+    photobooth_app = PhotoboothApplication(
+        root, 
+        nb_shoots_max = 2,
+        start_count = 3
+    )
     photobooth_app.pack(side="top", fill="both", expand=True)
     
     root.mainloop()
