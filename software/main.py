@@ -100,7 +100,7 @@ class PhotoboothApplication(ttk.Frame):
         os.popen(f"mkdir -p {full_dir} && mkdir -p {collages_dir}")
 
     def start_photoshoot(self):
-        if self.camera.is_camera_up():
+        if self.camera.is_up():
             self.home_screen.pack_forget()
 
             self.countdown_screen.start_countdown(self.nb_shoots_taken + 1, self.nb_shoots_max)

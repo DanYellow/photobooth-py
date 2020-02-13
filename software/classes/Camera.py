@@ -19,12 +19,11 @@ class Camera:
         if callback is not None:
             f.add_done_callback(callback)
 
-    def is_camera_up(self):
+    def is_up(self):
         try:
             camera_setup_process = subprocess.Popen(self.camera_setup_cmd, stdout=subprocess.PIPE)
             if camera_setup_process.wait() != 0:
                 return False
-                raise RuntimeError()
             else:
                 return True
 
