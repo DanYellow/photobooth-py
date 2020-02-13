@@ -49,26 +49,20 @@ class Home(tk.Frame):
 
         self.help_view = UiHelp(master=self, texts = self.texts)
 
-        
-
         btns_container_font_style = tkFont.Font(family='DejaVu Sans Mono', size=20)
         self.close_help_btn = tk.Button(
             self,
-            # height = btns_container_btns_height,
-            background="red",
+            height = "1",
+            background="#a1d4f0",
             highlightbackground="#8e9ae9", 
             highlightthickness=2,
             activeforeground="#033754", 
-            # activebackground=start_btn_bgc, 
             borderwidth=0,
             fg="white",
             text = self.texts['close'], 
             font=btns_container_font_style,
             command=self.hide_help_view
         )
-
-        self.show_help_view()
-
 
     def create_navigation(self):
         navigation_style_bg = "#333333"
@@ -213,14 +207,14 @@ class Home(tk.Frame):
         self.help_view.place(
             relx=0.5, rely=0.5,
             anchor="center",
-            width="445",
-            height="615",
         )
         self.help_view.lift()
 
         self.close_help_btn.place(
-            relx=0.5, rely=0.88,
-            anchor="center"
+            relx=0.5, rely=0.87,
+            anchor="center",
+            height=60,
+            width=300
         )
         self.close_help_btn.lift()
 

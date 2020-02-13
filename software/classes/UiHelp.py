@@ -8,52 +8,54 @@ class UiHelp(tk.Frame):
     def __init__(self, master, texts, *args, **kwargs): 
         self.texts = texts
 
-        tk.Frame.__init__(self, master, *args, **kwargs, bg="#333333")
-
+        tk.Frame.__init__(
+            self, master, *args, **kwargs, 
+            bg="#333333", width="425", height="590",
+            highlightthickness=3,
+            highlightbackground="black",
+            padx=20,
+        )
 
         self.instructions = {
             'fr': {
                 'step1': "Appuyez sur le bouton \"Commencer\"",
                 'step2': "Prenez la pose",
                 'step3': "Connectez-vous au réseau Wi-Fi \"photomaton\" (mdp: \"photos!!\") ou via",
-                'step4': "Accéder à vos photos via raspberrypi.local ou via",
+                'step4': "Accéder aux  photos via raspberrypi.local ou via",
             }
         }
-        # self.pack_propagate(0)
+
         self.create_widgets()
 
     def create_widgets(self):
         navigation = self.create_main_container()
         navigation.place(
-            relx=0.5, rely=0.5,
-            anchor="center",
-            width="465",
-            height="700",
+            relx=0.5, 
+            rely=0,
+            anchor="n",
         )
 
         self.create_list_instructions(navigation)
 
     def create_main_container(self):
-        navigation_style_bg = "#333333"
-
         navigation = tk.Frame(
             self,
             relief="flat",
-            borderwidth=3,
-            bg=navigation_style_bg,
-            highlightthickness=0,
-            # highlightbackground="black",
+            bg=self['bg'],
+            highlightthickness=0
         )
 
         return navigation
 
     def create_list_instructions(self, container):
-        space_between_instruction = 8
+        space_between_instructions = 4
+
         instruction_container = tk.Frame(
             container,
-            bg=self['bg']
+            bg=self['bg'],
+            pady=0
         )
-        instruction_container.pack(fill="both", expand=1)
+        instruction_container.pack(fill="x", expand=1, side="bottom")
 
         instruction_text_style = tkFont.Font(
             family='DejaVu Sans Mono', 
@@ -69,7 +71,7 @@ class UiHelp(tk.Frame):
             instruction_container,
             bg=self['bg'],
         )
-        instruction_step_1_container.pack(fill="x", pady=space_between_instruction)
+        instruction_step_1_container.pack(fill="x", pady=space_between_instructions)
 
         instruction_step_1_number = tk.Label(
             instruction_step_1_container,
@@ -97,7 +99,7 @@ class UiHelp(tk.Frame):
             instruction_container,
             bg=self['bg'],
         )
-        instruction_step_2_container.pack(fill="x", pady=space_between_instruction)
+        instruction_step_2_container.pack(fill="x", pady=space_between_instructions)
 
         instruction_step_2_number = tk.Label(
             instruction_step_2_container,
@@ -125,7 +127,7 @@ class UiHelp(tk.Frame):
             instruction_container,
             bg=self['bg'],
         )
-        instruction_step_3_container.pack(fill="x", pady=space_between_instruction)
+        instruction_step_3_container.pack(fill="x", pady=space_between_instructions)
 
         instruction_step_3_texts_container = tk.Frame(
             instruction_step_3_container,
@@ -149,23 +151,23 @@ class UiHelp(tk.Frame):
             font=instruction_text_style,
             bg=self['bg'],
             foreground="white",
-            aspect=500
+            aspect=450
         )
 
         instruction_step_3_number.pack(side="left")
         instruction_step_3_text.pack(side="left", fill="x")
 
-        site_qr_code = self.get_site_qr_code()
-        site_qr_code_label = tk.Label(instruction_step_3_container, image=site_qr_code)
-        site_qr_code_label.image = site_qr_code
-        site_qr_code_label.pack(side="bottom")
+        wifi_qr_code = self.get_wifi_access_qr_code()
+        wifi_qr_code_label = tk.Label(instruction_step_3_container, image=wifi_qr_code)
+        wifi_qr_code_label.image = wifi_qr_code
+        wifi_qr_code_label.pack(side="bottom")
 
 
         instruction_step_4_container = tk.Frame(
             instruction_container,
             bg=self['bg'],
         )
-        instruction_step_4_container.pack(fill="x", pady=space_between_instruction)
+        instruction_step_4_container.pack(fill="x", pady=space_between_instructions)
 
         instruction_step_4_texts_container = tk.Frame(
             instruction_step_4_container,
@@ -195,10 +197,10 @@ class UiHelp(tk.Frame):
         instruction_step_4_number.pack(side="left")
         instruction_step_4_text.pack(side="left", fill="x")
 
-        wifi_qr_code = self.get_wifi_access_qr_code()
-        wifi_qr_code_label = tk.Label(instruction_step_4_container, image=wifi_qr_code)
-        wifi_qr_code_label.image = wifi_qr_code
-        wifi_qr_code_label.pack(side="bottom")
+        site_qr_code = self.get_site_qr_code()
+        site_qr_code_label = tk.Label(instruction_step_4_container, image=site_qr_code)
+        site_qr_code_label.image = site_qr_code
+        site_qr_code_label.pack(side="bottom")
 
     def get_wifi_access_qr_code(self):
         ssid = 'photomaton'

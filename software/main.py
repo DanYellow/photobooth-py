@@ -219,3 +219,4 @@ if __name__ == "__main__":
     photobooth_app.pack(side="top", fill="both", expand=True)
     
     root.mainloop()
+    root.destroy()
