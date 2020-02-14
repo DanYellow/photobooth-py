@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<html>
+  <head>
+      <title>{% block title %}Galerie{% endblock %}</title>
+    
+      <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}">
+      <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+      <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0" />
+  </head>
+    <div id="content">{% block content %}{% endblock %}</div>
+  <body>
+        <div class="section">
+            <nav>
+                <ul>
+                    <li><a href="/" {% if request.path == '/' %}class="active"{% endif %}>Général</a></li>
+                    <li><a href="/collages" {% if request.path == '/collages' %}class="active"{% endif %}>Collages</a></li>
+                    <li><a href="/diaporama" {% if request.path == '/diaporama' %}class="active"{% endif %}>Diaporama</a></li>
+                </ul>
+            </nav>
+            <div class="grid">
+                {% block gallery %}{% endblock %}
+            </div>
+        </div>
+    </body>
+</html>

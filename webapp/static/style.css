@@ -15,11 +15,7 @@ body, html {
     width: 100%;
 }
 
-@media screen and (min-width: 768px) {
-    .section {
-        padding: 2rem;
-    }
-}
+
 
 .section nav {
     font-size: 1.6rem;
@@ -106,5 +102,24 @@ body, html {
     .item--full {
         grid-column: 1/-1;
         grid-row-end: span 2;
+    }
+
+    .section {
+        padding: 2rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    body, html {
+        font-size: 16px;
+    }
+
+    .section nav ul {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .section nav ul li:after {
+        content: "";
     }
 }

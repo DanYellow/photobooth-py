@@ -1,33 +1,12 @@
+{% extends "base.html" %}
 {% from 'macros.html' import gallery_item %}
 
-<!DOCTYPE html>
-<html lang="fr">
-
-<head>
-    <title>Galerie</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='reset.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-
-<body>
-    <div class="section">
-        <nav>
-            <ul>
-                <li><a href="/" class="active">Général</a></li>
-                <li><a href="/collages">Collages</a></li>
-                <li><a href="/diaporama">Diaporama</a></li>
-            </ul>
-        </nav>
-        <div class="grid">
-            {% for image, class in images_list|zip(classes) %}
-                {{ gallery_item(
-                    url_for('full.static', filename=image), 
-                    url_for('thumb.static', filename=image),
-                    class
-                )}} 
-            {% endfor %}
-        </div>
-    </div>
-</body>
-
-</html>
+{% block gallery %}
+    {% for image, class in images_list|zip(classes) %}
+    {{ gallery_item(
+        url_for('full.static', filename=image), 
+        url_for('thumb.static', filename=image),
+        class
+    )}} 
+    {% endfor %}
+{% endblock %}

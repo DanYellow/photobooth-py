@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
     <style>
-        .conteneur{
+        .diaporama-container{
             max-width: 576px;
             margin: 50px auto;
         }
@@ -42,12 +42,12 @@
     <div class="section">
         <nav>
             <ul>
-                <li><a href="/" class="active">Général</a></li>
-                <li><a href="/collages">Collages</a></li>
-                <li><a href="/diaporama">Diaporama</a></li>
+                <li><a href="/" {% if request.path == '/' %}class="active"{% endif %}>Général</a></li>
+                    <li><a href="/collages" {% if request.path == '/collages' %}class="active"{% endif %}>Collages</a></li>
+                    <li><a href="/diaporama" {% if request.path == '/diaporama' %}class="active"{% endif %}>Diaporama</a></li>
             </ul>
         </nav>
-        <div class="conteneur">
+        <div class="diaporama-container">
             <div class="diaporama"></div>
         </div>
     </div>
