@@ -8,6 +8,8 @@ body, html {
     font-size: 16px;
     max-width: 1920px;
     margin: 0 auto;
+
+    -webkit-overflow-scrolling: touch;
 }
 
 .section {
@@ -15,17 +17,20 @@ body, html {
     width: 100%;
 }
 
-
-
 .section nav {
     font-size: 1.6rem;
     margin-bottom: 15px;
 }
 
 .section nav ul {
-    display: flex;
+    overflow-x: auto;
+    overflow-y: auto;
+    white-space: nowrap;
 }
 
+.section nav ul li {
+    display: inline-block;
+}
 .section nav ul li:after {
     content: "-";
     display: inline-block;
@@ -117,9 +122,14 @@ body, html {
     .section nav ul {
         display: flex;
         justify-content: space-between;
+        padding: 5px 16px;
     }
 
     .section nav ul li:after {
         content: "";
+    }
+
+    .section {
+        padding: 2rem 0;
     }
 }

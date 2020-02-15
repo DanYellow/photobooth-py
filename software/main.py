@@ -213,13 +213,13 @@ class PhotoboothApplication(ttk.Frame):
     def print_pic(self):
         print('------------------ printing --------------')
 
+        printer_name = "Canon_SELPHY_CP1300"
+        os.system(f"cupsenable {printer_name}")
+        print_cmd = f"lp -d {printer_name} -o fit-to-page {self.collage_path}"
+        os.system(print_cmd)
+
         self.go_to_home_screen()
         self.notification_manager.create_print_notification()
-        # self.home_screen.animate_print_notification_in()
-        # os.system("cupsenable Canon_SELPHY_CP1300")
-        printer_name = "Canon_SELPHY_CP1300"
-        # print_cmd = f"""lp -d {printer_name} -o fit-to-page {self.collage_path}"""
-        # os.system(print_cmd)
 
 if __name__ == "__main__":
     root = tk.Tk()
