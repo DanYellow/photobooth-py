@@ -58,10 +58,8 @@ class PhotoboothApplication(ttk.Frame):
             callback = self.on_countdown_ended,
             start_count = start_count
         )
-        # self.countdown_screen.pack(side="top", fill="both", expand=1)
 
         self.home_screen = Home(self, self.root, self.translation['fr'])
-        # self.home_screen.start_btn.configure(command=self.print_pic)
         self.home_screen.start_btn.configure(command=self.start_photoshoot)
         self.home_screen.pack(fill="both", expand=True)
 
@@ -226,7 +224,7 @@ if __name__ == "__main__":
     photobooth_app = PhotoboothApplication(
         root, 
         nb_shoots_max = 2,
-        start_count = 0
+        start_count = 3
     )
     photobooth_app.pack(side="top", fill="both", expand=True)
     

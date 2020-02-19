@@ -15,8 +15,10 @@ class UiGallery(tk.Frame):
         NB_ROWS = ceil(self.root.winfo_height() / thumb_height)
 
         image_count = 0
-        list_images = glob.glob(os.path.join(f"{ROOT_DIR}/../../_tmp/", '*.JPG'))[:NB_ROWS*NB_COLUMNS]
-
+        list_images = glob.glob(os.path.join(f"{ROOT_DIR}/../../_tmp/", '*.JPG'))
+        list_images.sort(key=os.path.getmtime)
+        list_images = list_images[:NB_ROWS*NB_COLUMNS]
+        
         for infile in reversed(list_images):
             image_count += 1
             r, c = divmod(image_count - 1, NB_COLUMNS)
