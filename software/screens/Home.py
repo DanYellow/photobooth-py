@@ -5,6 +5,8 @@ import pyqrcode, os, PIL
 
 from classes.UiGallery import UiGallery
 from classes.UiHelp import UiHelp
+from classes.UiLiveview import UiLiveview
+from classes.Liveview import Liveview
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -18,9 +20,15 @@ class Home(tk.Frame):
         self.create_widgets()
 
     def create_widgets(self):
+        ui_liveview = UiLiveview(self)
+        ui_liveview.pack()
+
         navigation = self.create_navigation()
         navigation.pack(pady=30)
         navigation.pack_propagate(0)
+
+        # liveview = Liveview()
+        # liveview.start(f"{ROOT_DIR}/../../_tmp")
 
         btns_container = self.create_btns_container(navigation)
         qr_code_area = self.create_qr_code_area(navigation)

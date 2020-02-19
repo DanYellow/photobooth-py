@@ -1,9 +1,8 @@
-import glob
-import os
 import tkinter as tk
-
+import PIL, os, glob, math
+            
+from PIL import Image, ImageFilter, ImageTk
 from math import ceil
-from PIL import Image, ImageTk, ImageFile, ImageFilter
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -11,8 +10,8 @@ class UiGallery(tk.Frame):
     def create_widgets(self):
         thumb_width = 150
         thumb_height = 100
-        NB_COLUMNS = ceil(self.root.winfo_width() / thumb_width)
-        NB_ROWS = ceil(self.root.winfo_height() / thumb_height)
+        NB_COLUMNS = math.ceil(self.root.winfo_width() / thumb_width)
+        NB_ROWS = math.ceil(self.root.winfo_height() / thumb_height)
 
         image_count = 0
         list_images = glob.glob(os.path.join(f"{ROOT_DIR}/../../_tmp/", '*.JPG'))
@@ -24,7 +23,8 @@ class UiGallery(tk.Frame):
             r, c = divmod(image_count - 1, NB_COLUMNS)
 
             img = Image.open(infile)
-            resized = img.resize((thumb_width, thumb_height), Image.ANTIALIAS).filter(ImageFilter.GaussianBlur(2))
+            resized = img.resize((thumb_width, thumb_height), Image.ANTIALIAS)
+            resized.filter(ImageFilter.GaussianBlur(2))
             tkimage = ImageTk.PhotoImage(resized)
             img_container = tk.Label(self, image=tkimage)
             img_container.image = tkimage
