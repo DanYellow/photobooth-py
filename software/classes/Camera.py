@@ -38,7 +38,6 @@ class Camera:
         camera_setup_process = subprocess.Popen(camera_get_level_cmd, stdout=subprocess.PIPE)
         out, err = camera_setup_process.communicate()
 
-        print('err', out)
         if err:
             return None
         else:
