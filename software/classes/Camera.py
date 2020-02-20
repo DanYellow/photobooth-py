@@ -1,5 +1,5 @@
 from functools import partial
-import subprocess, time, os, re
+import subprocess, time, os, re, signal
 from concurrent.futures import ThreadPoolExecutor as Pool
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -18,6 +18,25 @@ class Camera:
         f = pool.submit(subprocess.call, capture_image_cmd, shell=True)
         if callback is not None:
             f.add_done_callback(callback)
+
+    def start_liveview(self, folder_location = ROOT_DIR):
+        os.chdir(folder_location)
+
+        capture_movie_cmd = f"""gphoto2 \
+            --capture-movie
+        """
+
+        capture_movie_process = subprocess.Popen(
+            capture_movie_cmd,
+            stdout=subprocess.PIPE, 
+            shell=True,
+            preexec_fn=os.setsid
+        )
+
+        self.process = capture_movie_process.pid
+
+    def stop(self):
+        os.killpg(os.getpgid(self.process.pid), signal.SIGTERM) 
 
     def is_up(self):
         try:
@@ -47,6 +66,8 @@ class Camera:
             return int(search_battery_level)
 
     def __init__(self, on_error=None):
+        self.process = None
+
         self.camera_setup_cmd = [
             'gphoto2',
             '--set-config', 
