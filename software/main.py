@@ -11,6 +11,8 @@ from screens.Loading import Loading
 from classes.Camera import Camera
 from classes.UiNotification import UiNotification
 
+from classes.UiLiveview import UiLiveview
+
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class PhotoboothApplication(ttk.Frame):
@@ -26,6 +28,8 @@ class PhotoboothApplication(ttk.Frame):
         self['style'] = 'App.TFrame'
 
         self.ROOT_DIR = f"{ROOT_DIR}/.."
+
+
 
         self.translation = {
             'fr': {
@@ -58,28 +62,39 @@ class PhotoboothApplication(ttk.Frame):
             callback = self.on_countdown_ended,
             start_count = start_count
         )
+        # self.countdown_screen.pack(fill="both", expand=True)
 
-        self.home_screen = Home(self, self.root, self.translation['fr'])
-        self.home_screen.start_btn.configure(command=self.start_photoshoot)
-        self.home_screen.pack(fill="both", expand=True)
+        # self.ui_liveview = UiLiveview(self)
+        # self.ui_liveview.pack()
 
-        self.result_screen = Result(self, self.root, self.translation['fr'])
-        self.result_screen.print_btn.configure(command=self.print_pic)
-        self.result_screen.continue_btn.configure(command=self.go_to_home_screen)
+        # self.home_screen = Home(self, self.root, self.translation['fr'])
+        # self.home_screen.start_btn.configure(command=self.start_photoshoot)
+        # self.home_screen.pack(fill="both", expand=True)
 
-        self.loading_screen = Loading(self, self.translation['fr'])
+        # self.result_screen = Result(self, self.root, self.translation['fr'])
+        # self.result_screen.print_btn.configure(command=self.print_pic)
+        # self.result_screen.continue_btn.configure(command=self.go_to_home_screen)
 
-        self.notification_manager = UiNotification(master = self.root, texts = self.translation['fr'])
+        # self.loading_screen = Loading(self, self.translation['fr'])
 
-        self.camera = Camera(
-            on_error=self.on_missing_camera
-        )
+        # self.notification_manager = UiNotification(master = self.root, texts = self.translation['fr'])
+
+        # self.camera = Camera(
+        #     on_error=self.on_missing_camera
+        # )
 
         root.bind("<KeyPress>", self.quit_)
+        root.protocol("WM_DELETE_WINDOW",self. cleanup)
+
+
+    def cleanup(self):
+        # self.home_screen.ui_liveview.cap.release()
+        sys.exit()
+        self.root.destroy()
 
     def quit_(self, event):
         if event is not None and event.keycode == 9:
-            sys.exit()
+            self.cleanup()
         return 0
 
     def configure_gui(self):
@@ -226,6 +241,9 @@ if __name__ == "__main__":
         nb_shoots_max = 2,
         start_count = 3
     )
-    photobooth_app.pack(side="top", fill="both", expand=True)
+    # photobooth_app.pack(side="top", fill="both", expand=True)
+
+    ui_liveview = UiLiveview()
+    ui_liveview.pack()
     
     root.mainloop()
