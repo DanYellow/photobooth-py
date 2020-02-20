@@ -64,24 +64,22 @@ class PhotoboothApplication(ttk.Frame):
         )
         # self.countdown_screen.pack(fill="both", expand=True)
 
-        # self.ui_liveview = UiLiveview(self)
-        # self.ui_liveview.pack()
 
-        # self.home_screen = Home(self, self.root, self.translation['fr'])
-        # self.home_screen.start_btn.configure(command=self.start_photoshoot)
-        # self.home_screen.pack(fill="both", expand=True)
+        self.home_screen = Home(self, self.root, self.translation['fr'])
+        self.home_screen.start_btn.configure(command=self.start_photoshoot)
+        self.home_screen.pack(fill="both", expand=True)
 
-        # self.result_screen = Result(self, self.root, self.translation['fr'])
-        # self.result_screen.print_btn.configure(command=self.print_pic)
-        # self.result_screen.continue_btn.configure(command=self.go_to_home_screen)
+        self.result_screen = Result(self, self.root, self.translation['fr'])
+        self.result_screen.print_btn.configure(command=self.print_pic)
+        self.result_screen.continue_btn.configure(command=self.go_to_home_screen)
 
-        # self.loading_screen = Loading(self, self.translation['fr'])
+        self.loading_screen = Loading(self, self.translation['fr'])
 
-        # self.notification_manager = UiNotification(master = self.root, texts = self.translation['fr'])
+        self.notification_manager = UiNotification(master = self.root, texts = self.translation['fr'])
 
-        # self.camera = Camera(
-        #     on_error=self.on_missing_camera
-        # )
+        self.camera = Camera(
+            on_error=self.on_missing_camera
+        )
 
         root.bind("<KeyPress>", self.quit_)
         root.protocol("WM_DELETE_WINDOW",self. cleanup)
@@ -241,9 +239,6 @@ if __name__ == "__main__":
         nb_shoots_max = 2,
         start_count = 3
     )
-    # photobooth_app.pack(side="top", fill="both", expand=True)
-
-    ui_liveview = UiLiveview()
-    ui_liveview.pack()
+    photobooth_app.pack(side="top", fill="both", expand=True)
     
     root.mainloop()

@@ -5,7 +5,6 @@ import pyqrcode, os, PIL
 
 from classes.UiGallery import UiGallery
 from classes.UiHelp import UiHelp
-from classes.UiLiveview import UiLiveview
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -19,10 +18,6 @@ class Home(tk.Frame):
         self.create_widgets()
 
     def create_widgets(self):
-        self.ui_liveview = UiLiveview(self)
-        # self.ui_liveview.pack()
-        # self.ui_liveview.pack_propagate(0)
-
         navigation = self.create_navigation()
         navigation.pack(pady=30)
         navigation.pack_propagate(0)

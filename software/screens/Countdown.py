@@ -16,8 +16,8 @@ class Countdown(tk.Frame):
 
         self.countpics_label_var = tk.StringVar()
 
-        ui_liveview = UiLiveview(self, width=130)
-        ui_liveview.pack()
+        ui_liveview = UiLiveview(self, width=600)
+        ui_liveview.place(relx=0.5, rely=0.5, anchor="center")
 
         self.create_widgets()
         
