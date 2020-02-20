@@ -29,8 +29,6 @@ class PhotoboothApplication(ttk.Frame):
 
         self.ROOT_DIR = f"{ROOT_DIR}/.."
 
-
-
         self.translation = {
             'fr': {
                 'take_pict': "COMMENCER",
@@ -60,14 +58,27 @@ class PhotoboothApplication(ttk.Frame):
             root = self.root,
             texts = self.translation['fr'],
             callback = self.on_countdown_ended,
-            start_count = start_count
+            start_count = start_count,
         )
-        # self.countdown_screen.pack(fill="both", expand=True)
+        self.countdown_screen.place(
+            relx=0.5,
+            rely=0.5,
+            anchor="center",
+            relheight=1.0,
+            relwidth=1.0
+        )
+
+        ui_liveview = UiLiveview(self.countdown_screen, width=600)
+        ui_liveview.place(relx=0.5, rely=0.5, anchor="center")
 
 
         self.home_screen = Home(self, self.root, self.translation['fr'])
         self.home_screen.start_btn.configure(command=self.start_photoshoot)
         self.home_screen.pack(fill="both", expand=True)
+
+        self.countdown_screen.lower(self.home_screen)
+
+        ui_liveview.lower(self.countdown_screen.countdown_label)
 
         self.result_screen = Result(self, self.root, self.translation['fr'])
         self.result_screen.print_btn.configure(command=self.print_pic)
@@ -115,7 +126,6 @@ class PhotoboothApplication(ttk.Frame):
             self.home_screen.pack_forget()
 
             self.countdown_screen.start_countdown(self.nb_shoots_taken + 1, self.nb_shoots_max)
-            self.countdown_screen.pack(side="top", fill="both", expand=1)
         else:
             self.notification_manager.create_error_notification('missing_camera')
 
@@ -126,8 +136,6 @@ class PhotoboothApplication(ttk.Frame):
     def on_countdown_ended(self):
         self.camera.capture(f"{ROOT_DIR}/../_tmp/full", callback=self.on_taken_pic)
 
-        # self.loading_screen.pack(side="top", fill="both", expand=1)
-
     def on_taken_pic(self, temp):
         self.nb_shoots_taken += 1
         latest_pic = self.get_latest_pic()
@@ -135,10 +143,9 @@ class PhotoboothApplication(ttk.Frame):
         self.create_thumbnail(latest_pic)
 
         self.countdown_screen.reset()
-        self.countdown_screen.pack_forget()
+        self.countdown_screen.lower(self.home_screen)
         if self.nb_shoots_taken < self.nb_shoots_max:
             self.countdown_screen.start_countdown(self.nb_shoots_taken + 1, self.nb_shoots_max)
-            self.countdown_screen.pack(side="top", fill="both", expand=1)
         else:
             self.loading_screen.pack(side="top", fill="both", expand=1)
             self.on_photoshoot_ended()

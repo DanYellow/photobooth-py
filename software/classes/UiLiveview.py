@@ -19,6 +19,7 @@ class UiLiveview(tk.Frame):
         self.cap.set(cv2.CAP_PROP_FPS, 10.00)
         self.cap.set(cv2.CAP_PROP_CONTRAST, 0.1)
         self.cap.set(cv2.CAP_PROP_BRIGHTNESS, 0.5)
+        self.cap.set(cv2.CAP_PROP_SATURATION, 0.1)
 
         while(self.cap.isOpened()):
             result, frame = self.cap.read()
@@ -50,9 +51,6 @@ class UiLiveview(tk.Frame):
         )
         
         self.img_container.pack()
-        # self.pack_propagate(0)
-
-        print('greger')
 
         thread = threading.Thread(target=self.start)
         thread.start()

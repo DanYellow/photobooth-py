@@ -2,10 +2,8 @@ import tkinter.ttk as ttk
 import tkinter as tk
 import tkinter.font as tkFont
 
-from classes.UiLiveview import UiLiveview
-
 class Countdown(tk.Frame):
-    def __init__(self, master, root, texts, callback=None, start_count=3, *args, **kwargs):
+    def __init__(self, master, root, texts, callback=None, start_count=3,  *args, **kwargs):
         tk.Frame.__init__(self, master, *args, **kwargs, background="wheat") # , cursor="none"
 
         self.root = root
@@ -16,9 +14,6 @@ class Countdown(tk.Frame):
 
         self.countpics_label_var = tk.StringVar()
 
-        ui_liveview = UiLiveview(self, width=600)
-        ui_liveview.place(relx=0.5, rely=0.5, anchor="center")
-
         self.create_widgets()
         
     def create_widgets(self):
@@ -28,7 +23,7 @@ class Countdown(tk.Frame):
             size=self.init_size 
         )
         self.countdown_label = tk.Label(self, 
-            background=self["bg"],
+            background="white",
             borderwidth=0,
             text=self.count,
             font = self.countdown_label_style
@@ -37,11 +32,7 @@ class Countdown(tk.Frame):
         self.countdown_label.place(
             relx=0.5, rely=0.5,
             anchor="center",
-            # height=60,
-            # width=300
         )
-        self.countdown_label.lift()
-        # .pack(side="top", expand=1, fill="both")
 
         countpics_label_style = tkFont.Font(
             family='DejaVu Sans Mono', 
@@ -53,15 +44,6 @@ class Countdown(tk.Frame):
             font = countpics_label_style)
 
         countpics_label.pack(side="bottom", expand=0, fill="x", pady=((0, 15)))
-
-        
-        # ui_liveview.place(
-        #     relx=0.5, rely=0.5,
-        #     anchor="center",
-        #     # height=60,
-        #     # width=300
-        # )
-        # ui_liveview.lower()
 
     def start_countdown(self, photocount = None, maxcount = None):
         if photocount is not None:
