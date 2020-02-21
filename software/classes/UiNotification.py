@@ -5,11 +5,17 @@ import tkinter.font as tkFont
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class UiNotification(tk.Canvas):
-    def __init__(self, texts, master=None, bg="white"):
-        tk.Canvas.__init__(self, master, width=220, height=120, bg=bg)
+    def __init__(self, texts, master=None, bg="wheat"):
+        tk.Canvas.__init__(
+            self, master, 
+            width=220, height=120, 
+            bg=bg, borderwidth=0
+        )
     
         self.master = master
         self.texts = texts
+
+        self.is_notification_animating = False
 
     def create_print_notification(self):
         self.place(relx=0.5, rely=0, anchor="n", y=-60)
@@ -39,7 +45,8 @@ class UiNotification(tk.Canvas):
 
         self.notification_creator(params)
 
-        self.animate_notification_in("error_notification")
+        if self.is_notification_animating == False:
+            self.animate_notification_in("error_notification")
 
     def notification_creator(self, params):
         notification_container = tk.Frame(
@@ -117,4 +124,5 @@ class UiNotification(tk.Canvas):
             self.move(tag_name, 0, -1)
             self.master.after(1, lambda: self.animate_notification_out(tag_name) )
         else:
+            self.is_notification_animating = False
             self.place_forget()

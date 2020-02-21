@@ -8,6 +8,7 @@ from screens.Home import Home
 from screens.Result import Result
 from screens.Countdown import Countdown
 from screens.Loading import Loading
+from screens.Liveview import Liveview
 
 from classes.Camera import Camera
 from classes.UiNotification import UiNotification
@@ -22,6 +23,7 @@ class PhotoboothApplication(ttk.Frame):
         self.nb_shoots_max = nb_shoots_max
         self.nb_shoots_taken = 0
         self.collage_pics_name_buffer = []
+        self.liveview_enabled = False
 
         ttk.Frame.__init__(self, self.root, *args, **kwargs)
         main_style = ttk.Style()
@@ -54,6 +56,8 @@ class PhotoboothApplication(ttk.Frame):
         self.configure_gui()
         self.setup_files_and_folders()
 
+        self.cap = cv2.VideoCapture(0)
+
         self.countdown_screen = Countdown(
             master = self,
             root = self.root,
@@ -70,21 +74,11 @@ class PhotoboothApplication(ttk.Frame):
         )
 
         self.home_screen = Home(self, self.root, self.translation['fr'])
-        self.home_screen.start_btn.configure(command=self.start_photoshoot)
+        self.home_screen.start_btn.configure(command=self.start_photoshoot_or_liveview)
         self.home_screen.pack(fill="both", expand=True)
 
-        cap = cv2.VideoCapture(0)
-        self.ui_liveview = None
-        if cap.isOpened():
-            self.countdown_screen.has_liveview = True
-            cap.release()
-            self.ui_liveview = UiLiveview(
-                self.countdown_screen, 
-                width=600,
-            )
-            self.ui_liveview.place(relx=0.5, rely=0.5, anchor="center")
-            self.countdown_screen.lower(self.home_screen)
-            self.ui_liveview.lower(self.countdown_screen.countdown_label)
+        self.liveview_screen = Liveview(self, self.translation['fr'])
+        self.liveview_screen.start_btn.configure(command=self.start_photoshoot)
 
         self.result_screen = Result(self, self.root, self.translation['fr'])
         self.result_screen.print_btn.configure(command=self.print_pic)
@@ -97,6 +91,8 @@ class PhotoboothApplication(ttk.Frame):
         self.camera = Camera(
             on_error=self.on_missing_camera
         )
+
+        
 
         root.bind("<KeyPress>", self.quit_)
         root.protocol("WM_DELETE_WINDOW",self. cleanup)
@@ -127,9 +123,21 @@ class PhotoboothApplication(ttk.Frame):
 
         os.popen(f"mkdir -p {full_dir} && mkdir -p {collages_dir}")
 
+    def start_photoshoot_or_liveview(self):
+        if self.cap.isOpened():
+            self.liveview_enabled = True
+            self.cap.release()
+
+        if self.liveview_enabled:
+            self.home_screen.pack_forget()
+            self.liveview_screen.pack(fill="both", expand=True)
+        else:
+            self.start_photoshoot()
+
     def start_photoshoot(self):
         if self.camera.is_up():
             self.home_screen.pack_forget()
+            self.liveview_screen.pack_forget()
 
             self.countdown_screen.start_countdown(self.nb_shoots_taken + 1, self.nb_shoots_max)
         else:
@@ -247,6 +255,7 @@ class PhotoboothApplication(ttk.Frame):
 
 if __name__ == "__main__":
     root = tk.Tk()
+    root['bg'] = 'black'
     photobooth_app = PhotoboothApplication(
         root, 
         nb_shoots_max = 2,
