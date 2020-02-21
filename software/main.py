@@ -2,6 +2,7 @@ import tkinter.ttk as ttk
 import tkinter as tk
 import tkinter.font as tkFont
 import glob, os, sys, PIL, math
+import cv2
 
 from screens.Home import Home
 from screens.Result import Result
@@ -16,7 +17,7 @@ from classes.UiLiveview import UiLiveview
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class PhotoboothApplication(ttk.Frame):
-    def __init__(self, root, nb_shoots_max = 2, start_count = 2, *args, **kwargs):
+    def __init__(self, root, nb_shoots_max = 2, start_count = 3, *args, **kwargs):
         self.root = root
         self.nb_shoots_max = nb_shoots_max
         self.nb_shoots_taken = 0
@@ -68,17 +69,22 @@ class PhotoboothApplication(ttk.Frame):
             relwidth=1.0
         )
 
-        ui_liveview = UiLiveview(self.countdown_screen, width=600)
-        ui_liveview.place(relx=0.5, rely=0.5, anchor="center")
-
-
         self.home_screen = Home(self, self.root, self.translation['fr'])
         self.home_screen.start_btn.configure(command=self.start_photoshoot)
         self.home_screen.pack(fill="both", expand=True)
 
-        self.countdown_screen.lower(self.home_screen)
-
-        ui_liveview.lower(self.countdown_screen.countdown_label)
+        cap = cv2.VideoCapture(0)
+        self.ui_liveview = None
+        if cap.isOpened():
+            self.countdown_screen.has_liveview = True
+            cap.release()
+            self.ui_liveview = UiLiveview(
+                self.countdown_screen, 
+                width=600,
+            )
+            self.ui_liveview.place(relx=0.5, rely=0.5, anchor="center")
+            self.countdown_screen.lower(self.home_screen)
+            self.ui_liveview.lower(self.countdown_screen.countdown_label)
 
         self.result_screen = Result(self, self.root, self.translation['fr'])
         self.result_screen.print_btn.configure(command=self.print_pic)
@@ -199,7 +205,7 @@ class PhotoboothApplication(ttk.Frame):
         collage_img = PIL.Image.new('RGB', collage_img_size, color=collage_img_bg)
 
         space_between_thumbs = 10
-        bottom_space = 200 # 200
+        bottom_space = 200
 
         for idx, img_path in enumerate(list_collage_pics_paths):
             try:

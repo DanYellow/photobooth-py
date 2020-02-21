@@ -33,7 +33,6 @@ class UiLiveview(tk.Frame):
                 self.img_container.pack_forget()
 
         self.cap.release()
-        cv2.destroyAllWindow()
 
     def __init__(self, master=None, width=360):
         tk.Frame.__init__(
@@ -54,6 +53,3 @@ class UiLiveview(tk.Frame):
 
         thread = threading.Thread(target=self.start)
         thread.start()
-        
-        
-

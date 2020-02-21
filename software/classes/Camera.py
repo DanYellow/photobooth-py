@@ -19,7 +19,7 @@ class Camera:
         if callback is not None:
             f.add_done_callback(callback)
 
-    def start_liveview(self, folder_location = ROOT_DIR):
+    def movie_capture(self, folder_location = ROOT_DIR):
         os.chdir(folder_location)
 
         capture_movie_cmd = f"""gphoto2 \
@@ -35,7 +35,7 @@ class Camera:
 
         self.process = capture_movie_process.pid
 
-    def stop(self):
+    def stop_movie_capture(self):
         os.killpg(os.getpgid(self.process.pid), signal.SIGTERM) 
 
     def is_up(self):

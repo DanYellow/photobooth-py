@@ -11,6 +11,7 @@ class Countdown(tk.Frame):
         self.init_start_count = start_count
         self.count = start_count
         self.callback = callback
+        self.has_liveview = False
 
         self.countpics_label_var = tk.StringVar()
 
@@ -22,8 +23,10 @@ class Countdown(tk.Frame):
             family='DejaVu Sans Mono', 
             size=self.init_size 
         )
+        
+        countdown_label_bg = "white" if self.has_liveview == False else self['background']
         self.countdown_label = tk.Label(self, 
-            background="white",
+            background=countdown_label_bg,
             borderwidth=0,
             text=self.count,
             font = self.countdown_label_style
