@@ -24,7 +24,7 @@ class Countdown(tk.Frame):
             size=self.init_size 
         )
         
-        countdown_label_bg = "white" if self.has_liveview == False else self['background']
+        countdown_label_bg = self['background']
         self.countdown_label = tk.Label(self, 
             background=countdown_label_bg,
             borderwidth=0,
