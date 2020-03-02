@@ -4,8 +4,9 @@ import tkinter.font as tkFont
 from classes.UiLiveview import UiLiveview
 
 class Liveview(tk.Frame):
-    def __init__(self, master, texts, *args, **kwargs):
+    def __init__(self, master, texts, stream = None, *args, **kwargs):
         self.texts = texts
+        self.camera_stream = stream
 
         tk.Frame.__init__(self, master, *args, **kwargs, bg="wheat") # , cursor="none"
 
@@ -13,8 +14,9 @@ class Liveview(tk.Frame):
 
     def create_widgets(self):
         ui_liveview = UiLiveview(
-                self, 
-                width=600,
+                master = self, 
+                width = 600,
+                camera_stream = self.camera_stream
         )
 
         ui_liveview.pack(fill="x", expand=True)

@@ -16,6 +16,7 @@ from classes.UiNotification import UiNotification
 from classes.UiLiveview import UiLiveview
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+bytes = ''
 
 class PhotoboothApplication(ttk.Frame):
     def __init__(self, root, nb_shoots_max = 2, start_count = 3, *args, **kwargs):
@@ -56,8 +57,6 @@ class PhotoboothApplication(ttk.Frame):
         self.configure_gui()
         self.setup_files_and_folders()
 
-        self.cap = cv2.VideoCapture(0)
-
         self.countdown_screen = Countdown(
             master = self,
             root = self.root,
@@ -65,20 +64,13 @@ class PhotoboothApplication(ttk.Frame):
             callback = self.on_countdown_ended,
             start_count = start_count,
         )
-        self.countdown_screen.place(
-            relx=0.5,
-            rely=0.5,
-            anchor="center",
-            relheight=1.0,
-            relwidth=1.0
-        )
 
         self.home_screen = Home(self, self.root, self.translation['fr'])
         self.home_screen.start_btn.configure(command=self.start_photoshoot_or_liveview)
-        self.home_screen.pack(fill="both", expand=True)
+        # self.home_screen.pack(fill="both", expand=True)
+        
 
-        self.liveview_screen = Liveview(self, self.translation['fr'])
-        self.liveview_screen.start_btn.configure(command=self.start_photoshoot)
+
 
         self.result_screen = Result(self, self.root, self.translation['fr'])
         self.result_screen.print_btn.configure(command=self.print_pic)
@@ -92,10 +84,13 @@ class PhotoboothApplication(ttk.Frame):
             on_error=self.on_missing_camera
         )
 
+        self.liveview_screen = Liveview(self, self.translation['fr'], stream=self.camera.liveview())
+        self.liveview_screen.start_btn.configure(command=self.start_photoshoot)
+        self.liveview_screen.pack(fill="both", expand=True)
         
 
         root.bind("<KeyPress>", self.quit_)
-        root.protocol("WM_DELETE_WINDOW",self. cleanup)
+        root.protocol("WM_DELETE_WINDOW",self.cleanup)
 
 
     def cleanup(self):
@@ -138,7 +133,7 @@ class PhotoboothApplication(ttk.Frame):
         if self.camera.is_up():
             self.home_screen.pack_forget()
             self.liveview_screen.pack_forget()
-
+            self.countdown_screen.pack(fill="both", expand=True)
             self.countdown_screen.start_countdown(self.nb_shoots_taken + 1, self.nb_shoots_max)
         else:
             self.notification_manager.create_error_notification('missing_camera')
@@ -161,6 +156,7 @@ class PhotoboothApplication(ttk.Frame):
         if self.nb_shoots_taken < self.nb_shoots_max:
             self.countdown_screen.start_countdown(self.nb_shoots_taken + 1, self.nb_shoots_max)
         else:
+            self.countdown_screen.pack_forget()
             self.loading_screen.pack(side="top", fill="both", expand=1)
             self.on_photoshoot_ended()
         self.loading_screen.pack_forget()
@@ -258,8 +254,8 @@ if __name__ == "__main__":
     root['bg'] = 'black'
     photobooth_app = PhotoboothApplication(
         root, 
-        nb_shoots_max = 2,
-        start_count = 3
+        nb_shoots_max = 20,
+        start_count = 1
     )
     photobooth_app.pack(side="top", fill="both", expand=True)
     

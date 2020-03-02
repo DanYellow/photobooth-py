@@ -19,24 +19,18 @@ class Camera:
         if callback is not None:
             f.add_done_callback(callback)
 
-    def movie_capture(self, folder_location = ROOT_DIR):
-        os.chdir(folder_location)
+    def liveview(self, time = 10):
+        liveview_cmd = ["gphoto2", f"--capture-movie={time}", "--stdout"]
+        liveview_process = subprocess.Popen(
+            liveview_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=1)
 
-        capture_movie_cmd = f"""gphoto2 \
-            --capture-movie
-        """
+        self.liveview_process = liveview_process.pid
 
-        capture_movie_process = subprocess.Popen(
-            capture_movie_cmd,
-            stdout=subprocess.PIPE, 
-            shell=True,
-            preexec_fn=os.setsid
-        )
+        return liveview_process.stdout
 
-        self.process = capture_movie_process.pid
 
-    def stop_movie_capture(self):
-        os.killpg(os.getpgid(self.process.pid), signal.SIGTERM) 
+    def stop_liveview(self):
+        os.killpg(os.getpgid(self.liveview_process.pid), signal.SIGTERM) 
 
     def is_up(self):
         try:

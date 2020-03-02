@@ -1,6 +1,7 @@
 import os
 import tkinter as tk
 import cv2
+import numpy as np
 
 import requests, threading
 
@@ -11,30 +12,35 @@ ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class UiLiveview(tk.Frame):
     def start(self):
-        frame_width = 600
-        frame_height = math.ceil(frame_width * (9/16))
-        self.cap = cv2.VideoCapture("/dev/video0")
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, frame_width)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, frame_height)
-        self.cap.set(cv2.CAP_PROP_FPS, 10.00)
-        self.cap.set(cv2.CAP_PROP_CONTRAST, 0.1)
-        self.cap.set(cv2.CAP_PROP_BRIGHTNESS, 0.5)
-        self.cap.set(cv2.CAP_PROP_SATURATION, 0.1)
+        bytes = b""
 
-        while(self.cap.isOpened()):
-            result, frame = self.cap.read()
-            if result:
-                pilimage = Image.fromarray(frame).resize((frame_width, frame_height))
-                collage = ImageTk.PhotoImage(pilimage)
+        is_streaming_running = True
+        size_chunks = 1024
+        nb_chunks = math.ceil(sys.getsizeof(p.stdout) / size_chunks)
 
-                self.img_container.configure(image=collage)
-                self.img_container.image = collage
-            else:
-                self.img_container.pack_forget()
+        while is_streaming_running:
+            bytes += self.camera_stream.read(1024)
 
-        self.cap.release()
+            a = bytes.find(b'\xff\xd8')
+            b = bytes.find(b'\xff\xd9')
 
-    def __init__(self, master=None, width=360):
+            if a != -1 and b != -1:
+                jpg = bytes[a:b+2]
+                bytes = bytes[b+2:]
+                i = cv2.imdecode(np.frombuffer(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
+
+                liveview_frame = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(i, cv2.COLOR_BGR2RGB)))
+                self.liveview_container.configure(image=liveview_frame)
+                self.liveview_container.image = liveview_frame
+                self.liveview_container._backbuffer_ = liveview_frame
+            
+                nb_chunks = nb_chunks - 1
+
+            if nb_chunks == 1:
+                is_streaming_running = False
+ 
+
+    def __init__(self, camera_stream, master=None, width=360):
         tk.Frame.__init__(
             self, 
             master, 
@@ -43,13 +49,16 @@ class UiLiveview(tk.Frame):
             bg="black"
         )
 
-        self.img_container = tk.Label(
+        self.liveview_container = tk.Label(
             self, 
             width=width, 
-            height=math.ceil(width * (9/16)), 
+            height=math.ceil(width * (9/16)),
         )
         
-        self.img_container.pack()
+        self.liveview_container.pack()
 
-        thread = threading.Thread(target=self.start)
-        thread.start()
+        self.camera_stream = camera_stream
+
+        if self.camera_stream is not None:
+            thread = threading.Thread(target=self.start)
+            thread.start()
