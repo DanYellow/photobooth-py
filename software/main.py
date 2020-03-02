@@ -26,7 +26,7 @@ class PhotoboothApplication(ttk.Frame):
         self.collage_pics_name_buffer = []
         self.liveview_enabled = False
 
-        ttk.Frame.__init__(self, self.root, *args, **kwargs)
+        ttk.Frame.__init__(self, self.root, *args, **kwargs) #  , cursor="none"
         main_style = ttk.Style()
         main_style.configure('App.TFrame', background="wheat")
         self['style'] = 'App.TFrame'
@@ -89,14 +89,12 @@ class PhotoboothApplication(ttk.Frame):
             on_stream_ended=self.on_stream_ended
         )
         self.liveview_screen.start_btn.configure(command=self.start_photoshoot)
-        # self.liveview_screen.pack(fill="both", expand=True)
         
         root.bind("<KeyPress>", self.quit_)
         root.protocol("WM_DELETE_WINDOW", self.cleanup)
 
     def cleanup(self):
         self.camera.stop_liveview()
-        # self.home_screen.ui_liveview.cap.release()
         sys.exit()
         self.root.destroy()
 
@@ -124,15 +122,6 @@ class PhotoboothApplication(ttk.Frame):
         self.home_screen.pack_forget()
         self.liveview_screen.pack(fill="both", expand=True)
         self.liveview_screen.ui_liveview.start_stream()
-        # if self.cap.isOpened():
-        #     self.liveview_enabled = True
-        #     self.cap.release()
-
-        # if self.liveview_enabled:
-        #     self.home_screen.pack_forget()
-        #     self.liveview_screen.pack(fill="both", expand=True)
-        # else:
-        #     self.start_photoshoot()
 
     def start_photoshoot(self):
         self.camera.stop_liveview()

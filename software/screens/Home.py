@@ -13,7 +13,7 @@ class Home(tk.Frame):
         self.root = root
         self.texts = texts
 
-        tk.Frame.__init__(self, master, *args, **kwargs) # , cursor="none"
+        tk.Frame.__init__(self, master, *args, **kwargs) #
 
         self.create_widgets()
 
