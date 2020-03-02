@@ -1,6 +1,6 @@
 {
   "name": "photobooth-py",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A photobooth written in Python, perfect for your parties, birthdays, events...",
   "main": "index.js",
   "dependencies": {},
@@ -8,7 +8,7 @@
     "standard-version": "^7.1.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "changelog": "standard-version"
   },
   "repository": {
     "type": "git",
