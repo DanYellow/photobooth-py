@@ -29,9 +29,18 @@ class Liveview(tk.Frame):
                 display_time = self.display_time
         )
 
-        self.ui_liveview.pack(fill="x", expand=True)
+        self.ui_liveview.pack(fill="x", expand=True, pady=2)
 
         start_btn_bgc = '#a1d4f0'
+        start_btn_icon_src = PIL.Image.open(f"{ROOT_DIR}/../assets/camera-icon.png").convert("RGBA")
+        start_btn_icon_src = start_btn_icon_src.resize((30, 30), PIL.Image.ANTIALIAS)
+        start_btn_bgc_tmp = PIL.Image.composite(
+            start_btn_icon_src,
+            PIL.Image.new('RGB', start_btn_icon_src.size, start_btn_bgc),
+            start_btn_icon_src
+        )
+        start_btn_icon = PIL.ImageTk.PhotoImage(start_btn_bgc_tmp)
+
         self.start_btn = tk.Button(
             self,
             height = 2,
@@ -42,7 +51,7 @@ class Liveview(tk.Frame):
             activebackground=start_btn_bgc, 
             borderwidth=0,
             fg="white",
-            # image=start_btn_icon,
+            image=start_btn_icon,
             text = self.texts['take_pict'].upper(),
             font=tkFont.Font(family='DejaVu Sans Mono', size=20),
             compound="left"
