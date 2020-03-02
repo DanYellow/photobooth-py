@@ -11,20 +11,30 @@ import math
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class UiLiveview(tk.Frame):
-    def start(self):
+    def countdown(self):
+        if self.time_elapsed > 0:
+            self.root.after(1000, self.countdown)
+            self.time_elapsed = self.time_elapsed - 1
+        else:
+            self.is_streaming_running = False
+
+    def compute_stream(self):
         bytes = b""
 
-        is_streaming_running = True
-        size_chunks = 1024
-        nb_chunks = math.ceil(sys.getsizeof(p.stdout) / size_chunks)
-
-        while is_streaming_running:
-            bytes += self.camera_stream.read(1024)
+        self.is_streaming_running = True
+        chunks_size = 1024
+ 
+        while self.is_streaming_running:
+            bytes += self.camera_stream.read(chunks_size)
 
             a = bytes.find(b'\xff\xd8')
             b = bytes.find(b'\xff\xd9')
 
             if a != -1 and b != -1:
+                if self.countdown_running == False:
+                    self.countdown_running = True
+                    self.countdown()
+
                 jpg = bytes[a:b+2]
                 bytes = bytes[b+2:]
                 i = cv2.imdecode(np.frombuffer(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
@@ -33,14 +43,25 @@ class UiLiveview(tk.Frame):
                 self.liveview_container.configure(image=liveview_frame)
                 self.liveview_container.image = liveview_frame
                 self.liveview_container._backbuffer_ = liveview_frame
-            
-                nb_chunks = nb_chunks - 1
-
-            if nb_chunks == 1:
-                is_streaming_running = False
+        
+        if self.on_stream_ended is not None:
+            self.reset()
+            self.on_stream_ended()
  
+    def start_stream(self):
+        if self.camera is not None:
+            self.camera_stream = self.camera.liveview()
+            thread = threading.Thread(target=self.compute_stream)
+            thread.start()
 
-    def __init__(self, camera_stream, master=None, width=360):
+    def reset(self):
+        self.time_elapsed = 10
+        self.is_streaming_running = True
+        self.countdown_running = False
+
+    def __init__(self, master, root, 
+        camera, on_stream_ended = None, width=360):
+        
         tk.Frame.__init__(
             self, 
             master, 
@@ -57,8 +78,9 @@ class UiLiveview(tk.Frame):
         
         self.liveview_container.pack()
 
-        self.camera_stream = camera_stream
-
-        if self.camera_stream is not None:
-            thread = threading.Thread(target=self.start)
-            thread.start()
+        self.camera = camera
+        self.time_elapsed = 10
+        self.is_streaming_running = True
+        self.countdown_running = False
+        self.root = root
+        self.on_stream_ended = on_stream_ended

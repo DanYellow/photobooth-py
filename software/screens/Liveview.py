@@ -4,22 +4,29 @@ import tkinter.font as tkFont
 from classes.UiLiveview import UiLiveview
 
 class Liveview(tk.Frame):
-    def __init__(self, master, texts, stream = None, *args, **kwargs):
+    def __init__(self, master, root,
+        texts, camera = None, on_stream_ended = None, 
+        *args, **kwargs):
+        
         self.texts = texts
-        self.camera_stream = stream
+        self.camera = camera
+        self.root = root
+        self.on_stream_ended = on_stream_ended
 
         tk.Frame.__init__(self, master, *args, **kwargs, bg="wheat") # , cursor="none"
 
         self.create_widgets()
 
     def create_widgets(self):
-        ui_liveview = UiLiveview(
+        self.ui_liveview = UiLiveview(
                 master = self, 
                 width = 600,
-                camera_stream = self.camera_stream
+                root = self.root,
+                camera = self.camera,
+                on_stream_ended = self.on_stream_ended
         )
 
-        ui_liveview.pack(fill="x", expand=True)
+        self.ui_liveview.pack(fill="x", expand=True)
 
         start_btn_bgc = '#a1d4f0'
         self.start_btn = tk.Button(

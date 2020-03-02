@@ -19,15 +19,12 @@ class Camera:
         if callback is not None:
             f.add_done_callback(callback)
 
-    def liveview(self, time = 10):
-        liveview_cmd = ["gphoto2", f"--capture-movie={time}", "--stdout"]
+    def liveview(self):
+        liveview_cmd = ["gphoto2", f"--capture-movie", "--stdout"]
         liveview_process = subprocess.Popen(
             liveview_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=1)
 
-        self.liveview_process = liveview_process.pid
-
         return liveview_process.stdout
-
 
     def stop_liveview(self):
         os.system("ps -ef | grep 'gphoto2 --capture' | grep -v grep | awk '{print $2}' | xargs -r kill -9")
@@ -61,7 +58,7 @@ class Camera:
             return int(search_battery_level)
 
     def __init__(self, on_error=None):
-        self.process = None
+        self.stream = None
 
         self.camera_setup_cmd = [
             'gphoto2',

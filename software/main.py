@@ -66,12 +66,9 @@ class PhotoboothApplication(ttk.Frame):
         )
 
         self.home_screen = Home(self, self.root, self.translation['fr'])
-        self.home_screen.start_btn.configure(command=self.start_photoshoot_or_liveview)
-        # self.home_screen.pack(fill="both", expand=True)
+        self.home_screen.start_btn.configure(command=self.start_liveview)
+        self.home_screen.pack(fill="both", expand=True)
         
-
-
-
         self.result_screen = Result(self, self.root, self.translation['fr'])
         self.result_screen.print_btn.configure(command=self.print_pic)
         self.result_screen.continue_btn.configure(command=self.go_to_home_screen)
@@ -84,16 +81,21 @@ class PhotoboothApplication(ttk.Frame):
             on_error=self.on_missing_camera
         )
 
-        self.liveview_screen = Liveview(self, self.translation['fr'], stream=self.camera.liveview())
+        self.liveview_screen = Liveview(
+            self,
+            self.root, 
+            self.translation['fr'], 
+            camera=self.camera,
+            on_stream_ended=self.on_stream_ended
+        )
         self.liveview_screen.start_btn.configure(command=self.start_photoshoot)
-        self.liveview_screen.pack(fill="both", expand=True)
+        # self.liveview_screen.pack(fill="both", expand=True)
         
-
         root.bind("<KeyPress>", self.quit_)
-        root.protocol("WM_DELETE_WINDOW",self.cleanup)
-
+        root.protocol("WM_DELETE_WINDOW", self.cleanup)
 
     def cleanup(self):
+        self.camera.stop_liveview()
         # self.home_screen.ui_liveview.cap.release()
         sys.exit()
         self.root.destroy()
@@ -118,18 +120,22 @@ class PhotoboothApplication(ttk.Frame):
 
         os.popen(f"mkdir -p {full_dir} && mkdir -p {collages_dir}")
 
-    def start_photoshoot_or_liveview(self):
-        if self.cap.isOpened():
-            self.liveview_enabled = True
-            self.cap.release()
+    def start_liveview(self):
+        self.home_screen.pack_forget()
+        self.liveview_screen.pack(fill="both", expand=True)
+        self.liveview_screen.ui_liveview.start_stream()
+        # if self.cap.isOpened():
+        #     self.liveview_enabled = True
+        #     self.cap.release()
 
-        if self.liveview_enabled:
-            self.home_screen.pack_forget()
-            self.liveview_screen.pack(fill="both", expand=True)
-        else:
-            self.start_photoshoot()
+        # if self.liveview_enabled:
+        #     self.home_screen.pack_forget()
+        #     self.liveview_screen.pack(fill="both", expand=True)
+        # else:
+        #     self.start_photoshoot()
 
     def start_photoshoot(self):
+        self.camera.stop_liveview()
         if self.camera.is_up():
             self.home_screen.pack_forget()
             self.liveview_screen.pack_forget()
@@ -176,6 +182,9 @@ class PhotoboothApplication(ttk.Frame):
     def on_missing_camera(self, msg):
         self.notification_manager.create_error_notification('missing_camera')
         print('log : missing_camera')
+
+    def on_stream_ended(self):
+        self.start_photoshoot()
 
     def get_latest_pic(self, folder = None):
         os.chdir(f"{self.ROOT_DIR}/_tmp/full")
@@ -254,7 +263,7 @@ if __name__ == "__main__":
     root['bg'] = 'black'
     photobooth_app = PhotoboothApplication(
         root, 
-        nb_shoots_max = 20,
+        nb_shoots_max = 2,
         start_count = 1
     )
     photobooth_app.pack(side="top", fill="both", expand=True)
