@@ -89,7 +89,7 @@ class PhotoboothApplication(ttk.Frame):
             on_stream_ended=self.on_stream_ended,
             display_time = 15
         )
-        self.liveview_screen.start_btn.configure(command=self.start_photoshoot)
+        self.liveview_screen.start_btn.configure(command=self.interrupt_stream)
         
         root.bind("<KeyPress>", self.quit_)
         root.protocol("WM_DELETE_WINDOW", self.cleanup)
@@ -127,6 +127,7 @@ class PhotoboothApplication(ttk.Frame):
     def start_photoshoot(self):
         self.liveview_screen.ui_liveview.reset()
         self.camera.stop_liveview()
+
         if self.camera.is_up():
             self.home_screen.pack_forget()
             self.liveview_screen.pack_forget()
@@ -176,6 +177,9 @@ class PhotoboothApplication(ttk.Frame):
 
     def on_stream_ended(self):
         self.start_photoshoot()
+
+    def interrupt_stream(self):
+        self.liveview_screen.ui_liveview.is_streaming_running = False
 
     def get_latest_pic(self, folder = None):
         os.chdir(f"{self.ROOT_DIR}/_tmp/full")

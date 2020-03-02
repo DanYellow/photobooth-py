@@ -53,6 +53,7 @@ class UiLiveview(tk.Frame):
         if self.on_stream_ended is not None:
             self.reset()
             self.on_stream_ended()
+
  
     def start_stream(self):
         if self.camera is not None:
@@ -61,7 +62,7 @@ class UiLiveview(tk.Frame):
             thread.start()
 
     def reset(self):
-        self.time_elapsed = 10
+        self.time_elapsed = self.display_time
         self.is_streaming_running = True
         self.countdown_running = False
 
@@ -86,6 +87,7 @@ class UiLiveview(tk.Frame):
 
         self.camera = camera
         self.time_elapsed = display_time
+        self.display_time = display_time
         self.is_streaming_running = True
         self.countdown_running = False
         self.root = root
