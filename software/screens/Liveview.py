@@ -6,14 +6,16 @@ from classes.UiLiveview import UiLiveview
 class Liveview(tk.Frame):
     def __init__(self, master, root,
         texts, camera = None, on_stream_ended = None, 
+        display_time = 15,
         *args, **kwargs):
         
         self.texts = texts
         self.camera = camera
         self.root = root
+        self.display_time = display_time
         self.on_stream_ended = on_stream_ended
 
-        tk.Frame.__init__(self, master, *args, **kwargs, bg="wheat") # , cursor="none"
+        tk.Frame.__init__(self, master, *args, **kwargs, bg="wheat")
 
         self.create_widgets()
 
@@ -23,7 +25,8 @@ class Liveview(tk.Frame):
                 width = 600,
                 root = self.root,
                 camera = self.camera,
-                on_stream_ended = self.on_stream_ended
+                on_stream_ended = self.on_stream_ended,
+                display_time = self.display_time
         )
 
         self.ui_liveview.pack(fill="x", expand=True)

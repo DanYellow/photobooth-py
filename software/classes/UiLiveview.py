@@ -38,8 +38,14 @@ class UiLiveview(tk.Frame):
                 jpg = bytes[a:b+2]
                 bytes = bytes[b+2:]
                 i = cv2.imdecode(np.frombuffer(jpg, dtype=np.uint8), cv2.IMREAD_COLOR)
-
-                liveview_frame = ImageTk.PhotoImage(Image.fromarray(cv2.cvtColor(i, cv2.COLOR_BGR2RGB)))
+                
+                img = Image.fromarray(cv2.cvtColor(i, cv2.COLOR_BGR2RGB))
+                resized_img = img.resize((
+                    self.liveview_container['width'], 
+                    self.liveview_container['height']
+                ))
+                
+                liveview_frame = ImageTk.PhotoImage(resized_img)
                 self.liveview_container.configure(image=liveview_frame)
                 self.liveview_container.image = liveview_frame
                 self.liveview_container._backbuffer_ = liveview_frame
@@ -60,7 +66,7 @@ class UiLiveview(tk.Frame):
         self.countdown_running = False
 
     def __init__(self, master, root, 
-        camera, on_stream_ended = None, width=360):
+        camera, display_time, on_stream_ended = None, width=360):
         
         tk.Frame.__init__(
             self, 
@@ -79,7 +85,7 @@ class UiLiveview(tk.Frame):
         self.liveview_container.pack()
 
         self.camera = camera
-        self.time_elapsed = 10
+        self.time_elapsed = display_time
         self.is_streaming_running = True
         self.countdown_running = False
         self.root = root

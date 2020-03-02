@@ -83,10 +83,11 @@ class PhotoboothApplication(ttk.Frame):
 
         self.liveview_screen = Liveview(
             self,
-            self.root, 
-            self.translation['fr'], 
+            self.root,
+            self.translation['fr'],
             camera=self.camera,
-            on_stream_ended=self.on_stream_ended
+            on_stream_ended=self.on_stream_ended,
+            display_time = 15
         )
         self.liveview_screen.start_btn.configure(command=self.start_photoshoot)
         
@@ -124,6 +125,7 @@ class PhotoboothApplication(ttk.Frame):
         self.liveview_screen.ui_liveview.start_stream()
 
     def start_photoshoot(self):
+        self.liveview_screen.ui_liveview.reset()
         self.camera.stop_liveview()
         if self.camera.is_up():
             self.home_screen.pack_forget()
