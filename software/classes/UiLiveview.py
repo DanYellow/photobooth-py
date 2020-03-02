@@ -51,12 +51,14 @@ class UiLiveview(tk.Frame):
                 self.liveview_container._backbuffer_ = liveview_frame
         
         if self.on_stream_ended is not None:
+            self.time_elapsed = 0
             self.reset()
             self.on_stream_ended()
 
  
     def start_stream(self):
         if self.camera is not None:
+            self.is_streaming_running = True
             self.camera_stream = self.camera.liveview()
             thread = threading.Thread(target=self.compute_stream)
             thread.start()
@@ -64,7 +66,6 @@ class UiLiveview(tk.Frame):
     def reset(self):
         self.liveview_container.config(image='')
         self.time_elapsed = self.display_time
-        self.is_streaming_running = True
         self.countdown_running = False
 
     def __init__(self, master, root, 

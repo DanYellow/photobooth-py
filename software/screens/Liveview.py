@@ -1,7 +1,10 @@
 import tkinter as tk
 import tkinter.font as tkFont
+import os, PIL
 
 from classes.UiLiveview import UiLiveview
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class Liveview(tk.Frame):
     def __init__(self, master, root,
@@ -43,7 +46,7 @@ class Liveview(tk.Frame):
 
         self.start_btn = tk.Button(
             self,
-            height = 2,
+            height = 60,
             background=start_btn_bgc,
             highlightbackground="#8e9ae9", 
             highlightthickness=2,
@@ -56,4 +59,5 @@ class Liveview(tk.Frame):
             font=tkFont.Font(family='DejaVu Sans Mono', size=20),
             compound="left"
         )
+        self.start_btn.image = start_btn_icon
         self.start_btn.pack(expand=True, pady=2)

@@ -48,15 +48,17 @@ class Countdown(tk.Frame):
 
         countpics_label.pack(side="bottom", expand=0, fill="x", pady=((0, 15)))
 
-    def start_countdown(self, photocount = None, maxcount = None):
+    def start_countdown(self, photocount = None, maxcount = None, skip = False):
+        self.skip = skip
         if photocount is not None:
             self.countpics_label_var.set('Photo {}/{}'.format(photocount, maxcount))
 
         self.countdown()
-        self.countdown_font_size_anim()
+        if(skip == False):
+            self.countdown_font_size_anim()
 
     def countdown(self):
-        if self.count > 0:
+        if self.skip == False and self.count > 0:
             self.countdown_label_style.configure(
                 size=self.init_size
             )

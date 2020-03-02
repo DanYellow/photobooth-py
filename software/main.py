@@ -132,7 +132,7 @@ class PhotoboothApplication(ttk.Frame):
             self.home_screen.pack_forget()
             self.liveview_screen.pack_forget()
             self.countdown_screen.pack(fill="both", expand=True)
-            self.countdown_screen.start_countdown(self.nb_shoots_taken + 1, self.nb_shoots_max)
+            self.countdown_screen.start_countdown(self.nb_shoots_taken + 1, self.nb_shoots_max, skip=True)
         else:
             self.notification_manager.create_error_notification('missing_camera')
 
@@ -179,7 +179,7 @@ class PhotoboothApplication(ttk.Frame):
         self.start_photoshoot()
 
     def interrupt_stream(self):
-        self.liveview_screen.ui_liveview.is_streaming_running = False
+        self.liveview_screen.ui_liveview.time_elapsed = 0
 
     def get_latest_pic(self, folder = None):
         os.chdir(f"{self.ROOT_DIR}/_tmp/full")
