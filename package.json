@@ -1,0 +1,24 @@
+{
+  "name": "photobooth-py",
+  "version": "1.0.0",
+  "description": "A photobooth written in Python, perfect for your parties, birthdays, events...",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "standard-version": "^7.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanYellow/photobooth-py.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DanYellow/photobooth-py/issues"
+  },
+  "homepage": "https://github.com/DanYellow/photobooth-py#readme"
+}
