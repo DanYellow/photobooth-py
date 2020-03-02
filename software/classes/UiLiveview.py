@@ -62,6 +62,7 @@ class UiLiveview(tk.Frame):
             thread.start()
 
     def reset(self):
+        self.liveview_container.config(image='')
         self.time_elapsed = self.display_time
         self.is_streaming_running = True
         self.countdown_running = False
