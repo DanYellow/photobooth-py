@@ -30,7 +30,8 @@ class Camera:
 
 
     def stop_liveview(self):
-        os.killpg(os.getpgid(self.liveview_process.pid), signal.SIGTERM) 
+        os.system("ps -ef | grep 'gphoto2 --capture' | grep -v grep | awk '{print $2}' | xargs -r kill -9")
+        os.system("gphoto2 --summary -q | grep 'Summary'")
 
     def is_up(self):
         try:
