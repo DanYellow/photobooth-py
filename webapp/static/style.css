@@ -17,29 +17,9 @@ body, html {
     width: 100%;
 }
 
-.section nav {
+ .section nav {
     font-size: 1.6rem;
     margin-bottom: 15px;
-}
-
-.section nav ul {
-    overflow-x: auto;
-    overflow-y: auto;
-    white-space: nowrap;
-}
-
-.section nav ul li {
-    display: inline-block;
-}
-.section nav ul li:after {
-    content: "-";
-    display: inline-block;
-    margin: 0 10px;
-    color: aliceblue;
-}
-
-.section nav ul li:last-child:after {
-    content: none;
 }
 
 .section nav a {
@@ -49,6 +29,19 @@ body, html {
 
 .section nav a.active {
     font-weight: bold;
+    text-decoration: none;
+}
+
+.menu {
+    overflow: auto;
+    white-space: nowrap;
+}
+
+.menu li {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px;
     text-decoration: none;
 }
 
@@ -119,17 +112,9 @@ body, html {
         font-size: 16px;
     }
 
-    .section nav ul {
-        display: flex;
-        justify-content: space-between;
-        padding: 5px 16px;
-    }
-
-    .section nav ul li:after {
-        content: "";
-    }
-
     .section {
         padding: 2rem 0;
     }
 }
+
+
