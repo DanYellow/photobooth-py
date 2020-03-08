@@ -20,7 +20,7 @@ class Camera:
             f.add_done_callback(callback)
 
     def liveview(self):
-        liveview_cmd = ["gphoto2", f"--capture-movie", "--stdout"]
+        liveview_cmd = ["gphoto2", "--capture-movie", "--stdout"]
         liveview_process = subprocess.Popen(
             liveview_cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, bufsize=1)
 

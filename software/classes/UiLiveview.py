@@ -55,7 +55,6 @@ class UiLiveview(tk.Frame):
             self.reset()
             self.on_stream_ended()
 
- 
     def start_stream(self):
         if self.camera is not None:
             self.is_streaming_running = True
@@ -75,14 +74,14 @@ class UiLiveview(tk.Frame):
             self, 
             master, 
             width=width,
-            height=math.ceil(width * (9/16)),
+            height=math.ceil(width * (10 / 15)),
             bg="black"
         )
 
         self.liveview_container = tk.Label(
             self, 
             width=width, 
-            height=math.ceil(width * (9/16)),
+            height=math.ceil(width * (10 / 15)),
         )
         
         self.liveview_container.pack()
