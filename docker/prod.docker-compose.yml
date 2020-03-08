@@ -1,0 +1,27 @@
+version: "3.2"
+
+services:
+  prod_photobooth_webapp:
+    build: 
+      context: '../'
+      dockerfile: docker/flask.prod/Dockerfile
+    container_name: prod_photobooth_flask
+    restart: always
+    ports:
+      - 80:5000
+    expose:
+      - 5000
+    volumes:
+      - ../webapp/:/app/
+      - ../_tmp/:/app/_tmp
+
+  prod_photobooth_nginx:
+    build: 
+      context: '../'
+      dockerfile: docker/nginx/Dockerfile
+    container_name: prod_photobooth_nginx
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../webapp/:/app/
