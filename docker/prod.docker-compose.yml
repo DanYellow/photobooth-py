@@ -15,13 +15,13 @@ services:
       - ../webapp/:/app/
       - ../_tmp/:/app/_tmp
 
-  prod_photobooth_nginx:
-    build: 
-      context: '../'
-      dockerfile: docker/nginx/Dockerfile
-    container_name: prod_photobooth_nginx
-    restart: always
-    ports:
-      - "8080:8080"
-    volumes:
-      - ../webapp/:/app/
+  # prod_photobooth_nginx:
+  #   build: 
+  #     context: '../'
+  #     dockerfile: docker/nginx/Dockerfile
+  #   container_name: prod_photobooth_nginx
+  #   restart: always
+  #   ports:
+  #     - "8080:8080"
+  #   volumes:
+  #     - ../webapp/:/app/

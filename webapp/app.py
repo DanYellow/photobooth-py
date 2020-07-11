@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import os, glob, random
 
 from tkinter import Tcl

@@ -87,7 +87,7 @@ class PhotoboothApplication(ttk.Frame):
             self.translation['fr'],
             camera=self.camera,
             on_stream_ended=self.on_stream_ended,
-            display_time = 15
+            display_time = 25
         )
         self.liveview_screen.start_btn.configure(command=self.interrupt_stream)
         
@@ -258,8 +258,8 @@ if __name__ == "__main__":
     root['bg'] = 'black'
     photobooth_app = PhotoboothApplication(
         root, 
-        nb_shoots_max = 2,
-        start_count = 1
+        nb_shoots_max = 3,
+        start_count = 3
     )
     photobooth_app.pack(side="top", fill="both", expand=True)
     
