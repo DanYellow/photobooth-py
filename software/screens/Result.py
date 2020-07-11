@@ -3,11 +3,13 @@ import tkinter as tk
 import tkinter.font as tkFont
 import os, PIL
 
+import utils.colors
+
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class Result(tk.Frame):
     def __init__(self, master, root, texts, *args, **kwargs):
-        tk.Frame.__init__(self, master, *args, **kwargs, bg="wheat") # , cursor="none"
+        tk.Frame.__init__(self, master, *args, **kwargs, bg=utils.colors.mainBackgroundColor) # , cursor="none"
         
         self.root = root
         self.texts = texts
@@ -45,7 +47,7 @@ class Result(tk.Frame):
             activeforeground="#033754", 
             activebackground=print_btn_bgc, 
             borderwidth=0,
-            fg="white",
+            fg=utils.colors.mainButtonTxtColor,
             text = self.texts['print'].upper(),
             font=btns_container_font_style,
         )
@@ -61,7 +63,7 @@ class Result(tk.Frame):
             activebackground=continue_btn_bgc,
             highlightbackground="#f2a560",
             borderwidth=0,
-            fg="white",
+            fg=utils.colors.mainButtonTxtColor,
             text = self.texts['continue'].upper(),
             font=btns_container_font_style,
         )
@@ -77,7 +79,7 @@ class Result(tk.Frame):
             relief="flat",
             overrelief="flat",
             borderwidth=0,
-            width=round(self.root.winfo_width() * 0.7),
+            height=round(self.root.winfo_height() * 0.80),
             command=self.toggle_fullscreen_collage,
             highlightthickness=0,
         )
@@ -90,8 +92,9 @@ class Result(tk.Frame):
             relief="flat",
             overrelief="flat",
             borderwidth=0,
-            width=self.root.winfo_width(),
-            command=self.toggle_fullscreen_collage
+            bg = utils.colors.mainBackgroundColor,
+            height = self.root.winfo_height(),
+            command = self.toggle_fullscreen_collage
         )
 
         return collage_label
@@ -101,19 +104,20 @@ class Result(tk.Frame):
 
         if(self.is_fullscreen):
             self.fullscreen_collage.place_forget()
-            self.configure(bg="wheat")
+            self.configure(bg=utils.colors.mainBackgroundColor)
         else:
             self.fullscreen_collage.place(
                 relx=0.5, rely=0.5,
                 anchor="center",
                 relheight=1.0, relwidth=1.0
             )
-            self.configure(bg="black")
+            self.configure(bg=utils.colors.mainBackgroundColor)
         self.is_fullscreen = bools[self.is_fullscreen]
 
     def set_collage_image(self, collage_path):
         collage_src = PIL.Image.open(collage_path)
-        collage_src.thumbnail((self.root.winfo_width(), self.root.winfo_width()))
+        print(self.collage_container['width'] )
+        collage_src.thumbnail((self.root.winfo_height()* 0.80, self.root.winfo_height() * 0.80))
         collage = PIL.ImageTk.PhotoImage(collage_src)
 
         self.collage_container.configure(image=collage)

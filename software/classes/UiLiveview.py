@@ -68,14 +68,15 @@ class UiLiveview(tk.Frame):
         self.countdown_running = False
 
     def __init__(self, master, root, 
-        camera, display_time, on_stream_ended = None, width=360):
+        camera, display_time, on_stream_ended = None, width=360, bg="black"):
         
         tk.Frame.__init__(
             self, 
             master, 
             width=width,
             height=math.ceil(width * (10 / 15)),
-            bg="black"
+            bg=bg,
+            highlightthickness=0,
         )
 
         self.liveview_container = tk.Label(

@@ -3,7 +3,7 @@ import tkinter as tk
 import tkinter.font as tkFont
 
 import datetime
-
+import time
 import utils.colors
 
 
@@ -17,14 +17,15 @@ class Countdown(tk.Frame):
         self.count = start_count
         self.callback = callback
         self.has_liveview = False
+
+        self.debug_counter = 0
         
-        self.animation_speed = 200 # 250
+        self.animation_speed = 100 # 250
         self.animation = None
         self.max_angle = 359.9999
         self.angle_offset = float((359.9999 * self.animation_speed) / (start_count * 1000))
         
         self.countpics_label_var = tk.StringVar()
-
         self.create_widgets()
 
     def create_widgets(self):
@@ -91,10 +92,8 @@ class Countdown(tk.Frame):
         self.skip = skip
         if photocount is not None:
             self.countpics_label_var.set('Photo {}/{}'.format(photocount, maxcount))
-
-        print("start", datetime.datetime.now())
         
-        if(skip == False):
+        if(self.skip == False):
             self.countdown_circle_anim()
 
         self.countdown()
@@ -108,14 +107,15 @@ class Countdown(tk.Frame):
                 text = self.count,
                 font = self.countdown_label_style
             )
-            self.root.after(1000, self.countdown)            
+            # print("start", datetime.datetime.now())
+            self.debug_counter = 0
+
             self.count = self.count - 1
+            self.root.after(1000, self.countdown)            
         else:
             self.countdown_label_style.configure(
                 size=70
             )
-            print(float(self.circle_canvas_container.itemcget(self.circle_canvas, "extent")))
-            self.count = self.count-1
             self.countdown_label.configure(
                 text=self.texts["cheese"],
                 font = self.countdown_label_style
@@ -129,7 +129,7 @@ class Countdown(tk.Frame):
 
     def countdown_circle_anim(self):
         circle_angle = float(self.circle_canvas_container.itemcget(self.circle_canvas, "extent"))
-
+        self.debug_counter = self.debug_counter + 1
         if self.count >= 0 and circle_angle < self.max_angle:
             self.circle_canvas_container.itemconfigure(
                 self.circle_canvas, 
@@ -137,9 +137,15 @@ class Countdown(tk.Frame):
             )
             self.animation = self.root.after(self.animation_speed, self.countdown_circle_anim)
         else:
+            print("----- self.debug_counter", self.debug_counter)
+            print(float(self.circle_canvas_container.itemcget(self.circle_canvas, "extent")))
+            
             self.root.after_cancel(self.animation)
 
     def reset(self):
+        self.debug_counter = 0
         self.count = self.init_start_count
-        self.root.after_cancel(self.animation)
         self.circle_canvas_container.itemconfigure(self.circle_canvas, extent=0, start=0)
+        
+        if self.animation is not None:
+            self.root.after_cancel(self.animation)

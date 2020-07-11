@@ -3,11 +3,13 @@ import tkinter as tk
 import tkinter.font as tkFont
 import os, PIL
 
+import utils.colors
+
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class Loading(tk.Frame):
     def __init__(self, master, texts, *args, **kwargs):
-        tk.Frame.__init__(self, master, *args, **kwargs, bg="wheat") # , cursor="none"
+        tk.Frame.__init__(self, master, *args, **kwargs, bg=utils.colors.mainBackgroundColor) # , cursor="none"
         
         self.texts = texts
 
@@ -32,8 +34,8 @@ class Loading(tk.Frame):
         image = PIL.Image.open(f"{ROOT_DIR}/../assets/loading-icon.png")
         photo = PIL.ImageTk.PhotoImage(image)
 
-        label = tk.Label(group, image=photo, bg=self["bg"],)
-        label.image = photo # keep a reference!
+        label = tk.Label(group, image=photo, bg=self["bg"])
+        label.image = photo
         label.pack(side="left", padx=(0, 15))
         
         loading_label = tk.Label(

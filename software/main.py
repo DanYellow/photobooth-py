@@ -15,6 +15,8 @@ from classes.UiNotification import UiNotification
 
 from classes.UiLiveview import UiLiveview
 
+import utils.colors
+
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 bytes = ''
 
@@ -64,12 +66,12 @@ class PhotoboothApplication(ttk.Frame):
             callback = self.on_countdown_ended,
             start_count = start_count,
         )
-        self.countdown_screen.pack(fill="both", expand=True)
-        self.countdown_screen.start_countdown(self.nb_shoots_taken + 1, self.nb_shoots_max)
+        # self.countdown_screen.pack(fill="both", expand=True)
+        # self.countdown_screen.start_countdown(self.nb_shoots_taken + 1, self.nb_shoots_max)
 
         self.home_screen = Home(self, self.root, self.translation['fr'])
         self.home_screen.start_btn.configure(command=self.start_liveview)
-#        self.home_screen.pack(fill="both", expand=True)
+        self.home_screen.pack(fill="both", expand=True)
         
         self.result_screen = Result(self, self.root, self.translation['fr'])
         self.result_screen.print_btn.configure(command=self.print_pic)
@@ -107,8 +109,8 @@ class PhotoboothApplication(ttk.Frame):
         return 0
 
     def configure_gui(self):
-        screen_width = int(root.winfo_screenwidth()) if int(root.winfo_screenwidth()) < 1000 else 800
-        screen_height = int(root.winfo_screenheight()) if int(root.winfo_screenheight()) < 1000 else 600
+        screen_width = int(root.winfo_screenwidth()) if int(root.winfo_screenwidth()) < 1000 else 1333
+        screen_height = int(root.winfo_screenheight()) if int(root.winfo_screenheight()) < 1000 else 1000
         self.root.geometry(f"{screen_width}x{screen_height}")
 
         self.root.title('Photobooth')
@@ -261,11 +263,11 @@ class PhotoboothApplication(ttk.Frame):
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root['bg'] = 'black'
+    root['bg'] = utils.colors.mainBackgroundColor
     photobooth_app = PhotoboothApplication(
         root, 
-        nb_shoots_max = 3,
-        start_count = 3
+        nb_shoots_max = 4,
+        start_count = 1
     )
     photobooth_app.pack(side="top", fill="both", expand=True)
     

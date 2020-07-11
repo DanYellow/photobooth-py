@@ -2,6 +2,8 @@ import tkinter as tk
 import tkinter.font as tkFont
 import os, PIL
 
+import utils.colors
+
 from classes.UiLiveview import UiLiveview
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -18,18 +20,19 @@ class Liveview(tk.Frame):
         self.display_time = display_time
         self.on_stream_ended = on_stream_ended
 
-        tk.Frame.__init__(self, master, *args, **kwargs, bg="wheat")
+        tk.Frame.__init__(self, master, *args, **kwargs, bg=utils.colors.mainBackgroundColor)
 
         self.create_widgets()
 
     def create_widgets(self):
         self.ui_liveview = UiLiveview(
                 master = self, 
-                width = 600,
+                width = int(self.root.winfo_width() * 0.72),
                 root = self.root,
                 camera = self.camera,
                 on_stream_ended = self.on_stream_ended,
-                display_time = self.display_time
+                display_time = self.display_time,
+                bg = utils.colors.mainBackgroundColor
         )
 
         self.ui_liveview.pack(fill="x", expand=True, pady=2)
