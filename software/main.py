@@ -105,8 +105,8 @@ class PhotoboothApplication(ttk.Frame):
         return 0
 
     def configure_gui(self):
-        screen_width = int(root.winfo_screenwidth()) if int(root.winfo_screenwidth()) < 1000 else 600
-        screen_height = int(root.winfo_screenheight()) if int(root.winfo_screenheight()) < 1000 else 800
+        screen_width = int(root.winfo_screenwidth()) if int(root.winfo_screenwidth()) < 1000 else 800
+        screen_height = int(root.winfo_screenheight()) if int(root.winfo_screenheight()) < 1000 else 600
         self.root.geometry(f"{screen_width}x{screen_height}")
 
         self.root.title('Photobooth')
@@ -120,9 +120,12 @@ class PhotoboothApplication(ttk.Frame):
         os.popen(f"mkdir -p {full_dir} && mkdir -p {collages_dir}")
 
     def start_liveview(self):
-        self.home_screen.pack_forget()
-        self.liveview_screen.pack(fill="both", expand=True)
-        self.liveview_screen.ui_liveview.start_stream()
+        if self.camera.is_up():
+            self.home_screen.pack_forget()
+            self.liveview_screen.pack(fill="both", expand=True)
+            self.liveview_screen.ui_liveview.start_stream()
+        else:
+            self.notification_manager.create_error_notification('missing_camera')
 
     def start_photoshoot(self):
         self.liveview_screen.ui_liveview.reset()

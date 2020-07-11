@@ -26,7 +26,7 @@ class UiGallery(tk.Frame):
             resized = img.resize((thumb_width, thumb_height), Image.ANTIALIAS)
             blurred = resized.filter(ImageFilter.GaussianBlur(2))
             tkimage = ImageTk.PhotoImage(blurred)
-            img_container = tk.Label(self, image=tkimage)
+            img_container = tk.Label(self, image=tkimage, borderwidth=0)
             img_container.image = tkimage
 
             img_container.grid(row=r, column=c)

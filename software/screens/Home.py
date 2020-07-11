@@ -6,6 +6,8 @@ import pyqrcode, os, PIL
 from classes.UiGallery import UiGallery
 from classes.UiHelp import UiHelp
 
+import utils.colors
+
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class Home(tk.Frame):
@@ -83,7 +85,7 @@ class Home(tk.Frame):
         return navigation
 
     def create_gallery_bg(self):
-        gallery_bg = UiGallery(self, self.root, bg = "#f6e2c3")
+        gallery_bg = UiGallery(self, self.root, bg = utils.colors.mainBackgroundColor)
         return gallery_bg
 
     def create_btns_container(self, wrapper):
@@ -113,7 +115,7 @@ class Home(tk.Frame):
             activeforeground="#033754", 
             activebackground=start_btn_bgc, 
             borderwidth=0,
-            fg="white",
+            fg=utils.colors.mainButtonTxtColor,
             image=start_btn_icon,
             text = self.texts['take_pict'].upper(),
             font=btns_container_font_style,
@@ -142,7 +144,7 @@ class Home(tk.Frame):
             activeforeground="#f2a560", 
             activebackground=help_btn_bgc, 
             borderwidth=0,
-            fg="white",
+            fg=utils.colors.mainButtonTxtColor,
             text = self.texts['help'].upper(),
             font=btns_container_font_style,
             image=help_btn_icon,
