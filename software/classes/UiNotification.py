@@ -2,14 +2,17 @@ import os, PIL, glob
 import tkinter as tk
 import tkinter.font as tkFont
 
+import utils.colors
+
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class UiNotification(tk.Canvas):
-    def __init__(self, texts, master=None, bg="wheat"):
+    def __init__(self, texts, master=None, bg=utils.colors.mainBackgroundColor):
         tk.Canvas.__init__(
             self, master, 
-            width=220, height=120, 
-            bg=bg, borderwidth=0
+            width=220, height=120,
+            bg=bg, borderwidth=0,
+            highlightthickness=0,
         )
     
         self.master = master

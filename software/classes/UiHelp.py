@@ -3,7 +3,7 @@ import tkinter as tk
 import tkinter.font as tkFont
 import os, PIL, pyqrcode
 
-import utils.credentials
+import utils.settings
 
 class UiHelp(tk.Frame):
     def __init__(self, master, texts, window_height, *args, **kwargs): 
@@ -11,9 +11,6 @@ class UiHelp(tk.Frame):
 
         panel_height_ratio = 73.75 / 100
         panel_height = window_height * panel_height_ratio
-
-        print(panel_height)
-
 
         tk.Frame.__init__(
             self, master, *args, **kwargs, 
@@ -23,7 +20,7 @@ class UiHelp(tk.Frame):
             padx=20,
         )
 
-        self.wifi_access = utils.credentials.wifi_access
+        self.wifi_access = utils.settings.wifi_access
 
         self.instructions = {
             'fr': {
@@ -62,7 +59,8 @@ class UiHelp(tk.Frame):
         instruction_container = tk.Frame(
             container,
             bg=self['bg'],
-            pady=0
+            pady=0,
+            padx=5
         )
         instruction_container.pack(fill="x", expand=1, side="bottom")
 
@@ -107,6 +105,7 @@ class UiHelp(tk.Frame):
         instruction_step_2_container = tk.Frame(
             instruction_container,
             bg=self['bg'],
+            
         )
         instruction_step_2_container.pack(fill="x", pady=space_between_instructions)
 

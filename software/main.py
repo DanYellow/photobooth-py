@@ -16,6 +16,7 @@ from classes.UiNotification import UiNotification
 from classes.UiLiveview import UiLiveview
 
 import utils.colors
+import utils.settings
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 bytes = ''
@@ -30,7 +31,7 @@ class PhotoboothApplication(ttk.Frame):
 
         ttk.Frame.__init__(self, self.root, *args, **kwargs) #  , cursor="none"
         main_style = ttk.Style()
-        main_style.configure('App.TFrame', background="wheat")
+        main_style.configure('App.TFrame', background=utils.colors.mainBackgroundColor)
         self['style'] = 'App.TFrame'
 
         self.ROOT_DIR = f"{ROOT_DIR}/.."
@@ -179,9 +180,8 @@ class PhotoboothApplication(ttk.Frame):
         self.home_screen.gallery_bg.update()
 
     def on_missing_camera(self, msg):
-        x = 3
-        # self.notification_manager.create_error_notification('missing_camera')
-        # print('log : missing_camera')
+        self.notification_manager.create_error_notification('missing_camera')
+        print('log : missing_camera')
 
     def on_stream_ended(self):
         self.start_photoshoot()
@@ -253,7 +253,7 @@ class PhotoboothApplication(ttk.Frame):
     def print_pic(self):
         print('------------------ printing --------------')
 
-        printer_name = "Canon_SELPHY_CP1300"
+        printer_name = f"{utils.settings.printer['name']}"
         os.system(f"cupsenable {printer_name}")
         print_cmd = f"lp -d {printer_name} -o fit-to-page {self.collage_path}"
         os.system(print_cmd)
@@ -266,7 +266,7 @@ if __name__ == "__main__":
     root['bg'] = utils.colors.mainBackgroundColor
     photobooth_app = PhotoboothApplication(
         root, 
-        nb_shoots_max = 4,
+        nb_shoots_max = 1,
         start_count = 1
     )
     photobooth_app.pack(side="top", fill="both", expand=True)

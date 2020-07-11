@@ -28,7 +28,8 @@ class Loading(tk.Frame):
 
         self.countdown_label_style = tkFont.Font(
             family='DejaVu Sans Mono', 
-            size=50
+            size=50,
+            
         )
 
         image = PIL.Image.open(f"{ROOT_DIR}/../assets/loading-icon.png")
@@ -43,6 +44,7 @@ class Loading(tk.Frame):
             text=self.texts["loading"],
             font = self.countdown_label_style,
             bg=self["bg"],
+            fg="white"
         )
         loading_label.pack(side="left")
 

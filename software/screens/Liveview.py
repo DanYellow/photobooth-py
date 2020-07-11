@@ -26,13 +26,13 @@ class Liveview(tk.Frame):
 
     def create_widgets(self):
         self.ui_liveview = UiLiveview(
-                master = self, 
-                width = int(self.root.winfo_width() * 0.72),
-                root = self.root,
-                camera = self.camera,
-                on_stream_ended = self.on_stream_ended,
-                display_time = self.display_time,
-                bg = utils.colors.mainBackgroundColor
+            master = self, 
+            width = int(self.root.winfo_width() * 0.72),
+            root = self.root,
+            camera = self.camera,
+            on_stream_ended = self.on_stream_ended,
+            display_time = self.display_time,
+            bg = utils.colors.mainBackgroundColor
         )
 
         self.ui_liveview.pack(fill="x", expand=True, pady=2)

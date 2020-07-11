@@ -6,7 +6,6 @@ import datetime
 import time
 import utils.colors
 
-
 class Countdown(tk.Frame):
     def __init__(self, master, root, texts, callback=None, start_count=3,  *args, **kwargs):
         tk.Frame.__init__(self, master, *args, **kwargs, background=utils.colors.mainBackgroundColor) # , cursor="none"
