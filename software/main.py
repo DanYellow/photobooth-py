@@ -99,6 +99,23 @@ class PhotoboothApplication(ttk.Frame):
         root.bind("<KeyPress>", self.quit_)
         root.protocol("WM_DELETE_WINDOW", self.cleanup)
 
+        self.collage_frames = tk.Frame(self, bg=utils.colors.mainBackgroundColor, height="250")
+        self.collage_frames.place(relx=0, rely=0.5)
+
+    def update_thumbnails_preview_list(self, img_name):
+        TARGET_SIZE = 250, 250
+        print('f', self.collage_pics_name_buffer)
+        
+        tmp_img = PIL.Image.open(f"{self.ROOT_DIR}/_tmp/full/{img_name}")
+        tmp_img.thumbnail(TARGET_SIZE, PIL.Image.ANTIALIAS)
+
+        collage = PIL.ImageTk.PhotoImage(tmp_img)
+
+        img = tk.Label(self.collage_frames, image=collage)
+        img.image = collage
+        img.pack(side = "left", padx=(4, 4))
+            
+
     def cleanup(self):
         self.camera.stop_liveview()
         sys.exit()
@@ -156,6 +173,8 @@ class PhotoboothApplication(ttk.Frame):
         latest_pic = self.get_latest_pic()
         self.collage_pics_name_buffer.append(latest_pic)
         self.create_thumbnail(latest_pic)
+
+        self.update_thumbnails_preview_list(latest_pic)
 
         self.countdown_screen.reset()
         self.countdown_screen.lower(self.home_screen)
@@ -266,7 +285,7 @@ if __name__ == "__main__":
     root['bg'] = utils.colors.mainBackgroundColor
     photobooth_app = PhotoboothApplication(
         root, 
-        nb_shoots_max = 1,
+        nb_shoots_max = 3,
         start_count = 1
     )
     photobooth_app.pack(side="top", fill="both", expand=True)

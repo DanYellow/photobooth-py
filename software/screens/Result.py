@@ -116,7 +116,7 @@ class Result(tk.Frame):
 
     def set_collage_image(self, collage_path):
         collage_src = PIL.Image.open(collage_path)
-        print(self.collage_container['width'] )
+
         collage_src.thumbnail((self.root.winfo_height()* 0.80, self.root.winfo_height() * 0.80))
         collage = PIL.ImageTk.PhotoImage(collage_src)
 
