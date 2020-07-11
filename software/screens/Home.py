@@ -49,7 +49,7 @@ class Home(tk.Frame):
         )
         self.gallery_bg.lower()
 
-        self.help_view = UiHelp(master=self, texts = self.texts)
+        self.help_view = UiHelp(master=self, texts = self.texts, window_height=self.root.winfo_height())
 
         btns_container_font_style = tkFont.Font(family='DejaVu Sans Mono', size=20)
         self.close_help_btn = tk.Button(

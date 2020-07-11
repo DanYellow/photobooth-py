@@ -4,12 +4,18 @@ import tkinter.font as tkFont
 import os, PIL, pyqrcode
 
 class UiHelp(tk.Frame):
-    def __init__(self, master, texts, *args, **kwargs): 
+    def __init__(self, master, texts, window_height, *args, **kwargs): 
         self.texts = texts
+
+        panel_height_ratio = 73.75 / 100
+        panel_height = window_height * panel_height_ratio
+
+        print(panel_height)
+
 
         tk.Frame.__init__(
             self, master, *args, **kwargs, 
-            bg="#333333", width="425", height="590",
+            bg="#333333", width=panel_height * (425 / 538), height= panel_height,
             highlightthickness=3,
             highlightbackground="black",
             padx=20,
@@ -18,7 +24,7 @@ class UiHelp(tk.Frame):
         self.instructions = {
             'fr': {
                 'step1': "Appuyez sur le bouton \"Commencer\"",
-                'step2': "Prenez la pose",
+                'step2': "Prenez la pose !",
                 'step3': "Connectez-vous au réseau Wi-Fi \"photomaton\" (mdp: \"photos!!\") ou via",
                 'step4': "Accéder aux  photos via raspberrypi.local ou via",
             }
@@ -47,7 +53,7 @@ class UiHelp(tk.Frame):
         return navigation
 
     def create_list_instructions(self, container):
-        space_between_instructions = 4
+        space_between_instructions = 7
 
         instruction_container = tk.Frame(
             container,
@@ -206,7 +212,7 @@ class UiHelp(tk.Frame):
         security = 'WPA'
         password = 'photos!!'
         qr = pyqrcode.create(f'WIFI:S:{ssid};T:{security};P:{password};;')
-        qr_xbm = qr.xbm(scale=3)
+        qr_xbm = qr.xbm(scale=4)
         code_bmp = tk.BitmapImage(data=qr_xbm)
         code_bmp.config(background="white")
 
@@ -214,7 +220,7 @@ class UiHelp(tk.Frame):
 
     def get_site_qr_code(self):
         qr = pyqrcode.create(f'http://raspberrypi.local/')
-        qr_xbm = qr.xbm(scale=3)
+        qr_xbm = qr.xbm(scale=4)
         code_bmp = tk.BitmapImage(data=qr_xbm)
         code_bmp.config(background="white")
 
