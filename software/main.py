@@ -48,7 +48,7 @@ class PhotoboothApplication(ttk.Frame):
                 'printing': "Impression\nlancée",
                 'access_gallery': "Accès aux photos",
                 'link_to_gallery': "raspberrypi.local\nou",
-                'cheese': "Souriez !",
+                'cheese': "Cheese !",
                 'missing_camera': "Appareil\nnon detecté",
                 'close': "Fermer"
              }
@@ -64,10 +64,12 @@ class PhotoboothApplication(ttk.Frame):
             callback = self.on_countdown_ended,
             start_count = start_count,
         )
+        self.countdown_screen.pack(fill="both", expand=True)
+        self.countdown_screen.start_countdown(self.nb_shoots_taken + 1, self.nb_shoots_max)
 
         self.home_screen = Home(self, self.root, self.translation['fr'])
         self.home_screen.start_btn.configure(command=self.start_liveview)
-        self.home_screen.pack(fill="both", expand=True)
+#        self.home_screen.pack(fill="both", expand=True)
         
         self.result_screen = Result(self, self.root, self.translation['fr'])
         self.result_screen.print_btn.configure(command=self.print_pic)
@@ -175,8 +177,9 @@ class PhotoboothApplication(ttk.Frame):
         self.home_screen.gallery_bg.update()
 
     def on_missing_camera(self, msg):
-        self.notification_manager.create_error_notification('missing_camera')
-        print('log : missing_camera')
+        x = 3
+        # self.notification_manager.create_error_notification('missing_camera')
+        # print('log : missing_camera')
 
     def on_stream_ended(self):
         self.start_photoshoot()

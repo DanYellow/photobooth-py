@@ -2,9 +2,14 @@ import tkinter.ttk as ttk
 import tkinter as tk
 import tkinter.font as tkFont
 
+import datetime
+
+import utils.colors
+
+
 class Countdown(tk.Frame):
     def __init__(self, master, root, texts, callback=None, start_count=3,  *args, **kwargs):
-        tk.Frame.__init__(self, master, *args, **kwargs, background="wheat") # , cursor="none"
+        tk.Frame.__init__(self, master, *args, **kwargs, background=utils.colors.mainBackgroundColor) # , cursor="none"
 
         self.root = root
         self.texts = texts
@@ -12,13 +17,45 @@ class Countdown(tk.Frame):
         self.count = start_count
         self.callback = callback
         self.has_liveview = False
-
+        
+        self.animation_speed = 200 # 250
+        self.animation = None
+        self.max_angle = 359.9999
+        self.angle_offset = float((359.9999 * self.animation_speed) / (start_count * 1000))
+        
         self.countpics_label_var = tk.StringVar()
 
         self.create_widgets()
-        
+
     def create_widgets(self):
-        self.init_size = 20
+        circle_canvas_container_width = 400
+        circle_canvas_container_height = circle_canvas_container_width
+
+        self.circle_canvas_container = tk.Canvas(
+            self,
+            background=utils.colors.mainBackgroundColor,
+            borderwidth=0,
+            width=circle_canvas_container_width,
+            height=circle_canvas_container_height,
+            highlightthickness=0,
+        )
+        
+        self.circle_canvas = self.circle_canvas_container.create_arc(
+            0, 0, 
+            circle_canvas_container_width - 10, circle_canvas_container_height - 10,
+            style="arc",
+            outline="white",
+            width=3,
+            start=0,
+            extent=0, 
+        )
+
+        self.circle_canvas_container.place(
+            relx=0.5, rely=0.5,
+            anchor="center",
+        )
+
+        self.init_size = 70
         self.countdown_label_style = tkFont.Font(
             family='DejaVu Sans Mono', 
             size=self.init_size 
@@ -29,7 +66,8 @@ class Countdown(tk.Frame):
             background=countdown_label_bg,
             borderwidth=0,
             text=self.count,
-            font = self.countdown_label_style
+            font = self.countdown_label_style,
+            fg="white",
         )
 
         self.countdown_label.place(
@@ -44,6 +82,7 @@ class Countdown(tk.Frame):
         countpics_label = tk.Label(self, background=self["bg"],
             borderwidth=0,
             textvariable=self.countpics_label_var,
+            fg="white",
             font = countpics_label_style)
 
         countpics_label.pack(side="bottom", expand=0, fill="x", pady=((0, 15)))
@@ -53,9 +92,12 @@ class Countdown(tk.Frame):
         if photocount is not None:
             self.countpics_label_var.set('Photo {}/{}'.format(photocount, maxcount))
 
-        self.countdown()
+        print("start", datetime.datetime.now())
+        
         if(skip == False):
-            self.countdown_font_size_anim()
+            self.countdown_circle_anim()
+
+        self.countdown()
 
     def countdown(self):
         if self.skip == False and self.count > 0:
@@ -66,12 +108,13 @@ class Countdown(tk.Frame):
                 text = self.count,
                 font = self.countdown_label_style
             )
-            self.root.after(1000, self.countdown)
-            self.count = self.count-1
+            self.root.after(1000, self.countdown)            
+            self.count = self.count - 1
         else:
             self.countdown_label_style.configure(
                 size=70
             )
+            print(float(self.circle_canvas_container.itemcget(self.circle_canvas, "extent")))
             self.count = self.count-1
             self.countdown_label.configure(
                 text=self.texts["cheese"],
@@ -84,23 +127,19 @@ class Countdown(tk.Frame):
     def on_countdown_end(self):
         self.callback()
 
-    def countdown_font_size_anim(self):
-        if self.count >= 0:
-            self.countdown_label_style.configure(
-                size=self.countdown_label_style['size'] + 1
+    def countdown_circle_anim(self):
+        circle_angle = float(self.circle_canvas_container.itemcget(self.circle_canvas, "extent"))
+
+        if self.count >= 0 and circle_angle < self.max_angle:
+            self.circle_canvas_container.itemconfigure(
+                self.circle_canvas, 
+                extent=circle_angle + self.angle_offset
             )
-            self.countdown_label.configure(
-                font = self.countdown_label_style
-            )
-            self.root.after(1, self.countdown_font_size_anim)
-    
+            self.animation = self.root.after(self.animation_speed, self.countdown_circle_anim)
+        else:
+            self.root.after_cancel(self.animation)
+
     def reset(self):
         self.count = self.init_start_count
-        self.countdown_label_style = tkFont.Font(
-            family='DejaVu Sans Mono', 
-            size=self.init_size 
-        )
-        self.countdown_label.configure(
-            text=self.count,
-            font = self.countdown_label_style
-        )
+        self.root.after_cancel(self.animation)
+        self.circle_canvas_container.itemconfigure(self.circle_canvas, extent=0, start=0)
