@@ -3,6 +3,8 @@ import tkinter as tk
 import tkinter.font as tkFont
 import os, PIL, pyqrcode
 
+import utils.credentials
+
 class UiHelp(tk.Frame):
     def __init__(self, master, texts, window_height, *args, **kwargs): 
         self.texts = texts
@@ -21,11 +23,13 @@ class UiHelp(tk.Frame):
             padx=20,
         )
 
+        self.wifi_access = utils.credentials.wifi_access
+
         self.instructions = {
             'fr': {
                 'step1': "Appuyez sur le bouton \"Commencer\"",
                 'step2': "Prenez la pose !",
-                'step3': "Connectez-vous au réseau Wi-Fi \"photomaton\" (mdp: \"photos!!\") ou via",
+                'step3': f"Connectez-vous au réseau Wi-Fi \"{self.wifi_access['ssid']}\" (mdp: \"{self.wifi_access['pwd']}\") ou via",
                 'step4': "Accéder aux  photos via raspberrypi.local ou via",
             }
         }
@@ -208,9 +212,9 @@ class UiHelp(tk.Frame):
         site_qr_code_label.pack(side="bottom")
 
     def get_wifi_access_qr_code(self):
-        ssid = 'photomaton'
+        ssid = self.wifi_access["ssid"]
         security = 'WPA'
-        password = 'photos!!'
+        password = self.wifi_access['pwd']
         qr = pyqrcode.create(f'WIFI:S:{ssid};T:{security};P:{password};;')
         qr_xbm = qr.xbm(scale=4)
         code_bmp = tk.BitmapImage(data=qr_xbm)
