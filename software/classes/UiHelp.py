@@ -12,9 +12,10 @@ class UiHelp(tk.Frame):
         panel_height_ratio = 73.75 / 100
         panel_height = window_height * panel_height_ratio
 
+        bgc = "#333333"
         tk.Frame.__init__(
             self, master, *args, **kwargs, 
-            bg="#333333", width=panel_height * (425 / 538), height= panel_height,
+            bg=bgc, width=panel_height * (425 / 538), height= panel_height,
             highlightthickness=3,
             highlightbackground="black",
             padx=20,
@@ -26,7 +27,7 @@ class UiHelp(tk.Frame):
             'fr': {
                 'step1': "Appuyez sur le bouton \"Commencer\"",
                 'step2': "Prenez la pose !",
-                'step3': f"Connectez-vous au réseau Wi-Fi \"{self.wifi_access['ssid']}\" (mdp: \"{self.wifi_access['pwd']}\") ou via",
+                'step3': f"Connectez-vous au réseau Wi-Fi \"{self.wifi_access['ssid']}\" / mdp: \"{self.wifi_access['pwd']}\" ou via",
                 'step4': "Accéder aux  photos via raspberrypi.local ou via",
             }
         }
@@ -39,6 +40,7 @@ class UiHelp(tk.Frame):
             relx=0.5, 
             rely=0,
             anchor="n",
+            relwidth=1
         )
 
         self.create_list_instructions(navigation)
@@ -141,7 +143,7 @@ class UiHelp(tk.Frame):
             instruction_step_3_container,
             bg=self['bg'],
         )
-        instruction_step_3_texts_container.pack(side="top", fill="x")
+        instruction_step_3_texts_container.pack(side="top", fill="x", expand=True)
 
         instruction_step_3_number = tk.Label(
             instruction_step_3_texts_container,
@@ -159,11 +161,11 @@ class UiHelp(tk.Frame):
             font=instruction_text_style,
             bg=self['bg'],
             foreground="white",
-            aspect=450
+            aspect=750
         )
 
         instruction_step_3_number.pack(side="left")
-        instruction_step_3_text.pack(side="left", fill="x")
+        instruction_step_3_text.pack(side="left", fill="x", expand=True)
 
         wifi_qr_code = self.get_wifi_access_qr_code()
         wifi_qr_code_label = tk.Label(instruction_step_3_container, image=wifi_qr_code)

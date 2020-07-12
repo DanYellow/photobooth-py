@@ -85,7 +85,7 @@ class Countdown(tk.Frame):
             fg="white",
             font = countpics_label_style)
 
-        countpics_label.pack(side="bottom", expand=0, fill="x", pady=((0, 15)))
+        countpics_label.pack(side="top", expand=0, fill="x", pady=((15, 0)))
 
     def start_countdown(self, photocount = None, maxcount = None, skip = False):
         self.skip = skip
@@ -94,6 +94,11 @@ class Countdown(tk.Frame):
         
         if(self.skip == False):
             self.countdown_circle_anim()
+        else:
+            self.circle_canvas_container.itemconfigure(
+                self.circle_canvas, 
+                extent=self.max_angle
+            )
 
         self.countdown()
 
@@ -106,7 +111,7 @@ class Countdown(tk.Frame):
                 text = self.count,
                 font = self.countdown_label_style
             )
-            # print("start", datetime.datetime.now())
+
             self.debug_counter = 0
 
             self.count = self.count - 1

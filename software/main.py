@@ -3,6 +3,8 @@ import tkinter as tk
 import tkinter.font as tkFont
 import glob, os, sys, PIL, math
 import cv2
+from subprocess import call
+
 
 from screens.Home import Home
 from screens.Result import Result
@@ -99,12 +101,10 @@ class PhotoboothApplication(ttk.Frame):
         root.bind("<KeyPress>", self.quit_)
         root.protocol("WM_DELETE_WINDOW", self.cleanup)
 
-        self.collage_frames = tk.Frame(self, bg=utils.colors.mainBackgroundColor, height="250")
-        self.collage_frames.place(relx=0, rely=0.5)
+        self.collage_frames = tk.Frame(self, bg=utils.colors.mainBackgroundColor) # utils.colors.mainBackgroundColor
 
     def update_thumbnails_preview_list(self, img_name):
         TARGET_SIZE = 250, 250
-        print('f', self.collage_pics_name_buffer)
         
         tmp_img = PIL.Image.open(f"{self.ROOT_DIR}/_tmp/full/{img_name}")
         tmp_img.thumbnail(TARGET_SIZE, PIL.Image.ANTIALIAS)
@@ -115,8 +115,8 @@ class PhotoboothApplication(ttk.Frame):
         img.image = collage
         img.pack(side = "left", padx=(4, 4))
             
-
     def cleanup(self):
+        call(["cancel", "-a", f"{utils.settings.printer['name']}"])
         self.camera.stop_liveview()
         sys.exit()
         self.root.destroy()
@@ -153,6 +153,11 @@ class PhotoboothApplication(ttk.Frame):
         self.liveview_screen.ui_liveview.reset()
         self.camera.stop_liveview()
 
+        self.reset_preview_list()
+        self.collage_frames.place(relx=0.5, rely=1, anchor="s", y=-15)
+
+        # self.countdown_screen.lower(self.home_screen)
+
         if self.camera.is_up():
             self.home_screen.pack_forget()
             self.liveview_screen.pack_forget()
@@ -168,6 +173,10 @@ class PhotoboothApplication(ttk.Frame):
     def on_countdown_ended(self):
         self.camera.capture(f"{ROOT_DIR}/../_tmp/full", callback=self.on_taken_pic)
 
+        # self.countdown_screen.pack_forget()
+        # self.loading_screen.pack(side="top", fill="both", expand=1)
+
+    # Called after each photo
     def on_taken_pic(self, temp):
         self.nb_shoots_taken += 1
         latest_pic = self.get_latest_pic()
@@ -179,6 +188,7 @@ class PhotoboothApplication(ttk.Frame):
         self.countdown_screen.reset()
         self.countdown_screen.lower(self.home_screen)
         if self.nb_shoots_taken < self.nb_shoots_max:
+            self.countdown_screen.pack(fill="both", expand=True)
             self.countdown_screen.start_countdown(self.nb_shoots_taken + 1, self.nb_shoots_max)
         else:
             self.countdown_screen.pack_forget()
@@ -190,6 +200,8 @@ class PhotoboothApplication(ttk.Frame):
         self.collage_path = self.create_collage()
 
         self.loading_screen.pack_forget()
+        self.collage_frames.pack_forget()
+        self.collage_frames.place_forget()
 
         self.result_screen.set_collage_image(self.collage_path)
         self.result_screen.set_fullscreen_collage_image(self.collage_path)
@@ -280,12 +292,16 @@ class PhotoboothApplication(ttk.Frame):
         self.go_to_home_screen()
         self.notification_manager.create_print_notification()
 
+    def reset_preview_list(self):
+        for child in self.collage_frames.winfo_children():
+            child.destroy()
+
 if __name__ == "__main__":
     root = tk.Tk()
     root['bg'] = utils.colors.mainBackgroundColor
     photobooth_app = PhotoboothApplication(
         root, 
-        nb_shoots_max = 3,
+        nb_shoots_max = 2,
         start_count = 1
     )
     photobooth_app.pack(side="top", fill="both", expand=True)
