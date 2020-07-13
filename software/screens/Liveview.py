@@ -23,6 +23,29 @@ class Liveview(tk.Frame):
         tk.Frame.__init__(self, master, *args, **kwargs, bg=utils.colors.mainBackgroundColor)
 
         self.create_widgets()
+        self.check_countdown()
+
+    def check_countdown(self):
+        time_elapsed = self.ui_liveview.time_elapsed
+
+        if time_elapsed < 6 and time_elapsed > 0:
+            self.countdown_label.place(
+                relx=0.5, rely=0.5,
+                anchor="center",
+            )
+
+            self.countdown_label.configure(
+                text = time_elapsed,
+            )
+        else:
+            self.countdown_label.place_forget()
+
+        self.root.after(1000, self.check_countdown)
+
+    def on_stream_ended_proxy(self):
+        self.on_stream_ended()
+        self.root.after_cancel(self.check_countdown)
+        self.countdown_label.place_forget()
 
     def create_widgets(self):
         self.ui_liveview = UiLiveview(
@@ -30,7 +53,7 @@ class Liveview(tk.Frame):
             width = int(self.root.winfo_width() * 0.72),
             root = self.root,
             camera = self.camera,
-            on_stream_ended = self.on_stream_ended,
+            on_stream_ended = self.on_stream_ended_proxy,
             display_time = self.display_time,
             bg = utils.colors.mainBackgroundColor
         )
@@ -65,3 +88,22 @@ class Liveview(tk.Frame):
         )
         self.start_btn.image = start_btn_icon
         self.start_btn.pack(expand=True, pady=2)
+
+        countdown_label_style = tkFont.Font(
+            family='DejaVu Sans Mono', 
+            size=70
+        )
+
+        countdown_label_bg = self['background']
+        self.countdown_label = tk.Label(self.ui_liveview, 
+            background=countdown_label_bg,
+            borderwidth=0,
+            text=self.display_time,
+            font = countdown_label_style,
+            fg="white",
+        )
+
+        
+
+
+

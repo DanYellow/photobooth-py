@@ -294,10 +294,17 @@ class PhotoboothApplication(ttk.Frame):
 if __name__ == "__main__":
     root = tk.Tk()
     root['bg'] = utils.colors.mainBackgroundColor
+
+    nb_shoots_max_settings_arg = utils.settings.photobooth['nb_shoots_max'] if utils.settings.photobooth.get('nb_shoots_max') else None
+    nb_shoots_max = nb_shoots_max_settings_arg if type(nb_shoots_max_settings_arg) is int and nb_shoots_max_settings_arg > 0 else 1
+
+    start_count_settings_arg = utils.settings.photobooth['start_count'] if utils.settings.photobooth.get('start_count') else None
+    start_count = start_count_settings_arg if type(start_count_settings_arg) is int and start_count_settings_arg > 0 else 1
+
     photobooth_app = PhotoboothApplication(
         root, 
-        nb_shoots_max = utils.settings.photobooth['nb_shoots_max'],
-        start_count = utils.settings.photobooth['start_count']
+        nb_shoots_max = nb_shoots_max,
+        start_count = start_count
     )
     photobooth_app.pack(side="top", fill="both", expand=True)
     
