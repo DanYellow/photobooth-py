@@ -75,8 +75,8 @@ class Home(tk.Frame):
         )
         navigation = ttk.Frame(
             self,
-            width="360",
-            height="520",
+            width="380",
+            height="540",
             style='HomeScreenBtnsContainer.TFrame',
             relief="solid",
             borderwidth=3

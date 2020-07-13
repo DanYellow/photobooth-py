@@ -49,7 +49,8 @@ class Liveview(tk.Frame):
 
         self.start_btn = tk.Button(
             self,
-            height = 60,
+            height = 80,
+            width = 220,
             background=start_btn_bgc,
             highlightbackground="#8e9ae9", 
             highlightthickness=2,

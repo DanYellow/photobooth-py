@@ -83,6 +83,7 @@ class UiLiveview(tk.Frame):
             self, 
             width=width, 
             height=math.ceil(width * (10 / 15)),
+            bg=bg,
         )
         
         self.liveview_container.pack()

@@ -31,7 +31,7 @@ class PhotoboothApplication(ttk.Frame):
         self.collage_pics_name_buffer = []
         self.liveview_enabled = False
 
-        ttk.Frame.__init__(self, self.root, *args, **kwargs) #  , cursor="none"
+        ttk.Frame.__init__(self, self.root, *args, **kwargs)
         main_style = ttk.Style()
         main_style.configure('App.TFrame', background=utils.colors.mainBackgroundColor)
         self['style'] = 'App.TFrame'
@@ -51,7 +51,7 @@ class PhotoboothApplication(ttk.Frame):
                 'take_another_one': "Prendre une autre photo",
                 'loading': "Chargement",
                 'printing': "Impression\nlancée",
-                'access_gallery': "Accès aux photos",
+                'access_gallery': "Accès aux photos\ndès maintenant",
                 'link_to_gallery': "raspberrypi.local\nou",
                 'cheese': "Cheese !",
                 'missing_camera': "Appareil\nnon detecté",
@@ -104,7 +104,7 @@ class PhotoboothApplication(ttk.Frame):
         self.collage_frames = tk.Frame(self, bg=utils.colors.mainBackgroundColor) # utils.colors.mainBackgroundColor
 
     def update_thumbnails_preview_list(self, img_name):
-        TARGET_SIZE = 250, 250
+        TARGET_SIZE = 320, 320
         
         tmp_img = PIL.Image.open(f"{self.ROOT_DIR}/_tmp/full/{img_name}")
         tmp_img.thumbnail(TARGET_SIZE, PIL.Image.ANTIALIAS)
@@ -156,8 +156,6 @@ class PhotoboothApplication(ttk.Frame):
         self.reset_preview_list()
         self.collage_frames.place(relx=0.5, rely=1, anchor="s", y=-15)
 
-        # self.countdown_screen.lower(self.home_screen)
-
         if self.camera.is_up():
             self.home_screen.pack_forget()
             self.liveview_screen.pack_forget()
@@ -172,9 +170,6 @@ class PhotoboothApplication(ttk.Frame):
 
     def on_countdown_ended(self):
         self.camera.capture(f"{ROOT_DIR}/../_tmp/full", callback=self.on_taken_pic)
-
-        # self.countdown_screen.pack_forget()
-        # self.loading_screen.pack(side="top", fill="both", expand=1)
 
     # Called after each photo
     def on_taken_pic(self, temp):
@@ -261,7 +256,7 @@ class PhotoboothApplication(ttk.Frame):
         
                 tmp_img_height = math.ceil((collage_img_height - bottom_space) / len(list_collage_pics_paths))
                 tmp_img_height = tmp_img_height - space_between_thumbs
-                tmp_img.thumbnail([1500, tmp_img_height], PIL.Image.ANTIALIAS)
+                tmp_img.thumbnail([collage_img_width, tmp_img_height], PIL.Image.ANTIALIAS)
 
                 collage_img.paste(
                     tmp_img, 
@@ -301,8 +296,8 @@ if __name__ == "__main__":
     root['bg'] = utils.colors.mainBackgroundColor
     photobooth_app = PhotoboothApplication(
         root, 
-        nb_shoots_max = 2,
-        start_count = 1
+        nb_shoots_max = utils.settings.photobooth['nb_shoots_max'],
+        start_count = utils.settings.photobooth['start_count']
     )
     photobooth_app.pack(side="top", fill="both", expand=True)
     
