@@ -6,3 +6,8 @@ wifi_access = dict(
 printer = dict(
     name = "myprinter"
 )
+
+photobooth = dict(
+    nb_shoots_max = 1,
+    start_count = 1
+)

@@ -1,0 +1,3 @@
+- Add automatic go back to the home screen 
+- Manage if a printer is plugged or not
+- Display friendly message when the galleries are empty
